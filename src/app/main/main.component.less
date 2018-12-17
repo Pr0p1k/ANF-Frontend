@@ -1,0 +1,42 @@
+@primary-color: blue;
+@secondary: gray;
+@margin-value: 10px;
+#header {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  height: 80px;
+  width: 100%;
+  background-color: @primary-color;
+  #logo {
+    position: relative;
+    float: left;
+    margin: @margin-value;
+    width: 60px;
+    height: 60px;
+  }
+  #account-button {
+    position: relative;
+    float: right;
+    margin-right: @margin-value; // TODO vertical margin
+  }
+  .menu {
+    position: relative;
+    margin-left: 500px; // TODO pizdec
+    .pages {
+      position: relative;
+      float: left;
+      color: white;
+      text-shadow: @secondary;
+      height: available;
+      padding: @margin-value;
+      border-right: 1px @secondary solid;
+    }
+    .pages:first-child {
+      border-left: 1px @secondary solid;
+    }
+    .pages:hover {
+      box-shadow: inset 0 0 10px @secondary;
+    }
+  }
+}

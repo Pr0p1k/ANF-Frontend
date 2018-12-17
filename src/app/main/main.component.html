@@ -1,0 +1,16 @@
+<div id="header">
+  <img id="logo" src="../../assets/logo.png"/>
+  <div class="menu">
+    <div class="pages" (click)="router.navigateByUrl('start')">
+      <p>Main</p>
+    </div>
+    <div class="pages" (click)="router.navigateByUrl('info')">
+      <p>Some хуйня</p>
+    </div>
+    <div class="pages">
+      <p>Some other хуйня</p>
+    </div>
+  </div>
+  <p-button id="account-button" label="Account" *ngIf="!loggedIn()" (click)="showLoginBlock()"></p-button>
+</div>
+<router-outlet></router-outlet>
