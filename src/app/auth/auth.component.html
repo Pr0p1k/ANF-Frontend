@@ -1,5 +1,28 @@
-<!-- TODO here should be TabMenu-->
-<input type="text"/>
-<br>
-<label for="sign-in-password">Kek</label>
-<input id="sign-in-password" type="password"/>
+<p-tabMenu [model]="pages" [activeItem]="pages[0]"></p-tabMenu>
+<div id="sign-in">
+  <div>
+    <label for="sign-in-login">Login:</label><br>
+    <input id="sign-in-login" type="text" pInputText/>
+  </div>
+  <div>
+    <label for="sign-in-password">Password: </label><br>
+    <input id="sign-in-password" type="password" pPassword [feedback]="false"/>
+  </div>
+  <p-button label="Sign in" (click)="tryToLogin()"></p-button>
+</div>
+
+<div id="sign-up">
+  <div>
+    <label for="sign-up-login">Login: </label><br>
+    <input id="sign-up-login" type="text" pInputText/>
+  </div>
+  <div>
+    <label for="sign-up-password">Password: </label><br>
+    <input id="sign-up-password" type="password" pPassword/>
+  </div>
+  <div>
+    <label for="sign-up-confirm">Confirm password: </label><br>
+    <input id="sign-up-confirm" type="password" pPassword/>
+  </div>
+  <p-button label="Sign up"></p-button>
+</div>

@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DialogService} from 'primeng/api';
-import {InfoPageComponent} from '../info-page/info-page.component';
-import {DialogService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 
 @Component({
@@ -26,7 +24,7 @@ export class MainComponent implements OnInit {
 
   showLoginBlock() {
     const dialog = this.dialogService.open(AuthComponent, {
-      width: '700', height: '300'
+      width: '800px', height: '400px'
     });
   }
 }

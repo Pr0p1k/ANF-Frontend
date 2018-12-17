@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-auth',
@@ -7,9 +8,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthComponent implements OnInit {
 
-  constructor() { }
+  pages: MenuItem[];
+  username = '';
+  firstPassword = '';
+  secondPassword = '';
 
-  ngOnInit() {
+  constructor() {
   }
 
+  ngOnInit() {
+    this.pages = [{
+      label: 'Sign in', command: function () {
+        document.getElementById('sign-in').style.display = 'block';
+        document.getElementById('sign-up').style.display = 'none';
+      }
+    },
+      {
+        label: 'Sign up', command: function () {
+          document.getElementById('sign-in').style.display = 'none';
+          document.getElementById('sign-up').style.display = 'block';
+        }
+      }];
+  }
+
+  tryToLogin() {
+    if (this.username.length < 6) {// todo show warning
+    } else if (this.firstPassword.length < 6) {
+      // todo show warning
+    } else {
+      // todo ajax request
+    }
+  }
 }

@@ -7,7 +7,8 @@ import {ButtonModule} from 'primeng/button';
 import {InfoPageComponent} from './info-page/info-page.component';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { AuthComponent } from './auth/auth.component';
+import {AuthComponent} from './auth/auth.component';
+import {TabMenuModule, PasswordModule, InputTextModule} from 'primeng/primeng';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,10 @@ import { AuthComponent } from './auth/auth.component';
     AppRoutingModule,
     ButtonModule,
     DynamicDialogModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    TabMenuModule,
+    PasswordModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [MainComponent],
