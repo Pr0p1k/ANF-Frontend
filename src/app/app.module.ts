@@ -9,13 +9,15 @@ import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AuthComponent} from './auth/auth.component';
 import {TabMenuModule, PasswordModule, InputTextModule} from 'primeng/primeng';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 @NgModule({
   declarations: [
     MainComponent,
     StartPageComponent,
     InfoPageComponent,
-    AuthComponent],
+    AuthComponent,
+    ProfilePageComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
