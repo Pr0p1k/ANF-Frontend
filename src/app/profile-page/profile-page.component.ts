@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'
+import { User } from '../user'
 
 @Component({
   selector: 'app-profile-page',
@@ -8,19 +9,17 @@ import { HttpClient } from '@angular/common/http'
 })
 export class ProfilePageComponent implements OnInit {
 
-  username :string;
-  chLevel :number;
-  animalRace :object;
-  fightsNum :number;
-  winsNum :number;
-  lossesNum :number;
-  deathsNum :number;
-  rating :number;
-  experience :number;
-  freePoints :number;
+  public user :User;
 
   constructor(private http: HttpClient) {
-    http.get('localhost:31480/profile');
+    http.get<User>('localhost:31480/profile').subscribe(data => {
+      this.user = data;
+    }, (err: HttpErrorResponse) => {
+      if (err.status === 401)
+        console.log("User is anauthorized.");
+      else
+        console.log("Client-side error.");
+    });
     //to finish
    }
 
