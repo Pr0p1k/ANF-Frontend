@@ -7,6 +7,5 @@ export class Stats {
   rating: number;
   experience: number;
   level: number;
-  freePoints: number;
-  fightsNum: number;
+  upgradePoints: number;
 }
