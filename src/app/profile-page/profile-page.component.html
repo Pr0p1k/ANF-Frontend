@@ -4,12 +4,12 @@
       <img id="avatar" <!--todo-->>
     </span>
     <span id="user_parameters">
-      <label id="username">{{username}}</label><br><
-      <label id="character_level">Level: {{chLevel}}</label><br><!--Although it is mutable, I've put it here because user can not change it explicitly-->
-      <label id="animal_race">Animal Race: {{animalRace}}</label>
+      <label id="username">{{user.username}}</label><br><
+      <label id="character_level">Level: {{user.stats.level}}</label><br><!--Although it is mutable, I've put it here because user can not change it explicitly-->
+      <label id="animal_race">Animal Race: {{user.character.animalRace}}</label>
     </span>
   </div>
   <div id="stats">
-    <label id="fights_number">Number of fights: {{fightsNum}}</label>
+    <label id="fights_number">Number of fights: {{user.stats.fightsNum}}</label>
   </div>
 </span>

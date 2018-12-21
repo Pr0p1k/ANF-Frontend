@@ -13,18 +13,16 @@ export class ProfilePageComponent implements OnInit {
 
   constructor(private http: HttpClient) {
     http.get<User>('localhost:31480/profile').subscribe(data => {
-      this.user = data;
-    }, (err: HttpErrorResponse) => {
-      if (err.status === 401)
-        console.log("User is anauthorized.");
-      else
-        console.log("Client-side error.");
-    });
-    //to finish
-   }
-
-  ngOnInit() {
-    //ajax for user, character and stats
+      this.user = { ...data},
+      (err: HttpErrorResponse) => {
+        if (err.status === 401)
+          console.log("User is anauthorized.");
+        else
+          console.log("Client-side error.");
+      }
+   });
   }
+
+  ngOnInit() {}
 
 }
