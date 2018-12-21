@@ -11,6 +11,8 @@
       <p>Some other хуйня</p>
     </div>
   </div>
-  <p-button id="account-button" label="Account" *ngIf="!loggedIn()" (click)="showLoginBlock()"></p-button>
+  <p-button id="account-button" label="Account" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
+  <p id="login" *ngIf="loggedIn">Logged in as: {{login}}</p>
+  <p-button id="open-profile-button" label="Profile" *ngIf="loggedIn" (click)="openProfile()"></p-button>
 </div>
 <router-outlet></router-outlet>

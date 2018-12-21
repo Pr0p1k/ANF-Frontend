@@ -9,8 +9,10 @@ import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AuthComponent} from './auth/auth.component';
 import {TabMenuModule, PasswordModule, InputTextModule} from 'primeng/primeng';
-import { ProfilePageComponent } from './profile-page/profile-page.component';
-import { HttpClientModule } from '@angular/common/http'
+import {ProfilePageComponent} from './profile-page/profile-page.component';
+import {HttpClientModule} from '@angular/common/http';
+import {CookieService} from 'ngx-cookie-service';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,9 +30,10 @@ import { HttpClientModule } from '@angular/common/http'
     BrowserAnimationsModule,
     TabMenuModule,
     PasswordModule,
-    InputTextModule
+    InputTextModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [MainComponent],
   entryComponents: [AuthComponent]
 })
