@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {DialogService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -12,17 +13,15 @@ import {CookieService} from 'ngx-cookie-service';
 })
 export class MainComponent implements OnInit {
 
-  constructor(public router: Router, private dialogService: DialogService, private cookieService: CookieService) {
+  constructor(public router: Router, private dialogService: DialogService, private cookieService: CookieService, private http: HttpClient) {
   }
 
   loggedIn: boolean;
   login: string;
 
   ngOnInit() {
-    console.log(this.cookieService.getAll());
-    const login = this.cookieService.get('JSESSIONID');
-    this.login = login;
-    this.loggedIn = login.length >= 6;
+    this.loggedIn = this.cookieService.get('loggedIn') === 'true';
+    this.login = this.cookieService.get('username');
   }
 
   showLoginBlock() {
@@ -33,6 +32,14 @@ export class MainComponent implements OnInit {
 
   openProfile() {
     this.router.navigateByUrl('profile');
+  }
+
+  logout() {
+    this.http.get('http://localhost:8080/logout', {responseType: 'text'}).subscribe(() => {
+      // some action here
+      this.cookieService.delete('loggedIn');
+      this.cookieService.delete('username');
+    });
   }
 
 }
