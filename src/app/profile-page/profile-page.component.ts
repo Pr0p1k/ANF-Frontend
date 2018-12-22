@@ -17,8 +17,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ЭТО ЕБУЧАЯ ОТПРАВКА ЗАПРОСА БЛЯТЬ!');
-    this.http.get<User>('http://localhost:8080/profile', {withCredentials: true}).subscribe(data => {
+    this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.loaded = true;
       this.user = data;
     });

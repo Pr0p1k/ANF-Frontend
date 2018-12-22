@@ -35,7 +35,7 @@ export class MainComponent implements OnInit {
   }
 
   logout() {
-    this.http.get('http://localhost:8080/logout', {responseType: 'text'}).subscribe(() => {
+    this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe(() => {
       // some action here
       this.cookieService.delete('loggedIn');
       this.cookieService.delete('username');

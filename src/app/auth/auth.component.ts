@@ -45,7 +45,7 @@ export class AuthComponent implements OnInit {
         .append('username', this.username)
         .append('password', this.firstPassword);
 
-      const request = this.httpClient.post('http://localhost:8080/login', null, {
+      const request = this.httpClient.post('http://localhost:31480/login', null, {
         params: sendParams,
         withCredentials: true,
         responseType: 'text', observe: 'response'
@@ -66,11 +66,19 @@ export class AuthComponent implements OnInit {
       // todo show warning
     } else {
       console.log('request sent');
-      const request = this.httpClient.post('http://localhost:8080/registration', {
+      const request = this.httpClient.post('http://localhost:31480/registration', {
         login: this.username,
         password: this.firstPassword
       });
       request.subscribe((data) => console.log(data.toString()));
     }
+  }
+
+  tryToSignInWithVk() {
+    window.location.replace('http://localhost:31480/login/vk');
+  }
+
+  tryToSignInWithGoogle() {
+    window.location.replace('http://localhost:31480/login/google');
   }
 }

@@ -9,6 +9,8 @@
     <input id="sign-in-password" type="password" pPassword [feedback]="false" [(ngModel)]="firstPassword"/>
   </div>
   <p-button label="Sign in" (onClick)="tryToLogin()"></p-button>
+  <p-button label="BK" (onClick)="tryToSignInWithVk()"></p-button>
+  <p-button label="G+" (onClick)="tryToSignInWithGoogle()"></p-button>
 </div>
 
 <div id="sign-up">
