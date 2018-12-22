@@ -1,15 +1,17 @@
-<span id="profile_info">
+<div id="profile_info" *ngIf="loaded">
   <div id="img_and_immutable">
     <span id="img_span">
       <img id="avatar">
     </span>
     <span id="user_parameters">
-      <label id="username">{{user.username}}</label><br><
+      <label id="username">{{user.login}}</label><br>
       <label id="character_level">Level: {{user.stats.level}}</label><br><!--Although it is mutable, I've put it here because user can not change it explicitly-->
+      <label id="character_rating">Rating: {{user.stats.rating}}</label><br>
+      <label id="character_experience">XP: {{user.stats.experience}}</label><br>
       <label id="animal_race">Animal Race: {{user.character.animalRace}}</label>
     </span>
   </div>
   <div id="stats">
     <label id="fights_number">Number of fights: {{user.stats.fightsNum}}</label>
   </div>
-</span>
+</div>

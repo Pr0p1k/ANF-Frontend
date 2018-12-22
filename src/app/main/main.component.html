@@ -14,5 +14,6 @@
   <p-button id="account-button" label="Account" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
   <p id="login" *ngIf="loggedIn">Logged in as: {{login}}</p>
   <p-button id="open-profile-button" label="Profile" *ngIf="loggedIn" (click)="openProfile()"></p-button>
+  <p-button id="logout-button" label="Log out" *ngIf="loggedIn" (click)="logout()"></p-button>
 </div>
 <router-outlet></router-outlet>

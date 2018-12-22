@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { User } from '../user'
+import {Component, OnInit} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {User} from '../user';
 
 @Component({
   selector: 'app-profile-page',
@@ -9,20 +9,19 @@ import { User } from '../user'
 })
 export class ProfilePageComponent implements OnInit {
 
-  public user :User;
+  public user: User;
+  public loaded = false;
 
   constructor(private http: HttpClient) {
-    http.get<User>('localhost:31480/profile').subscribe(data => {
-      this.user = { ...data},
-      (err: HttpErrorResponse) => {
-        if (err.status === 401)
-          console.log("User is anauthorized.");
-        else
-          console.log("Client-side error.");
-      }
-   });
+
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('ЭТО ЕБУЧАЯ ОТПРАВКА ЗАПРОСА БЛЯТЬ!');
+    this.http.get<User>('http://localhost:8080/profile', {withCredentials: true}).subscribe(data => {
+      this.loaded = true;
+      this.user = data;
+    });
+  }
 
 }

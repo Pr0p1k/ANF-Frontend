@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 import {HttpClient, HttpParams} from '@angular/common/http';
-//import {CookieService} from 'ngx-cookie-service';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +15,7 @@ export class AuthComponent implements OnInit {
   firstPassword = '';
   secondPassword = '';
 
-  constructor(private httpClient: HttpClient/*, private cookieService: CookieService*/) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService) {
   }
 
   ngOnInit() {
@@ -44,10 +44,15 @@ export class AuthComponent implements OnInit {
       const sendParams = new HttpParams()
         .append('username', this.username)
         .append('password', this.firstPassword);
-      const request = this.httpClient.post('http://localhost:31480/login', null, {params: sendParams});
-      request.subscribe(() => {
-        //this.cookieService.set('JSESSIONID', 'Keksdfg');
-        //console.log('cookie: ' + this.cookieService.get('JSESSIONID'));
+
+      const request = this.httpClient.post('http://localhost:8080/login', null, {
+        params: sendParams,
+        withCredentials: true,
+        responseType: 'text', observe: 'response'
+      });
+      request.subscribe((response) => {
+        this.cookieService.set('username', this.username);
+        this.cookieService.set('loggedIn', 'true');
       });
     }
   }
@@ -61,7 +66,7 @@ export class AuthComponent implements OnInit {
       // todo show warning
     } else {
       console.log('request sent');
-      const request = this.httpClient.post('http://localhost:31480/registration', {
+      const request = this.httpClient.post('http://localhost:8080/registration', {
         login: this.username,
         password: this.firstPassword
       });
