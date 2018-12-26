@@ -13,6 +13,8 @@ import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {FormsModule} from '@angular/forms';
+import { MessagesComponentComponent } from './messages-component/messages-component.component';
+import { FriendsPageComponent } from './friends-page/friends-page.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import {FormsModule} from '@angular/forms';
     StartPageComponent,
     InfoPageComponent,
     AuthComponent,
-    ProfilePageComponent],
+    ProfilePageComponent,
+    MessagesComponentComponent,
+    FriendsPageComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
