@@ -4,14 +4,23 @@
       <img id="avatar">
     </span>
     <span id="user_parameters">
-      <label id="username">{{user.login}}</label><br>
-      <label id="character_level">Level: {{user.stats.level}}</label><br><!--Although it is mutable, I've put it here because user can not change it explicitly-->
-      <label id="character_rating">Rating: {{user.stats.rating}}</label><br>
-      <label id="character_experience">XP: {{user.stats.experience}}</label><br>
-      <label id="animal_race">Animal Race: {{user.character.animalRace}}</label>
+      <label class="stats">{{user.login}}</label><br>
+      <label class="stats">Level: {{user.stats.level}}</label><br>
+      <label class="stats">Rating: {{user.stats.rating}}</label><br>
+      <label class="stats">XP: {{user.stats.experience}}</label><br>
+      <label class="stats">Animal Race: {{user.character.animalRace}}</label>
     </span>
   </div>
   <div id="stats">
-    <label id="fights_number">Number of fights: {{user.stats.fightsNum}}</label>
+    <label class="stats">Number of fights: {{user.stats.fightsNum}}</label><br>
+    <label class="stats">Number of wins: {{user.stats.wins}}</label><br>
+    <label class="stats">Number of losses: {{user.stats.losses}}</label><br>
+    <label class="stats">Number of deaths: {{user.stats.deaths}}</label>
   </div>
+  <div id="social">
+    <label class="social" (click) = "router.navigateByUrl('messages')">Unread messages: {{unreadMessages.length}}</label><br>
+    <label class="social" (click) = "router.navigateByUrl('friends')">New friend requests: {{user.friendRequestsIn.length}}</label><br>
+    <label class="social" (click) = "router.navigateByUrl('friends')">Friends: {{friends.length}}</label>
+  </div>
+
 </div>
