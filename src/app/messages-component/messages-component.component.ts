@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Message} from '../message';
 import {User} from '../user';
+import {Dialogue} from '../dialogue';
 
 @Component({
   selector: 'app-messages-component',
@@ -13,6 +14,7 @@ export class MessagesComponent implements OnInit {
   user: User;
   inMessages: Message[];
   outMessages: Message[];
+  dialogues: Dialogue[];
   
 
   constructor(private http: HttpClient) { }
