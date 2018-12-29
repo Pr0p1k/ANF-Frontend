@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from '../user';
 
 @Component({
   selector: 'app-friends-page',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./friends-page.component.less']
 })
 export class FriendsPageComponent implements OnInit {
+
+  friends: User[];
 
   constructor() { }
 

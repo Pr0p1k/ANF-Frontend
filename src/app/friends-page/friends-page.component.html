@@ -1,3 +1,9 @@
-<p>
-  friends-page works!
-</p>
+<div class="friendsList">
+<ul>
+  <li *ngFor="let friend of friends">
+    {{friend.login}}<br>
+    <label *ngIf="online" class="online">Online</label>
+    <label *ngIf="offline" class="offline">Offline</label>
+  </li>
+</ul>
+</div>
