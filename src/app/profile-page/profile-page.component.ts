@@ -10,7 +10,6 @@ import {MainComponent} from '../main/main.component';
   styleUrls: ['./profile-page.component.less']
 })
 export class ProfilePageComponent implements OnInit {
-  @Input() public main: MainComponent;
   public user: User;
   public loaded = false;
   public unreadMessages: Message[];
@@ -29,9 +28,5 @@ export class ProfilePageComponent implements OnInit {
     //   null, {withCredentials: true}).subscribe(data => {
     //   this.friends = data;
     // });
-  }
-
-  public openDialogs() {
-    this.main.router.navigateByUrl('messages');
   }
 }
