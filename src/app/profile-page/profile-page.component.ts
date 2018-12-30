@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {User} from '../user';
-import {Message} from '../message'
+import {Message} from '../message';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   selector: 'app-profile-page',
@@ -9,7 +10,7 @@ import {Message} from '../message'
   styleUrls: ['./profile-page.component.less']
 })
 export class ProfilePageComponent implements OnInit {
-
+  @Input() public main: MainComponent;
   public user: User;
   public loaded = false;
   public unreadMessages: Message[];
@@ -24,14 +25,13 @@ export class ProfilePageComponent implements OnInit {
       this.loaded = true;
       this.user = data;
     });
-    this.http.get<Message[]>('http://loclhost:8080/profile/messages/unread', 
-    {withCredentials: true}).subscribe(data => {
-      this.unreadMessages = data;
-    });
-    this.http.get<string[]>('http://localhost:8080/profile/friends', 
-      {withCredentials: true}).subscribe(data => {
-        this.friends = data;
-      });
+    // this.http.post<string[]>('http://localhost:31480/profile/friends',
+    //   null, {withCredentials: true}).subscribe(data => {
+    //   this.friends = data;
+    // });
   }
 
+  public openDialogs() {
+    this.main.router.navigateByUrl('messages');
+  }
 }

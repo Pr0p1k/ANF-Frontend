@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DialogService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient} from '@angular/common/http';
+import {ProfilePageComponent} from '../profile-page/profile-page.component';
 
 @Component({
   selector: 'app-main',
@@ -12,7 +13,6 @@ import {HttpClient} from '@angular/common/http';
   providers: [DialogService]
 })
 export class MainComponent implements OnInit {
-
   constructor(public router: Router, private dialogService: DialogService, private cookieService: CookieService, private http: HttpClient) {
   }
 
