@@ -1,23 +1,22 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, Injector, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Message} from '../message';
-import {User} from '../user';
-import {Dialogue} from '../dialogue';
+import {Message} from '../classes/message';
+import {User} from '../classes/user';
 import {MainComponent} from '../main/main.component';
 
 @Component({
-  selector: 'app-messages-component',
-  templateUrl: './messages-component.component.html',
-  styleUrls: ['./messages-component.component.less']
+  selector: 'app-messages',
+  templateUrl: './messages.component.html',
+  styleUrls: ['./messages.component.less']
 })
 export class MessagesComponent implements OnInit {
   user: User;
   inMessages: Message[];
   outMessages: Message[];
   dialogues: string[];
+  parent = this.injector.get(MainComponent);
 
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private injector: Injector) {
   }
 
   ngOnInit() {

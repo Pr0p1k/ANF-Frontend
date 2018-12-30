@@ -1,7 +1,7 @@
 <div id="messages">
   <label id="header">Dialogues</label><br>
   <ul class="list">
-    <li *ngFor="let dialogue of dialogues" class="row" (click)="router.navigateByUrl('dialogue')">
+    <li *ngFor="let dialogue of dialogues" class="row" (click)="parent.router.navigateByUrl('dialogue/' + dialogue)">
       Interlocutor: {{dialogue}}
     </li>
   </ul>

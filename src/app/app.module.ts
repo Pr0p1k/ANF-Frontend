@@ -13,8 +13,9 @@ import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {FormsModule} from '@angular/forms';
-import { MessagesComponent } from './messages-component/messages-component.component';
+import { MessagesComponent } from './messages/messages.component';
 import { FriendsPageComponent } from './friends-page/friends-page.component';
+import { DialogueComponent } from './dialogue/dialogue.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FriendsPageComponent } from './friends-page/friends-page.component';
     AuthComponent,
     ProfilePageComponent,
     MessagesComponent,
-    FriendsPageComponent],
+    FriendsPageComponent,
+    DialogueComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

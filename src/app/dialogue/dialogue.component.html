@@ -1,0 +1,22 @@
+<div id="header">
+  <div>
+    <p-button label="Back" id="back" (click)="parent.router.navigateByUrl('messages')"></p-button>
+  </div>
+  <div>
+    <p>{{interlocutor}}</p>
+  </div>
+</div>
+<div id="messages">
+  <div *ngFor="let message of messages">
+    <div *ngIf="message.sender.login === interlocutor" class="message">
+      <div class="incoming">{{message.message}}</div>
+    </div>
+    <div *ngIf="message.receiver.login === interlocutor" class="message out">
+      <div class="outgoing">{{message.message}}</div>
+    </div>
+  </div>
+</div>
+<div id="write">
+  <input type="text" pInputText id="text" [(ngModel)]="input">
+  <p-button id="send" label="Send" (onClick)="send()"></p-button>
+</div>

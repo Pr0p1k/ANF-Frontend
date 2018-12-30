@@ -1,12 +1,13 @@
-@primary-colour: beige; 
+@primary-colour: beige;
 @label-colour: #aa825a;
 @label-hovered-colour: #aa8296;
 #profile_info {
-  margin-top: 100px;
-  background-color: @primary-colour; 
+  background-color: @primary-colour;
+  min-width: 200px;
   #avatar {
     width: 120px;
-    height: 120px;
+    height: 89px;
+
     position: relative;
     float: left;
   }
@@ -16,7 +17,7 @@
     background-color: @label-colour;
     font-family: Arial, Helvetica, sans-serif;
     font-size: medium;
-    margin: 10px, 10px, 10px,10px;
+    margin: 10px 10px 10px 10px;
   }
   .social {
     position: relative;
@@ -25,11 +26,21 @@
     background-color: @label-colour;
     font-family: Arial, Helvetica, sans-serif;
     font-size: medium;
-    margin: 10px, 10px, 10px, 10px;
+    margin: 10px 10px 10px 10px;
   }
   .social:hover {
     background-color: @label-hovered-colour;
     box-shadow: 0, 0, 4, @label-hovered-colour;
   }
+}
+
+.section {
+  position: relative;
+  float: left;
+}
+
+#map {
+  width: 400px;
+  height: auto;
 }
 

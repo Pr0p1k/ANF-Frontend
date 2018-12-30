@@ -1,11 +1,12 @@
 @primary-color: blue;
 @secondary: gray;
 @margin-value: 10px;
+@header-height: 80px;
 #header {
   position: fixed;
   top: 0;
   z-index: 100;
-  height: 80px;
+  height: @header-height;
   width: 100%;
   background-color: @primary-color;
   #logo {
@@ -39,4 +40,8 @@
       box-shadow: inset 0 0 10px @secondary;
     }
   }
+}
+
+#content {
+  margin-top: @header-height;
 }

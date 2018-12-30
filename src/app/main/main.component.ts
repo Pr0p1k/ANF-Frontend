@@ -4,7 +4,6 @@ import {DialogService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient} from '@angular/common/http';
-import {ProfilePageComponent} from '../profile-page/profile-page.component';
 
 @Component({
   selector: 'app-main',

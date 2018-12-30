@@ -1,8 +1,10 @@
+import {User} from './user';
+
 export class Message {
 
     message_id: number;
-    receiver: string;
-    sender: string;
+    receiver: User;
+    sender: User;
     sendingDate: Date;
     message: string;
     isRead: boolean;

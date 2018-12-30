@@ -1,7 +1,7 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, Injector, Input, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {User} from '../user';
-import {Message} from '../message';
+import {User} from '../classes/user';
+import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
 
 @Component({
@@ -14,8 +14,9 @@ export class ProfilePageComponent implements OnInit {
   public loaded = false;
   public unreadMessages: Message[];
   public friends: string[];
+  public parent = this.injector.get(MainComponent);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private injector: Injector) {
 
   }
 

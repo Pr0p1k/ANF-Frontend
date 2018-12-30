@@ -1,7 +1,7 @@
-<div id="profile_info" *ngIf="loaded">
+<div id="profile_info" class="section" *ngIf="loaded">
   <div id="img_and_immutable">
     <span id="img_span">
-      <img id="avatar">
+      <img id="avatar" src="../../assets/01.png">
     </span>
     <span id="user_parameters">
       <label class="stats">{{user.login}}</label><br>
@@ -18,9 +18,14 @@
     <label class="stats">Number of deaths: {{user.stats.deaths}}</label>
   </div>
   <div id="social">
-    <label class="social" (click) = "">Unread messages: </label><br>
+    <!--<label class="social" (click)="parent.router.navigateByUrl('messages')">Messages</label><br>-->
     <!--<label class="social" (click) = "router.navigateByUrl('friends')">New friend requests: {{user.friendRequestsIn.length}}</label><br>-->
     <!--<label class="social" (click) = "router.navigateByUrl('friends')">Friends: {{friends.length}}</label>-->
   </div>
 
+</div>
+
+<div class="section">
+  <!--map-->
+  <img id="map" src="../../assets/map.svg">
 </div>
