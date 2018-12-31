@@ -29,16 +29,11 @@ export class MainComponent implements OnInit {
     });
   }
 
-  openProfile() {
-    this.router.navigateByUrl('profile');
-  }
-
   logout() {
-    this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe(() => {
-      // some action here
-      this.cookieService.delete('loggedIn');
-      this.cookieService.delete('username');
-    });
+    this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe();
+    this.loggedIn = false;
+    this.cookieService.delete('loggedIn');
+    this.cookieService.delete('username');
   }
 
 }

@@ -1,5 +1,5 @@
 <div id="header">
-  <img id="logo" src="../../assets/logo.png"/>
+  <img id="logo" src="../../assets/logo.png" (click)="router.navigateByUrl('start')"/>
   <div class="menu">
     <div *ngIf="router.url !== '/start'" class="pages" (click)="router.navigateByUrl('start')">
       <p>Main</p>
