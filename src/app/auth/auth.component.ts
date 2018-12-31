@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {MenuItem} from 'primeng/api';
+import {Component, Injector, OnInit} from '@angular/core';
+import {MenuItem, MessageService} from 'primeng/api';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
+import {MainComponent} from '../main/main.component';
+import {Appearance} from '../classes/appearance';
 
 @Component({
   selector: 'app-auth',
@@ -14,8 +16,11 @@ export class AuthComponent implements OnInit {
   username = '';
   firstPassword = '';
   secondPassword = '';
+  parent = this.injector.get(MainComponent);
+  registration = false;
+  appearance = new Appearance();
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private injector: Injector) {
   }
 
   ngOnInit() {
@@ -35,11 +40,9 @@ export class AuthComponent implements OnInit {
 
   tryToLogin() {
     if (this.username.length < 6) {
-      console.error('login is too short');
-      // todo
+      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Login is too short'});
     } else if (this.firstPassword.length < 6) {
-      console.error('password is too short');
-      // todo show warning
+      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Password is too short'});
     } else {
       const sendParams = new HttpParams()
         .append('username', this.username)
@@ -51,6 +54,7 @@ export class AuthComponent implements OnInit {
         responseType: 'text', observe: 'response'
       });
       request.subscribe((response) => {
+        this.parent.loginSuccess();
         this.cookieService.set('username', this.username);
         this.cookieService.set('loggedIn', 'true');
       });
@@ -59,20 +63,52 @@ export class AuthComponent implements OnInit {
 
   tryToSignUp() {
     if (this.username.length < 6) {
-      console.error('login is too short');
-      // todo
+      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Login is too short'});
     } else if (this.firstPassword.length < 6 || this.firstPassword !== this.secondPassword) {
-      console.error('password is too short');
-      // todo show warning
+      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Password is too short'});
     } else {
       console.log('request sent');
       const request = this.httpClient.post('http://localhost:31480/registration', {
         login: this.username,
         password: this.firstPassword
       });
-      request.subscribe((data) => console.log(data.toString()));
+      request.subscribe((data) => {
+        this.registration = true;
+      });
     }
   }
+
+  changeHair() {
+    document.getElementById('hair').style.fill = this.appearance.hairColour;
+  }
+
+  changeSkin() {
+    switch (this.appearance.skinColour) {
+      case 'Black':
+        document.getElementById('skin').style.fill = '#8E4B32';
+        break;
+      case 'White':
+        document.getElementById('skin').style.fill = '#EBCCAB';
+        break;
+      case 'Brown':
+        document.getElementById('skin').style.fill = '#C37C4D';
+        break;
+    }
+
+  }
+
+  changeClothes() {
+    switch (this.appearance.clothesColour) {
+      case 'Black':
+        document.getElementById('clothes').style.fill = '#272427';
+        break;
+      case 'White':
+        document.getElementById('clothes').style.fill = '#E2D4E9';
+        break;
+      case 'Brown':
+        document.getElementById('clothes').style.fill = 'darksalmon';
+        break;
+    }  }
 
   tryToSignInWithVk() {
     window.location.replace('http://localhost:31480/login/vk');

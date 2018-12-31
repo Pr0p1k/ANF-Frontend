@@ -8,7 +8,7 @@ import {InfoPageComponent} from './info-page/info-page.component';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AuthComponent} from './auth/auth.component';
-import {TabMenuModule, PasswordModule, InputTextModule} from 'primeng/primeng';
+import {TabMenuModule, PasswordModule, InputTextModule, MessageService, InputSwitchModule, RadioButtonModule} from 'primeng/primeng';
 import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
@@ -16,6 +16,7 @@ import {FormsModule} from '@angular/forms';
 import { MessagesComponent } from './messages/messages.component';
 import { FriendsPageComponent } from './friends-page/friends-page.component';
 import { DialogueComponent } from './dialogue/dialogue.component';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -37,9 +38,12 @@ import { DialogueComponent } from './dialogue/dialogue.component';
     TabMenuModule,
     PasswordModule,
     InputTextModule,
-    FormsModule
+    FormsModule,
+    ToastModule,
+    InputSwitchModule,
+    RadioButtonModule
   ],
-  providers: [CookieService],
+  providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
   entryComponents: [AuthComponent]
 })

@@ -1,5 +1,5 @@
-<p-tabMenu [model]="pages" [activeItem]="pages[0]"></p-tabMenu>
-<div id="sign-in">
+<p-tabMenu [model]="pages" [activeItem]="pages[0]" *ngIf="registration" style="min-height: 400px"></p-tabMenu>
+<div id="sign-in" *ngIf="registration">
   <div>
     <label for="sign-in-login">Login:</label><br>
     <input id="sign-in-login" type="text" pInputText [(ngModel)]="username"/>
@@ -27,4 +27,71 @@
     <input id="sign-up-confirm" type="password" pPassword [(ngModel)]="secondPassword"/>
   </div>
   <p-button label="Sign up" (onClick)="tryToSignUp()"></p-button>
+</div>
+
+<div id="customization" *ngIf="!registration">
+  <div class="customization">
+    <p>Gender: {{appearance.gender?'female':'male'}}</p>
+    <p-inputSwitch [(ngModel)]="appearance.gender"></p-inputSwitch>
+    <p>Hair color: {{appearance.hairColour}}</p>
+    <p-radioButton name="HairColor" label="Green " value="Green" [(ngModel)]="appearance.hairColour"
+                   (onClick)="changeHair()"></p-radioButton>
+    <p-radioButton name="HairColor" label="Red " value="Red" [(ngModel)]="appearance.hairColour"
+                   (onClick)="changeHair()"></p-radioButton>
+    <p-radioButton name="HairColor" label="Blue " value="Blue" [(ngModel)]="appearance.hairColour"
+                   (onClick)="changeHair()"></p-radioButton>
+    <p>Skin color: {{appearance.skinColour}}</p>
+    <p-radioButton name="SkinColor" label="White " value="White" [(ngModel)]="appearance.skinColour"
+                   (onClick)="changeSkin()"></p-radioButton>
+    <p-radioButton name="SkinColor" label="Black " value="Black" [(ngModel)]="appearance.skinColour"
+                   (onClick)="changeSkin()"></p-radioButton>
+    <p-radioButton name="SkinColor" label="Brown " value="Brown" [(ngModel)]="appearance.skinColour"
+                   (onClick)="changeSkin()"></p-radioButton>
+    <p>Skin color: {{appearance.clothesColour}}</p>
+    <p-radioButton name="ClothesColor" label="White " value="White"
+                   [(ngModel)]="appearance.clothesColour" (onClick)="changeClothes()"></p-radioButton>
+    <p-radioButton name="ClothesColor" label="Black " value="Black"
+                   [(ngModel)]="appearance.clothesColour" (onClick)="changeClothes()"></p-radioButton>
+    <p-radioButton name="ClothesColor" label="Brown " value="Brown"
+                   [(ngModel)]="appearance.clothesColour" (onClick)="changeClothes()"></p-radioButton>
+
+  </div>
+  <div class="customization">
+    <svg xmlns="http://www.w3.org/2000/svg" width="650" height="825" viewBox="0 0 650 825" id="character">
+      <title>Vault Boy</title>
+      <path
+        d="M125,592H101a30,30,0,0,1-16,5c-9,0-17-18-17-31s14-17,14-17,5,2,7,2,7-2,7-4c0-4-9-4-9-8,0,0-12,1-18,1S0,440,0,427,121,253,182,253v-6l-18-17s-3,1-10,1-25-10-25-26a34,34,0,0,1,4-15c-4-4-36-34-36-77,0-40,26-56,26-56s7-23,12-28,24-11,24-11S170,0,185,0c11,0,27,17,27,17s14-5,22-5,34,19,41,19,11-2,11-9-5-8-5-12,29,9,29,33c0,15-1,16-1,16s11,9,11,19-8,16-8,16,27,34,27,71c0,47-26,78-26,78s60,12,95,12,76-6,96-26c0,1,12-5,12-11s30-35,52-35,14,10,14,10,21-9,32-9,12,4,12,4,4-3,14-3c6,0,10,7,10,11,0,3-3,7-3,7s1,0,1,3c0,25-68,72-107,72,0,26-80,94-164,94,0,0-16,73-16,91,0,60,45,214,45,264,0,13-1,25-1,25,28,0,52,22,52,22a136,136,0,0,1-51,10c-29,0-43-8-48-8s-4,7-16,7c-20,0-28-13-28-18-2,0-10-44-21-84-11-41-24-77-24-77s-69,142-69,170c0,0-14,8-14,21s-22,30-46,30-31-22-31-26,10-21,10-21-12,4-12-25c0-129,53-197,53-247,0-38-27-88-27-88s-38,24-45,24c0,0,38,46,38,56,0,3-3,6-3,6,5,0,24,19,24,22C147,531,130,592,125,592Z"></path>
+      <g id="clothes" fill="#424244">
+        <path
+          d="M122 780c3 0 20 13 20 13s33-9 38-9c3 0 3 2 3 7s-14 28-42 28c-21 0-27-19-27-19s5-20 8-20zm282-25c4-4 44 13 44 16s-19 8-47 8c-26 0-49-9-49-9s-5 3-5 7c0 0-2 1-9 1s-15-8-15-13c0-3 2-4 3-4 2 0 5 1 8 4s62-2 70-10z"></path>
+        <path
+          d="M323 756a301 301 0 0 0 42 3c21 0 36-13 36-13s-20-168-28-168c0 0-29 13-45 13-19 0-36-55-36-55a15 15 0 0 1-8 2 21 21 0 0 1-8-2c0 15-15 68-37 68s-44-7-44-7-56 190-50 190 39-12 44-12c0-44 87-200 90-200 1 0-8 23-8 23s52 101 52 158zm-208 14c0 4 25 13 25 13 0-26 50-189 50-189-6 0-42-16-42-16s-33 72-33 192z"></path>
+        <path
+          d="M239 597c25 0 39-92 39-100 0-80-13-100-60-147-15-15-20-16-20-22s13-13 13-19c0-4-29-1-29-1s-23-38-28-38C131 270 6 401 6 433c0 11 63 99 63 99 28 0 46-26 47-41 0-7-30-49-35-49 0 0 73-44 76-44a4 4 0 0 1 4 4c0 2-24 13-24 13s28 44 28 85-14 71-14 71 55 26 88 26zm91-10c14 0 42-14 42-14s-13-59-13-69c0-3-29 7-29 7 0-8-7-22-7-22 9 0 32-9 32-9 0-51 16-90 16-115s-2-62 3-62 7 25 7 29-8 36-5 36c66 0 161-70 161-83 0-19-10-55-25-55-7 0-23 29-89 29-51 0-78-6-92-6 0 0 11 21 11 33 0 0-14 7-25 7 0 5 16 17 16 17s-51 70-51 113 16 164 48 164z"></path>
+        <path
+          d="M329 492s21-9 26-9c0 7 3 17 3 17-5 0-26 7-26 7s-3-9-3-15zM216 310c0 8 13 20 13 20l6-6s36 70 32 73c-3 3-42-49-63-70 0-3 12-17 12-17zm64 90c3 0 30-76 45-91 0 0-14-11-14-18 0 0 17-3 25-11 0 0-17-26-17-33a36 36 0 0 0-7-1c-8 0-8 38-8 53s-4 24-10 24c0 0-17 77-14 77zm-95-98c8 0 30 0 30 5 0 0-2-7-2-11a15 15 0 0 1 1-6s-24-27-30-33c-7 2-26 11-26 11l27 34"></path>
+      </g>
+      <path id="skin" fill="#f1ce9e"
+            d="M122 508c0 3 20 19 20 22s-17 46-17 48 1 2 1 5c0 6-17 5-24 5 0 0-9 6-15 6s-15-12-15-22 3-20 11-20 11 13 11 23c4 0 5-5 5-9s-5-6-5-11 13-5 13-5-6-9-11-9-3-4-3-4c7 0 29-29 29-29zm418-236c16 0 53-14 75-30 24-17 36-37 23-37-20 0-39 23-39 23 0-2-3-4-3-4s24-24 45-24c4 0 15-10-5-10-34 0-57 39-57 27 0-10 42-29 42-29 0-2-4-2-7-2-24 0-59 32-59 27s23-19 23-19 1-8-5-8c-17 0-54 31-54 41 0 6 21 17 21 45zM333 171c0-53-41-95-41-95a50 50 0 0 0-11-1c-7 0-21-23-35-23s-11 12-23 12-8-3-20-3-27 24-33 24-14-1-20-1-17 4-17 17 19 16 19 19-25 17-25 43a2 2 0 0 0 4 0c0-1 9-36 22-36 1 0 1 2 0 3s-20 18-20 38c0 1 0 3 1 3s14-30 21-30a1 1 0 0 1 1 1c0 1-21 26-21 40 0 3 7 2 7 5s-9 8-9 17 10 21 20 21c12 0 13-1 13-1 9 9 69 45 79 45 0 0 6 10 6 14s10 1 10 1c0-5-2-22 13-22s59-28 59-91z"></path>
+      <path fill="#fff"
+            d="M260 305a8 8 0 0 0 5-2s23 13 23 16-11 77-11 78a2 2 0 0 1-2 2c-1 0-4-1-4-3 0-24-31-77-31-77 0-2 15-16 15-16a8 8 0 0 0 5 2zm-74-54c3 0 59 18 59 27 0 3-1 3-1 3s-23-13-24-13-5 13-5 13-25-26-29-26c0 0-1 0-1-2s1-2 1-2zm110 6c3 0 4 3 4 5s0 4-3 4-5-3-7-3-26 23-26 23c0-9 9-22 16-22 5 0 10-7 16-7z"></path>
+      <path
+        d="M594 234c0 3-10 1-20 1-13 0-24 11-26 9-1-1 12-14 27-14s19 2 19 4zM210 124c4 0 10 9 10 14s-1 10-6 10-8-6-8-12 0-12 4-12zm-64 53c2 0 2-2 2-3a13 13 0 0 1 3-7c2-2 8-7 8-9 0-1-1-1-2-1s-12 6-12 19a1 1 0 0 0 1 1zm14-6a2 2 0 0 1 0 4c-1 0-3 4-3 7 0 2-1 3-2 3s-2-2-2-4c0-1 3-10 7-10zm38-79c3 0 7 6 7 9-5 0-19 15-19 15 0-6 7-24 12-24zm74-13c3 0 18 6 18 7s-13 4-17 4-5-4-5-6 1-5 4-5zm10 71c0 5-5 21-12 21a4 4 0 0 1-4-4c0-4 6-7 6-12s-26-34-26-37 36 30 36 32zm6-44c4 0 9 6 9 15s-3 11-6 11c-5 0-8-8-8-15s2-11 5-11zm-7 116c6 0 8-2 9-2 3 0-2 9-11 9-7 0-9-2-9-4 0-5 8-3 11-3zM181 476s55 18 62 18c0 0-7 27-7 30 0 0-61-20-64-20 0 0 9-25 9-28zm26-101c7 0 20 7 20 10a22 22 0 0 1-1 6h7l-1 13c-15 0-51 7-51 7s-3-14-3-16l6-1s-1-1-1-4 18-15 24-15z"></path>
+      <circle cx="273" cy="369" r="3"></circle>
+      <circle cx="269" cy="347" r="3"></circle>
+      <path
+        d="M269 323a4 4 0 1 1-4-4 4 4 0 0 1 4 4zm-58-125c0-2 19-20 19-20v9c0 3 29 4 40 4s40-11 40-14-3-7-3-7c7 0 14 9 14 11s-3 18-8 18c-2-2 1-6-1-6-3 0-16 24-43 24s-36-12-44-12c-5 0-6 1-6 3s4 7 4 9c0 1-2 1-2 1-2 0-10-20-10-20z"></path>
+      <path fill="#fff"
+            d="M265 210c-13 0-38-5-38-11 0-3 4-5 9-5 6 0 13 2 30 2 24 0 40-15 43-15 1 0 3 5 3 7 0 5-24 22-47 22z"></path>
+      <path fill="#424244" d="M183 483l55 16-5 19-56-16 6-19m46-89l1 8-46 4-1-9 46-3"></path>
+      <g id="bow" fill="#24399f">
+        <path
+          d="M284 495s-8 22-8 38c0 0 0 3 8 3s8-3 8-3c0-16-8-38-8-38zm-64-223c2 0 31 16 31 20s0 6 2 9c0 0-21 24-23 24s-14-16-14-30c0-17 2-23 4-23zm81 19c0-12-8-26-10-26-3 0-26 22-25 24a19 19 0 0 1 1 11s24 17 28 17 6-12 6-26z"></path>
+        <path
+          d="M259 288c4 0 7 4 7 8s-2 7-6 7a8 8 0 0 1-8-8c0-5 3-7 7-7zm-52 90c2 0 18 6 18 10 0 2-1 2-1 2l-36 1c0-4 17-13 19-13z"></path>
+      </g>
+      <path id="hair" fill="#f0ed61"
+            d="M120 162c4 0 4-5 4-9 0-18 21-27 21-32 0-4-23-7-23-24 0-12 14-20 22-20s21 4 26 4 9-31 24-31 21 9 30 9 12-12 21-12 29 24 43 24 20-11 20-22-12-32-20-32c0 0 5 20-10 20-17 0-29-20-42-20s-16 9-24 9-15-21-28-21c-7 0-15 12-21 18s-19 7-24 12-13 21-13 26c-8 0-24 31-24 53 0 26 14 48 18 48zm197-83c0-7-9-17-9-17s-4 5-6 7a17 17 0 0 1-6 4c0 2 3 5 7 9 3 3 5 8 7 8 5 0 7-4 7-11z"></path>
+    </svg>
+  </div>
 </div>

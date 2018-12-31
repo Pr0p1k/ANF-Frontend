@@ -1,8 +1,8 @@
 export class Appearance {
 
-    gender: string;
-    skinColour: string;
-    hairColour: string;
-    clothesColour: string;
+  gender: boolean; // it should be string, so convert it before saving
+  skinColour: string;
+  hairColour: string;
+  clothesColour: string;
 
 }
