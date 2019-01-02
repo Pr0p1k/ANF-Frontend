@@ -1,6 +1,6 @@
 import {Component, Injector, OnInit} from '@angular/core';
 import {MenuItem, MessageService} from 'primeng/api';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {MainComponent} from '../main/main.component';
 import {Appearance} from '../classes/appearance';
@@ -55,11 +55,12 @@ export class AuthComponent implements OnInit {
         .append('username', this.username)
         .append('password', this.firstPassword);
 
-      this.httpClient.post<Response>('http://localhost:31480/login', null, {
+      this.httpClient.post<HttpResponse>('http://localhost:31480/login', null, {
         params: sendParams,
         withCredentials: true,
-        responseType: 'text', observe: 'response'
+        observe: 'response'
       }).subscribe((response) => {
+        console.log(response);
         if (response.ok) {
           this.parent.loginSuccess();
           this.cookieService.set('username', this.username);
@@ -84,25 +85,25 @@ export class AuthComponent implements OnInit {
       this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Passwords are not the same'});
     } else {
       console.log('request sent');
-      this.httpClient.post<Response>('http://localhost:31480/registration', {
+      this.httpClient.post<HttpResponse>('http://localhost:31480/registration', {
         login: this.username,
         password: this.firstPassword
       }).subscribe((response) => {
-        if (response.ok) {
+          console.log(response);
           this.registration = true;
           this.parent.messageService.add({
             severity: 'success',
             summary: 'Almost done',
             detail: 'Now create your character'
           });
-        } else {
+        },
+        (error: HttpErrorResponse) => {
           this.parent.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: response.statusText
+            detail: error.message
           });
-        }
-      });
+        });
     }
   }
 

@@ -13,7 +13,7 @@
   <p-button label="G+" (onClick)="tryToSignInWithGoogle()"></p-button>
 </div>
 
-<div id="sign-up">
+<div id="sign-up" *ngIf="!registration">
   <div>
     <label for="sign-up-login">Login: </label><br>
     <input id="sign-up-login" type="text" pInputText [(ngModel)]="username"/>
