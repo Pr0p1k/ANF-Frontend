@@ -79,36 +79,52 @@ export class AuthComponent implements OnInit {
   }
 
   changeHair() {
-    document.getElementById('hair').style.fill = this.appearance.hairColour;
+    const array = document.getElementsByClassName('hair');
+    for (let i = 0; i < array.length; i++) {
+      array[i].style.fill = this.appearance.hairColour;
+      array[i].style.stroke = this.appearance.hairColour;
+    }
   }
 
   changeSkin() {
+    const array = document.getElementsByClassName('skin');
+    let color = this.appearance.skinColour;
     switch (this.appearance.skinColour) {
       case 'Black':
-        document.getElementById('skin').style.fill = '#8E4B32';
+        color = '#8E4B32';
         break;
       case 'White':
-        document.getElementById('skin').style.fill = '#EBCCAB';
+        color = '#EBCCAB';
         break;
       case 'Brown':
-        document.getElementById('skin').style.fill = '#C37C4D';
+        color = '#C37C4D';
         break;
     }
-
+    for (let i = 0; i < array.length; i++) {
+      array[i].style.fill = color;
+      array[i].style.stroke = color;
+    }
   }
 
   changeClothes() {
+    const array = document.getElementsByClassName('clothes');
+    let color = this.appearance.clothesColour;
     switch (this.appearance.clothesColour) {
       case 'Black':
-        document.getElementById('clothes').style.fill = '#272427';
+        color = '#272427';
         break;
       case 'White':
-        document.getElementById('clothes').style.fill = '#E2D4E9';
+        color = '#E2D4E9';
         break;
       case 'Brown':
-        document.getElementById('clothes').style.fill = 'darksalmon';
+        color = 'darksalmon';
         break;
-    }  }
+    }
+    for (let i = 0; i < array.length; i++) {
+      array[i].style.fill = color;
+      array[i].style.stroke = color;
+    }
+  }
 
   tryToSignInWithVk() {
     window.location.replace('http://localhost:31480/login/vk');
