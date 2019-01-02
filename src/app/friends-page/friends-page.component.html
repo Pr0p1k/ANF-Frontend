@@ -1,9 +1,29 @@
 <div class="friendsList">
+  <label class="header">Friends</label>
 <ul>
   <li *ngFor="let friend of friends">
-    {{friend.login}}<br>
-    <label *ngIf="online" class="online">Online</label>
-    <label *ngIf="offline" class="offline">Offline</label>
+    <span class="login">{{friend.login}}</span><span class="buttons">
+      <button *ngIf="friend.online" class="invite">Invite to PVP</button>
+      <button class="decline" (click)="deleteFriend(friend)">Remove from friends</button></span><br>
+    <label *ngIf="friend.online" class="online">Online</label>
+    <label *ngIf="friend.offline" class="offline">Offline</label>
+  </li>
+</ul>
+<label class="header">Incoming requests</label>
+<ul>
+  <li *ngFor="let inReq of inRequested">
+    <span class="login">{{inReq.login}}</span><span class="buttons">
+      <button (click)="addFriend(inReq)" class="accept">Accept</button>
+      <button (click)="declineReq(inReq)" class="decline">Decline</button>
+    </span>
+  </li>
+</ul>
+<label class="header">Outgoing requests</label>
+<ul>
+  <li *ngFor="let outReq of outRequested">
+    <span class="login">{{outReq.login}}</span><span class="buttons">
+      <button (click)="deleteRequest(outReq)" class="decline">Delete request</button>
+    </span>
   </li>
 </ul>
 </div>

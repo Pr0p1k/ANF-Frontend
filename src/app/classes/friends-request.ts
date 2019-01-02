@@ -1,9 +1,9 @@
-import { Character } from './character'
+import { User } from './user'
 
 export class FriendsRequest {
 
     request_id: number;
-    friendUser: Character;
-    requestingUser: Character;
+    friendUser: User;
+    requestingUser: User;
 
 }
