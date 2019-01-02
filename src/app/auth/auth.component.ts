@@ -55,23 +55,21 @@ export class AuthComponent implements OnInit {
         .append('username', this.username)
         .append('password', this.firstPassword);
 
-      this.httpClient.post<HttpResponse>('http://localhost:31480/login', null, {
+      this.httpClient.post('http://localhost:31480/login', null, {
         params: sendParams,
         withCredentials: true,
         observe: 'response'
       }).subscribe((response) => {
         console.log(response);
-        if (response.ok) {
-          this.parent.loginSuccess();
-          this.cookieService.set('username', this.username);
-          this.cookieService.set('loggedIn', 'true');
-        } else {
-          this.parent.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Unauthorized'
-          });
-        }
+        this.parent.loginSuccess();
+        this.cookieService.set('username', this.username);
+        this.cookieService.set('loggedIn', 'true');
+      }, (error) => {
+        this.parent.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Unauthorized'
+        });
       });
     }
   }
@@ -85,7 +83,7 @@ export class AuthComponent implements OnInit {
       this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Passwords are not the same'});
     } else {
       console.log('request sent');
-      this.httpClient.post<HttpResponse>('http://localhost:31480/registration', {
+      this.httpClient.post('http://localhost:31480/registration', {
         login: this.username,
         password: this.firstPassword
       }).subscribe((response) => {
@@ -182,12 +180,23 @@ export class AuthComponent implements OnInit {
   }
 
   sendAppearance() {
-    this.httpClient.post<Response>('http://localhost:31480/profile/character/appearance', this.appearance,
-      {withCredentials: true}).subscribe((response) => {
-      if (response.ok) {
-        this.parent.dialog.close();
-        this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
-      }
+    this.httpClient.post('http://localhost:31480/profile/character/appearance', null,
+      {
+        withCredentials: true,
+        params: new HttpParams()
+          .append('gender', this.appearance.gender)
+          .append('hairColour', this.appearance.hairColour)
+          .append('skinColour', this.appearance.skinColour)
+          .append('clothesColour', this.appearance.clothesColour)
+      }).subscribe((response) => {
+      this.parent.dialog.close();
+      this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
+    }, (error: HttpErrorResponse) => {
+      this.parent.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: error.message
+      });
     });
   }
 
