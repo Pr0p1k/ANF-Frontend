@@ -16,4 +16,15 @@ export class User {
   online: boolean;
   offline: boolean;
 
+
+  setOnline(): void {
+    this.online = true;
+    this.offline = false;
+  }
+
+  setOffline(): void {
+    this.online = false;
+    this.offline = false;
+  }
+
 }
