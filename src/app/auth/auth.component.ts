@@ -19,6 +19,7 @@ export class AuthComponent implements OnInit {
   parent = this.injector.get(MainComponent);
   registration = false;
   appearance = new Appearance();
+  gender: false;
 
   constructor(private httpClient: HttpClient, private cookieService: CookieService, private injector: Injector) {
   }
@@ -36,6 +37,12 @@ export class AuthComponent implements OnInit {
           document.getElementById('sign-up').style.display = 'block';
         }
       }];
+    this.appearance.hairColour = 'YELLOW';
+    this.appearance.clothesColour = 'GREEN';
+    this.appearance.skinColour = 'WHITE';
+    this.changeClothes();
+    this.changeHair();
+    this.changeSkin();
   }
 
   tryToLogin() {
@@ -48,15 +55,22 @@ export class AuthComponent implements OnInit {
         .append('username', this.username)
         .append('password', this.firstPassword);
 
-      const request = this.httpClient.post('http://localhost:31480/login', null, {
+      this.httpClient.post<Response>('http://localhost:31480/login', null, {
         params: sendParams,
         withCredentials: true,
         responseType: 'text', observe: 'response'
-      });
-      request.subscribe((response) => {
-        this.parent.loginSuccess();
-        this.cookieService.set('username', this.username);
-        this.cookieService.set('loggedIn', 'true');
+      }).subscribe((response) => {
+        if (response.ok) {
+          this.parent.loginSuccess();
+          this.cookieService.set('username', this.username);
+          this.cookieService.set('loggedIn', 'true');
+        } else {
+          this.parent.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Unauthorized'
+          });
+        }
       });
     }
   }
@@ -64,25 +78,51 @@ export class AuthComponent implements OnInit {
   tryToSignUp() {
     if (this.username.length < 6) {
       this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Login is too short'});
-    } else if (this.firstPassword.length < 6 || this.firstPassword !== this.secondPassword) {
+    } else if (this.firstPassword.length < 6) {
       this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Password is too short'});
+    } else if (this.firstPassword !== this.secondPassword) {
+      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Passwords are not the same'});
     } else {
       console.log('request sent');
-      const request = this.httpClient.post('http://localhost:31480/registration', {
+      this.httpClient.post<Response>('http://localhost:31480/registration', {
         login: this.username,
         password: this.firstPassword
-      });
-      request.subscribe((data) => {
-        this.registration = true;
+      }).subscribe((response) => {
+        if (response.ok) {
+          this.registration = true;
+          this.parent.messageService.add({
+            severity: 'success',
+            summary: 'Almost done',
+            detail: 'Now create your character'
+          });
+        } else {
+          this.parent.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: response.statusText
+          });
+        }
       });
     }
   }
 
   changeHair() {
     const array = document.getElementsByClassName('hair');
+    let color = this.appearance.hairColour;
+    switch (this.appearance.hairColour) {
+      case 'YELLOW':
+        color = '#DEAB7F';
+        break;
+      case 'BROWN':
+        color = '#A53900';
+        break;
+      case 'BLACK':
+        color = '#2D221C';
+        break;
+    }
     for (let i = 0; i < array.length; i++) {
-      array[i].style.fill = this.appearance.hairColour;
-      array[i].style.stroke = this.appearance.hairColour;
+      (<HTMLElement>array[i]).style.fill = color;
+      (<HTMLElement>array[i]).style.stroke = color;
     }
   }
 
@@ -90,19 +130,22 @@ export class AuthComponent implements OnInit {
     const array = document.getElementsByClassName('skin');
     let color = this.appearance.skinColour;
     switch (this.appearance.skinColour) {
-      case 'Black':
-        color = '#8E4B32';
+      case 'BLACK':
+        color = '#6E2B12';
         break;
-      case 'White':
+      case 'WHITE':
         color = '#EBCCAB';
         break;
-      case 'Brown':
+      case 'LATIN':
         color = '#C37C4D';
+        break;
+      case 'DARK':
+        color = '#934C1D';
         break;
     }
     for (let i = 0; i < array.length; i++) {
-      array[i].style.fill = color;
-      array[i].style.stroke = color;
+      (<HTMLElement>array[i]).style.fill = color;
+      (<HTMLElement>array[i]).style.stroke = color;
     }
   }
 
@@ -110,20 +153,41 @@ export class AuthComponent implements OnInit {
     const array = document.getElementsByClassName('clothes');
     let color = this.appearance.clothesColour;
     switch (this.appearance.clothesColour) {
-      case 'Black':
-        color = '#272427';
+      case 'RED':
+        color = 'crimson';
         break;
-      case 'White':
-        color = '#E2D4E9';
+      case 'GREEN':
+        color = '#81E890';
         break;
-      case 'Brown':
-        color = 'darksalmon';
+      case 'BLUE':
+        color = 'cornflowerblue';
         break;
     }
     for (let i = 0; i < array.length; i++) {
-      array[i].style.fill = color;
-      array[i].style.stroke = color;
+      (<HTMLElement>array[i]).style.fill = color;
+      (<HTMLElement>array[i]).style.stroke = color;
     }
+  }
+
+  setGender() {
+    if (this.gender) {
+      (<HTMLElement>document.getElementById('female')).style.display = 'block';
+      (<HTMLElement>document.getElementById('male')).style.display = 'none';
+    } else {
+      (<HTMLElement>document.getElementById('male')).style.display = 'block';
+      (<HTMLElement>document.getElementById('female')).style.display = 'none';
+    }
+    this.appearance.gender = this.gender ? 'female' : 'male';
+  }
+
+  sendAppearance() {
+    this.httpClient.post<Response>('http://localhost:31480/profile/character/appearance', this.appearance,
+      {withCredentials: true}).subscribe((response) => {
+      if (response.ok) {
+        this.parent.dialog.close();
+        this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
+      }
+    });
   }
 
   tryToSignInWithVk() {
