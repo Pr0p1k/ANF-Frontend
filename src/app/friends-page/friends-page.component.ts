@@ -60,4 +60,8 @@ export class FriendsPageComponent implements OnInit {
     this.friends.splice(id, 1);
   }
 
+  inviteToPVP(usr: User):void {
+    
+  }
+
 }
