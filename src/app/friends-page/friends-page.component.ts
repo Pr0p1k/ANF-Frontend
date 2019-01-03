@@ -31,7 +31,7 @@ export class FriendsPageComponent implements OnInit {
   deleteRequest(req: FriendsRequest): void {
     var username = req.friendUser.login;
     this.http.delete<string>('http://localhost:8080/profile/friends/requests', {withCredentials: true,
-  params: new HttpParams().append('username', username)}).subscribe( data=> {
+  params: new HttpParams().append('username', username).append('type', 'out')}).subscribe( data=> {
     console.log(data);
   });
   const id = this.outRequested.indexOf(req.friendUser);
@@ -41,7 +41,7 @@ export class FriendsPageComponent implements OnInit {
   declineReq(req: FriendsRequest): void {
     var username = req.requestingUser.login;
     this.http.delete<string>('http://localhost:8080/blyat, urla net', {withCredentials: true,
-    params: new HttpParams().append('username', username)}).subscribe(data => {
+    params: new HttpParams().append('username', username).append('type', 'in')}).subscribe(data => {
       console.log(data);
     });
     const id = this.inRequested.indexOf(req.requestingUser);
