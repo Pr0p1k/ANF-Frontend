@@ -40,7 +40,7 @@ export class FriendsPageComponent implements OnInit {
 
   declineReq(req: FriendsRequest): void {
     var username = req.requestingUser.login;
-    this.http.delete<string>('http://localhost:8080/blyat, urla net', {withCredentials: true,
+    this.http.delete<string>('http://localhost:31480/blyat, urla net', {withCredentials: true,
     params: new HttpParams().append('username', username).append('type', 'in')}).subscribe(data => {
       console.log(data);
     });
@@ -50,7 +50,7 @@ export class FriendsPageComponent implements OnInit {
 
   deleteFriend(usr: User): void {
     var username = usr.login;
-    this.http.delete<string>('http://localhost:8080/profile/friends', {
+    this.http.delete<string>('http://localhost:31480/profile/friends', {
       withCredentials: true,
       params: new HttpParams().append('username', username)
     }).subscribe(data => {

@@ -89,6 +89,25 @@ export class AuthComponent implements OnInit {
       }).subscribe((response) => {
           console.log(response);
           this.registration = true;
+          const sendParams = new HttpParams()
+            .append('username', this.username)
+            .append('password', this.firstPassword);
+          this.httpClient.post('http://localhost:31480/login', null, {
+            params: sendParams,
+            withCredentials: true,
+            observe: 'response'
+          }).subscribe((response) => {
+            console.log(response);
+            //this.parent.loginSuccess();
+            this.cookieService.set('username', this.username);
+            this.cookieService.set('loggedIn', 'true');
+          }, (error) => {
+            this.parent.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Unauthorized'
+            });
+          });
           this.parent.messageService.add({
             severity: 'success',
             summary: 'Almost done',
@@ -176,7 +195,7 @@ export class AuthComponent implements OnInit {
       (<HTMLElement>document.getElementById('male')).style.display = 'block';
       (<HTMLElement>document.getElementById('female')).style.display = 'none';
     }
-    this.appearance.gender = this.gender ? 'female' : 'male';
+    this.appearance.gender = this.gender ? 'FEMALE' : 'MALE';
   }
 
   sendAppearance() {
@@ -189,6 +208,7 @@ export class AuthComponent implements OnInit {
           .append('skinColour', this.appearance.skinColour)
           .append('clothesColour', this.appearance.clothesColour)
       }).subscribe((response) => {
+        //console.log(response);
       this.parent.dialog.close();
       this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
     }, (error: HttpErrorResponse) => {
