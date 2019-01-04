@@ -13,7 +13,7 @@ import { User } from '../classes/user';
 export class ChatComponent implements OnInit {
 
   user: User;
-  messages: string[];
+  messages: ChatMessage[];
   private subscriptionURL = 'http://localhost:31480/socket';
   private stompClient;
   input: string;
@@ -28,22 +28,28 @@ export class ChatComponent implements OnInit {
     let that = this;
     this.stompClient.connect({}, function(frame) {
       that.stompClient.subscribe("/chat", (message) => {
-          that.messages.push(message.body);
+          var str = message.body;
+          var i = str.indexOf(':');
+          var author = str.substring(0, i);
+          var msg = str.substring(i+1, str.length);
+          var mes = new ChatMessage(author, msg);
+          that.messages.push(mes);
           //console.log(message.body);
       });
     });
   }
 
   send(): void {
-    var author = this.user.login;
-    var text = author +': '+ this.input;
-    this.stompClient.send("/app/send/message" , {}, text);
+    var txt = this.user.login + ": "+this.input;
+    this.stompClient.send("/app/send/message" , {}, txt);
+    this.input = '';
     //this.messages.push(text);
   }
 
   ngOnInit() {
     this.messages = [];
-    this.messages.push("Welcome to the chat!");
+    var msg = new ChatMessage('SYSTEM', 'Welcome to the chat!');
+    this.messages.push(msg);
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.user = data;
     });

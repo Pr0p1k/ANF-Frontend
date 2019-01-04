@@ -2,7 +2,8 @@
   <label id="header">Chat</label>
   <ul>
     <li *ngFor="let msg of messages">
-      <label class="ordinary">{{msg}}</label>
+      <label *ngIf="msg.author === 'SYSTEM'" class="admin">{{msg.author}}: {{msg.text}}</label>
+      <label *ngIf="msg.author !== 'SYSTEM'" class="ordinary">{{msg.author}}: {{msg.text}}</label>
     </li>
   </ul>
   <div id="write">

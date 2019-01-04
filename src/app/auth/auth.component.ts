@@ -101,6 +101,8 @@ export class AuthComponent implements OnInit {
             //this.parent.loginSuccess();
             this.cookieService.set('username', this.username);
             this.cookieService.set('loggedIn', 'true');
+            this.parent.loggedIn = true;
+            this.parent.login = this.cookieService.get('username');
           }, (error) => {
             this.parent.messageService.add({
               severity: 'error',
