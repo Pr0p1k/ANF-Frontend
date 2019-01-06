@@ -98,7 +98,7 @@ export class AuthComponent implements OnInit {
             observe: 'response'
           }).subscribe((response) => {
             console.log(response);
-            //this.parent.loginSuccess();
+            // this.parent.loginSuccess();
             this.cookieService.set('username', this.username);
             this.cookieService.set('loggedIn', 'true');
             this.parent.loggedIn = true;
@@ -210,7 +210,6 @@ export class AuthComponent implements OnInit {
           .append('skinColour', this.appearance.skinColour)
           .append('clothesColour', this.appearance.clothesColour)
       }).subscribe((response) => {
-        //console.log(response);
       this.parent.dialog.close();
       this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
     }, (error: HttpErrorResponse) => {

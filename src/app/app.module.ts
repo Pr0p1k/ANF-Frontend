@@ -18,6 +18,7 @@ import { FriendsPageComponent } from './friends-page/friends-page.component';
 import { DialogueComponent } from './dialogue/dialogue.component';
 import {ToastModule} from 'primeng/toast';
 import { ChatComponent } from './chat/chat.component';
+import { QueueComponent } from './queue/queue.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ChatComponent } from './chat/chat.component';
     MessagesComponent,
     FriendsPageComponent,
     DialogueComponent,
-    ChatComponent],
+    ChatComponent,
+    QueueComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
