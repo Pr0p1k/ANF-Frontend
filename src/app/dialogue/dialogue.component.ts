@@ -2,6 +2,9 @@ import {Component, Injector, OnInit} from '@angular/core';
 import {Message} from '../classes/message';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {MainComponent} from '../main/main.component';
+import {User} from '../classes/user';
+import { Stomp } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-dialogue',
@@ -14,11 +17,16 @@ export class DialogueComponent implements OnInit {
   parent = this.injector.get(MainComponent);
   interlocutor: string;
   input: string;
+  login: string;
+  private stompClient;
 
   constructor(private httpClient: HttpClient, private injector: Injector) {
   }
 
   ngOnInit() {
+    this.httpClient.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
+      this.login = data.login;
+    });
     this.interlocutor = this.parent.router.url;
     this.interlocutor = this.interlocutor.substring(this.interlocutor.lastIndexOf('/') + 1);
     this.httpClient.get<Message[]>('http://localhost:31480/profile/messages/dialog', {
@@ -27,7 +35,10 @@ export class DialogueComponent implements OnInit {
     }).subscribe((data) => {
       this.messages = data;
     });
+    this.initializeWebSocketConnection();
   }
+
+  
 
   send() {
     if (this.input.length === 0) {
@@ -39,6 +50,45 @@ export class DialogueComponent implements OnInit {
         .append('message', this.input)
         .append('receiver', this.interlocutor)
     }).subscribe();
+    var msg = new Message();
+    var tempSendr = new User();
+    tempSendr.login = this.login;
+    var tempRecvr = new User();
+    tempRecvr.login = this.interlocutor;
+    msg.receiver = tempRecvr;
+    msg.sender = tempSendr;
+    msg.message = this.input;
+    msg.isRead = false;
+    this.messages.push(msg);
+    this.input = '';
+  }
+
+  initializeWebSocketConnection(){
+    let ws = new SockJS("http://localhost:31480/socket");
+    this.stompClient = Stomp.over(ws);
+    let that = this;
+    this.stompClient.connect({}, function(frame) {
+      that.stompClient.subscribe("/user/msg", (message) => {
+          var str = message.body;
+          
+          var i = str.indexOf(':');
+          var author = str.substring(0, i);
+          console.log(that.login);
+          if (author === that.interlocutor) {
+          var msg = str.substring(i+1, str.length);
+          var messg = new Message();
+          var tempSendr = new User();
+          tempSendr.login = that.login;
+          var tempRecvr = new User();
+          tempRecvr.login = that.interlocutor;
+          messg.sender = tempRecvr;
+          messg.receiver = tempSendr;
+          messg.message = msg;
+          messg.isRead = true;
+          that.messages.push(messg);
+        }
+      });
+    });
   }
 
 }
