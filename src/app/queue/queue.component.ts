@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {AreaService} from '../area.service';
 
 @Component({
   selector: 'app-queue',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QueueComponent implements OnInit {
 
-  constructor() { }
+  area: string;
+
+  constructor(private areaService: AreaService) {
+  }
 
   ngOnInit() {
+    this.area = this.areaService.selectedArea;
   }
 
 }

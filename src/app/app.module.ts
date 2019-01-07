@@ -49,7 +49,7 @@ import { QueueComponent } from './queue/queue.component';
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
-  entryComponents: [AuthComponent]
+  entryComponents: [AuthComponent, QueueComponent]
 })
 export class AppModule {
 }

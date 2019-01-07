@@ -5,6 +5,7 @@ import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
 import {DialogService} from 'primeng/api';
 import {QueueComponent} from '../queue/queue.component';
+import {AreaService} from '../area.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -18,7 +19,8 @@ export class ProfilePageComponent implements OnInit {
   public friends: string[];
   public parent = this.injector.get(MainComponent);
 
-  constructor(private http: HttpClient, private injector: Injector, private dialogService: DialogService) {
+  constructor(private http: HttpClient, private injector: Injector,
+              private dialogService: DialogService, private areaService: AreaService) {
 
   }
 
@@ -26,11 +28,13 @@ export class ProfilePageComponent implements OnInit {
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.loaded = true;
       this.user = data;
-      const service = this.dialogService;
+      const dialogService = this.dialogService;
+      const areaService = this.areaService;
       const array = document.getElementsByClassName('ground');
       for (let i = 0; i < array.length; i++) {
         (<HTMLElement>array[i]).onclick = function () {
-          service.open(QueueComponent, {});
+          dialogService.open(QueueComponent, {width: '200px', height: '200px'});
+          areaService.selectedArea = (<HTMLElement>this).id;
           // TODO Here the data about clicked area should be shared via service
         };
       }

@@ -3,7 +3,7 @@ import {Message} from '../classes/message';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {MainComponent} from '../main/main.component';
 import {User} from '../classes/user';
-import { Stomp } from '@stomp/stompjs';
+import {Stomp} from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 
 @Component({
@@ -38,7 +38,6 @@ export class DialogueComponent implements OnInit {
     this.initializeWebSocketConnection();
   }
 
-  
 
   send() {
     if (this.input.length === 0) {
@@ -50,10 +49,10 @@ export class DialogueComponent implements OnInit {
         .append('message', this.input)
         .append('receiver', this.interlocutor)
     }).subscribe();
-    var msg = new Message();
-    var tempSendr = new User();
+    const msg = new Message();
+    const tempSendr = new User();
     tempSendr.login = this.login;
-    var tempRecvr = new User();
+    const tempRecvr = new User();
     tempRecvr.login = this.interlocutor;
     msg.receiver = tempRecvr;
     msg.sender = tempSendr;
@@ -63,23 +62,23 @@ export class DialogueComponent implements OnInit {
     this.input = '';
   }
 
-  initializeWebSocketConnection(){
-    let ws = new SockJS("http://localhost:31480/socket");
+  initializeWebSocketConnection() {
+    const ws = new SockJS('http://localhost:31480/socket');
     this.stompClient = Stomp.over(ws);
-    let that = this;
-    this.stompClient.connect({}, function(frame) {
-      that.stompClient.subscribe("/user/msg", (message) => {
-          var str = message.body;
-          
-          var i = str.indexOf(':');
-          var author = str.substring(0, i);
-          console.log(that.login);
-          if (author === that.interlocutor) {
-          var msg = str.substring(i+1, str.length);
-          var messg = new Message();
-          var tempSendr = new User();
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/user/msg', (message) => {
+        const str = message.body;
+
+        const i = str.indexOf(':');
+        const author = str.substring(0, i);
+        console.log(that.login);
+        if (author === that.interlocutor) {
+          const msg = str.substring(i + 1, str.length);
+          const messg = new Message();
+          const tempSendr = new User();
           tempSendr.login = that.login;
-          var tempRecvr = new User();
+          const tempRecvr = new User();
           tempRecvr.login = that.interlocutor;
           messg.sender = tempRecvr;
           messg.receiver = tempSendr;
