@@ -34,7 +34,7 @@ export class FriendsPageComponent implements OnInit {
     this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
       .subscribe(result => {ready = result;});
     this.friends.forEach(friend => {
-      if (ready.includes(friend))
+      if (ready.includes(friend.login))
         friend.setOnline();
     })
   this.initializeWebSockets();
@@ -87,7 +87,7 @@ export class FriendsPageComponent implements OnInit {
 
   declineReq(req: FriendsRequest): void {
     var username = req.requestingUser.login;
-    this.http.delete<string>('http://localhost:31480/blyat, urla net', {withCredentials: true,
+    this.http.delete<string>('http://localhost:31480/profile/friends/request', {withCredentials: true,
     params: new HttpParams().append('username', username).append('type', 'in')}).subscribe(data => {
       console.log(data);
     });

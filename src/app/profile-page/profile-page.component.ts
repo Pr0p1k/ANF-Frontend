@@ -46,9 +46,9 @@ export class ProfilePageComponent implements OnInit {
   }
 
   changeReadyState() {
-    this.http.post('someurl', null, {
-      withCredentials: true,
-      params: new HttpParams().append('ready', this.ready.toString())
-    }).subscribe();
+    if (this.ready)
+    this.http.get('http://localhost:31480/profile/online', {withCredentials: true}).subscribe();
+    else
+    this.http.get('http://localhost:31480/profile/offline', {withCredentials: true}).subscribe();
   }
 }
