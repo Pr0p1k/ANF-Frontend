@@ -34,7 +34,7 @@ export class FriendsPageComponent implements OnInit {
     this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
       .subscribe(result => {ready = result;});
     this.friends.forEach(friend => {
-      if (ready.includes(friend))
+      if (ready.includes(friend.login))
         friend.setOnline();
     })
   this.initializeWebSockets();
