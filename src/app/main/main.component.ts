@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -24,6 +24,19 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.loggedIn = this.cookieService.get('loggedIn') === 'true';
     this.login = this.cookieService.get('username');
+    if (this.loggedIn) {
+      this.http.get('http://localhost:31480/checkCookies', {
+        withCredentials: true,
+        params: new HttpParams()
+          .append('username', this.login)
+      }).subscribe(null,
+        () => {
+          this.loggedIn = false;
+          this.cookieService.delete('loggedIn');
+          this.cookieService.delete('username');
+          this.router.navigateByUrl('start');
+        });
+    }
   }
 
   showLoginBlock() {
@@ -33,7 +46,6 @@ export class MainComponent implements OnInit {
   }
 
   loginSuccess() {
-    console.log('kek');
     this.messageService.add({severity: 'success', summary: 'Success', detail: 'Authorized'});
     this.dialog.close();
     this.loggedIn = true;

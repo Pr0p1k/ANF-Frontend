@@ -2,4 +2,15 @@
   <p>
     Selected: {{area}}
   </p>
+  <p-pickList sourceHeader="Ready users" [source]="users"
+              targetHeader="Invited users" [target]="selected"
+              [showSourceControls]="false" [showTargetControls]="false"
+  [responsive]="true" [dragdrop]="true">
+    <ng-template let-user pTemplate="user">
+        <div class="ready">
+          {{user}}
+      </div>
+    </ng-template>
+  </p-pickList>
+
 </div>

@@ -1,11 +1,13 @@
 import {Component, Injector, Input, OnInit, Output} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpRequest} from '@angular/common/http';
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
 import {DialogService} from 'primeng/api';
 import {QueueComponent} from '../queue/queue.component';
 import {AreaService} from '../area.service';
+import {Observable} from 'rxjs';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-profile-page',
@@ -21,7 +23,8 @@ export class ProfilePageComponent implements OnInit {
   public ready = false;
 
   constructor(private http: HttpClient, private injector: Injector,
-              private dialogService: DialogService, private areaService: AreaService) {
+              private dialogService: DialogService, private areaService: AreaService,
+              private cookieService: CookieService) {
 
   }
 
@@ -31,24 +34,32 @@ export class ProfilePageComponent implements OnInit {
       this.user = data;
       const dialogService = this.dialogService;
       const areaService = this.areaService;
-      const array = document.getElementsByClassName('ground');
+      const array = document.querySelectorAll('.ground, .bidju');
       for (let i = 0; i < array.length; i++) {
         (<HTMLElement>array[i]).onclick = function () {
-          dialogService.open(QueueComponent, {width: '200px', height: '200px'});
+          dialogService.open(QueueComponent, {width: '440px', height: '200px'});
           areaService.selectedArea = (<HTMLElement>this).id;
         };
       }
+    }, () => {
+      this.parent.router.navigateByUrl('start');
     });
+    this.ready = this.cookieService.get('ready') === 'true';
     // this.http.post<string[]>('http://localhost:31480/profile/friends',
     //   null, {withCredentials: true}).subscribe(data => {
     //   this.friends = data;
     // });
   }
 
-  changeReadyState() {
-    if (this.ready)
-    this.http.get('http://localhost:31480/profile/online', {withCredentials: true}).subscribe();
-    else
-    this.http.get('http://localhost:31480/profile/offline', {withCredentials: true}).subscribe();
+  public changeReadyState() {
+    let request: Observable;
+    if (this.ready) {
+      request = this.http.get('http://localhost:31480/profile/online', {withCredentials: true});
+    } else {
+      request = this.http.get('http://localhost:31480/profile/offline', {withCredentials: true});
+    }
+    request.subscribe(() => {
+      this.cookieService.set('ready', this.ready.toString());
+    });
   }
 }
