@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {User} from '../classes/user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {FriendsRequest} from '../classes/friends-request';
+import { Stomp } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-friends-page',
@@ -13,10 +15,55 @@ export class FriendsPageComponent implements OnInit {
   friends: User[];
   inRequested: User[];
   outRequested: User[];
+  private stompClient;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    this.friends = [];
+    this.inRequested = [];
+    this.outRequested = [];
+    this.http.get<User[]>('http://localhost:31480/friends/requests/incoming', {withCredentials: true})
+      .subscribe(data => this.inRequested = data);
+    this.http.get<User[]>('http://localhost:31480/friends/requests/outgoing', {withCredentials: true})
+      .subscribe(data => this.outRequested = data);
+    this.http.get<User[]>('http://localhost:31480/friends', {withCredentials: true})
+      .subscribe(data => this.friends = data);
+    this.friends.forEach(frnd => frnd.setOffline());
+    var ready = [];
+    this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
+      .subscribe(result => {ready = result;});
+    this.friends.forEach(friend => {
+      if (ready.includes(friend))
+        friend.setOnline();
+    })
+  this.initializeWebSockets();
+  }
+
+  initializeWebSockets(){
+    let ws = new SockJS("http://localhost:31480/socket");
+    this.stompClient = Stomp.over(ws);
+    let that = this;
+    this.stompClient.connect({}, function(frame) {
+      that.stompClient.subscribe("/online", (message) => {
+          var str = message.body; //format: {username}:{online/offline}
+          var i = str.indexOf(':');
+          var user = str.substring(0, i);
+          var type = str.substring(i+1, str.length);
+          if (that.friends.map(friend => friend.login).includes(user)){
+            if (type === 'online')
+              that.friends.forEach(friend => {
+                if (friend.login === user)
+                  friend.setOnline();
+              });
+            else 
+              that.friends.forEach(friend => {
+                if (friend.login === user)
+                  friend.setOffline();
+              });
+          }
+      });
+    });
   }
 
   addFriend(req: FriendsRequest): void {
