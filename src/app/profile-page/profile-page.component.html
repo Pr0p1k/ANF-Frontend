@@ -1,26 +1,27 @@
-<div id="profile_info" class="section" *ngIf="loaded">
-  <div id="img_and_immutable">
+<div class="section">
+  <div id="profile_info" *ngIf="loaded">
+    <div id="img_and_immutable">
     <span id="img_span">
       <img id="avatar" src="../../assets/01.png">
     </span>
-    <span id="user_parameters">
+      <span id="user_parameters">
       <label class="stats">{{user.login}}</label><br>
       <label class="stats">Level: {{user.stats.level}}</label><br>
       <label class="stats">Rating: {{user.stats.rating}}</label><br>
       <label class="stats">XP: {{user.stats.experience}}</label><br>
       <label class="stats">Animal Race: {{user.character.animalRace}}</label>
     </span>
-  </div>
-  <div id="stats">
-    <label class="stats">Number of fights: {{user.stats.fightsNum}}</label><br>
-    <label class="stats">Number of wins: {{user.stats.wins}}</label><br>
-    <label class="stats">Number of losses: {{user.stats.losses}}</label><br>
-    <label class="stats">Number of deaths: {{user.stats.deaths}}</label>
-  </div>
-  <div id="social">
-    <label class="social" (click)="parent.router.navigateByUrl('messages')">Messages</label><br>
-    <!--<label class="social" (click) = "router.navigateByUrl('friends')">New friend requests: {{user.friendRequestsIn.length}}</label><br>-->
-    <!--<label class="social" (click) = "router.navigateByUrl('friends')">Friends: {{friends.length}}</label>-->
+    </div>
+    <div id="stats">
+      <label class="stats">Number of fights: {{user.stats.fightsNum}}</label><br>
+      <label class="stats">Number of wins: {{user.stats.wins}}</label><br>
+      <label class="stats">Number of losses: {{user.stats.losses}}</label><br>
+      <label class="stats">Number of deaths: {{user.stats.deaths}}</label>
+    </div>
+    <div class="vertical">
+      {{ready?'Another players can invite you':'Another players can\'t invite you'}}
+      <p-inputSwitch [(ngModel)]="ready" onchange=""></p-inputSwitch>
+    </div>
   </div>
 
 </div>

@@ -1,5 +1,5 @@
 import {Component, Injector, Input, OnInit, Output} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
@@ -18,6 +18,7 @@ export class ProfilePageComponent implements OnInit {
   public unreadMessages: Message[];
   public friends: string[];
   public parent = this.injector.get(MainComponent);
+  public ready = false;
 
   constructor(private http: HttpClient, private injector: Injector,
               private dialogService: DialogService, private areaService: AreaService) {
@@ -35,7 +36,6 @@ export class ProfilePageComponent implements OnInit {
         (<HTMLElement>array[i]).onclick = function () {
           dialogService.open(QueueComponent, {width: '200px', height: '200px'});
           areaService.selectedArea = (<HTMLElement>this).id;
-          // TODO Here the data about clicked area should be shared via service
         };
       }
     });
@@ -43,5 +43,12 @@ export class ProfilePageComponent implements OnInit {
     //   null, {withCredentials: true}).subscribe(data => {
     //   this.friends = data;
     // });
+  }
+
+  changeReadyState() {
+    this.http.post('someurl', null, {
+      withCredentials: true,
+      params: new HttpParams().append('ready', this.ready.toString())
+    }).subscribe();
   }
 }
