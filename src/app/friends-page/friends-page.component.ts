@@ -28,15 +28,11 @@ export class FriendsPageComponent implements OnInit {
     this.http.get<User[]>('http://localhost:31480/friends/requests/outgoing', {withCredentials: true})
       .subscribe(data => this.outRequested = data);
     this.http.get<User[]>('http://localhost:31480/friends', {withCredentials: true})
-      .subscribe(data => this.friends = data);
-    this.friends.forEach(frnd => frnd.setOffline());
-    var ready = [];
-    this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
-      .subscribe(result => {ready = result;});
-    this.friends.forEach(friend => {
-      if (ready.includes(friend.login))
-        friend.setOnline();
-    })
+      .subscribe(data => {
+        this.friends = data
+        this.checkOnline();
+      });
+    
   this.initializeWebSockets();
   }
 
@@ -53,45 +49,70 @@ export class FriendsPageComponent implements OnInit {
           if (that.friends.map(friend => friend.login).includes(user)){
             if (type === 'online')
               that.friends.forEach(friend => {
-                if (friend.login === user)
-                  friend.setOnline();
+                if (friend.login === user) {
+                  friend.online = true;
+                  friend.offline = false;
+                }
               });
             else 
               that.friends.forEach(friend => {
-                if (friend.login === user)
-                  friend.setOffline();
+                if (friend.login === user) {
+                  friend.offline = true;
+                  friend.online = false;
+                }
               });
           }
       });
     });
   }
 
-  addFriend(req: FriendsRequest): void {
-    var id = req.request_id;
-    this.http.post<string>('http://localhost:8080/profile/friends', {withCredentials: true,
-  params: new HttpParams().append('requestId', id.toString())}).subscribe( data => {
+  addFriend(req: User): void {
+    //var id = req.request_id;
+    this.http.post<string>('http://localhost:31480/profile/friends', {withCredentials: true,
+  params: new HttpParams().append('login', req.login)}).subscribe( data => {
     console.log(data);
   });
-  this.friends.push(req.requestingUser);
+  this.friends.push(req);
+  this.inRequested.splice(this.inRequested.indexOf(req), 1);
   }
 
-  deleteRequest(req: FriendsRequest): void {
-    var username = req.friendUser.login;
-    this.http.delete<string>('http://localhost:8080/profile/friends/requests', {withCredentials: true,
+  deleteRequest(req: User): void {
+    var username = req.login;
+    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {withCredentials: true,
   params: new HttpParams().append('username', username).append('type', 'out')}).subscribe( data=> {
     console.log(data);
   });
-  const id = this.outRequested.indexOf(req.friendUser);
+  const id = this.outRequested.indexOf(req);
   this.outRequested.splice(id, 1);
   }
 
-  declineReq(req: FriendsRequest): void {
-    var username = req.requestingUser.login;
-    this.http.delete<string>('http://localhost:31480/profile/friends/request', {withCredentials: true,
+  checkOnline(){
+    this.friends.forEach(frnd => {
+      frnd.offline = true;
+      frnd.online = false;
+    });
+    let ready: string[];
+    this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
+      .subscribe(result => {
+        console.log(result);
+        this.friends.forEach(friend => {
+          if (result.includes(friend.login)){
+            friend.online = true;
+            friend.offline = false;
+          };
+      });
+    });
+    //ready.forEach(rd => console.log(rd));
+    
+  }
+
+  declineReq(req: User): void {
+    var username = req.login;
+    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {withCredentials: true,
     params: new HttpParams().append('username', username).append('type', 'in')}).subscribe(data => {
       console.log(data);
     });
-    const id = this.inRequested.indexOf(req.requestingUser);
+    const id = this.inRequested.indexOf(req);
     this.inRequested.splice(id, 1);
   }
 

@@ -21,6 +21,8 @@
     <div class="vertical">
       {{ready?'Ready':'Not ready'}}
       <p-inputSwitch [(ngModel)]="ready" (onChange)="changeReadyState()"></p-inputSwitch>
+      <br>
+      <app-friends-page></app-friends-page>
     </div>
   </div>
 

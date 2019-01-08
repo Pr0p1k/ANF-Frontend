@@ -13,18 +13,7 @@ export class User {
   roles: string[];
   friendRequestsIn: FriendsRequest[];
   friendRequestsOut: FriendsRequest[];
-  online: boolean;
-  offline: boolean;
-
-
-  setOnline(): void {
-    this.online = true;
-    this.offline = false;
-  }
-
-  setOffline(): void {
-    this.online = false;
-    this.offline = false;
-  }
+  online = false;
+  offline = true;
 
 }
