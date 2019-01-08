@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
+import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -9,12 +9,12 @@ import {HttpClient, HttpParams} from '@angular/common/http';
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.less'],
-  providers: [DialogService]
+  providers: [DialogService, ConfirmationService]
 })
 export class MainComponent implements OnInit {
   constructor(public router: Router, private dialogService: DialogService,
               private cookieService: CookieService, private http: HttpClient,
-              public messageService: MessageService) {
+              public messageService: MessageService, private confirmationService: ConfirmationService) {
   }
 
   loggedIn: boolean;
@@ -53,11 +53,11 @@ export class MainComponent implements OnInit {
   }
 
   logout() {
-    this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe();
-    this.loggedIn = false;
-    this.cookieService.delete('loggedIn');
-    this.cookieService.delete('username');
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
+      this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe();
+      this.loggedIn = false;
+      this.cookieService.delete('loggedIn');
+      this.cookieService.delete('username');
+      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
   }
 
 }

@@ -20,6 +20,7 @@
   <p-button id="account-button" label="Log in" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
   <p id="login" *ngIf="loggedIn">Logged in as: {{login}}</p>
   <p-button id="logout-button" label="Log out" *ngIf="loggedIn" (click)="logout()"></p-button>
+  <p-confirmDialog></p-confirmDialog>
 </div>
 <div id="content">
   <router-outlet></router-outlet>
