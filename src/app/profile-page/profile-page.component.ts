@@ -52,7 +52,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   public changeReadyState() {
-    let request: Observable;
+    let request: Observable<Object>;
     if (this.ready) {
       request = this.http.get('http://localhost:31480/profile/online', {withCredentials: true});
     } else {
