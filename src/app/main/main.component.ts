@@ -53,11 +53,12 @@ export class MainComponent implements OnInit {
   }
 
   logout() {
-      this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe();
-      this.loggedIn = false;
-      this.cookieService.delete('loggedIn');
-      this.cookieService.delete('username');
-      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
+    this.http.get('http://localhost:31480/logout', {responseType: 'text'}).subscribe();
+    this.loggedIn = false;
+    this.router.navigateByUrl('start');
+    this.cookieService.delete('loggedIn');
+    this.cookieService.delete('username');
+    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
   }
 
 }
