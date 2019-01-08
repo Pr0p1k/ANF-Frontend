@@ -15,7 +15,7 @@ import {
   MessageService,
   InputSwitchModule,
   RadioButtonModule,
-  PickListModule
+  PickListModule, ConfirmDialogModule
 } from 'primeng/primeng';
 import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -54,7 +54,8 @@ import { QueueComponent } from './queue/queue.component';
     ToastModule,
     InputSwitchModule,
     RadioButtonModule,
-    PickListModule
+    PickListModule,
+    ConfirmDialogModule
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],

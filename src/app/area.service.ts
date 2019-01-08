@@ -6,6 +6,15 @@ import {Injectable} from '@angular/core';
 export class AreaService {
 
   private _selectedArea: string;
+  private _pvp: boolean;
+
+  get pvp(): boolean {
+    return this._pvp;
+  }
+
+  set pvp(value: boolean) {
+    this._pvp = value;
+  }
 
   get selectedArea(): string {
     return this._selectedArea;

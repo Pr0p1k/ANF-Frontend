@@ -39,6 +39,7 @@ export class ProfilePageComponent implements OnInit {
         (<HTMLElement>array[i]).onclick = function () {
           dialogService.open(QueueComponent, {width: '440px', height: '200px'});
           areaService.selectedArea = (<HTMLElement>this).id;
+          areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
         };
       }
     }, () => {
@@ -52,7 +53,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   public changeReadyState() {
-    let request: Observable;
+    let request: Observable<Object>;
     if (this.ready) {
       request = this.http.get('http://localhost:31480/profile/online', {withCredentials: true});
     } else {

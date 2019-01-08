@@ -1,16 +1,19 @@
 <div>
   <p>
-    Selected: {{area}}
+    {{type}} fight: {{area}}
   </p>
   <p-pickList sourceHeader="Ready users" [source]="users"
               targetHeader="Invited users" [target]="selected"
               [showSourceControls]="false" [showTargetControls]="false"
-  [responsive]="true" [dragdrop]="true">
-    <ng-template let-user pTemplate="user">
-        <div class="ready">
-          {{user}}
+              [responsive]="true" [dragdrop]="true"
+              filterBy="toString()" (onMoveToTarget)="validateAmount($event)"
+              [metaKeySelection]="false" (onMoveAllToTarget)="break($event)" [showTargetFilter]="false">
+    <ng-template let-user pTemplate="item">
+      <div class="ready">
+        {{user}}
       </div>
     </ng-template>
   </p-pickList>
+  <p-button id="start" label="Start" [disabled]="disabled"></p-button>
 
 </div>
