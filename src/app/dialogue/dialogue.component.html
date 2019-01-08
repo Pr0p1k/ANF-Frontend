@@ -17,6 +17,6 @@
   </div>
 </div>
 <div id="write">
-  <input type="text" pInputText id="text" [(ngModel)]="input">
+  <input type="text" pInputText id="text" [(ngModel)]="input" (keyup.enter)="send()">
   <p-button id="send" label="Send" (onClick)="send()"></p-button>
 </div>

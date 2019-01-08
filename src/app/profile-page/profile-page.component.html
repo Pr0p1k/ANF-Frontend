@@ -1,9 +1,9 @@
 <div class="section">
   <div id="profile_info" *ngIf="loaded">
     <div id="img_and_immutable">
-    <span id="img_span">
-      <img id="avatar" src="../../assets/01.png">
-    </span>
+    <div id="avatar">
+      <app-character></app-character>
+    </div>
       <span id="user_parameters">
       <label class="stats">{{user.login}}</label><br>
       <label class="stats">Level: {{user.stats.level}}</label><br>
@@ -19,7 +19,7 @@
       <label class="stats">Number of deaths: {{user.stats.deaths}}</label>
     </div>
     <div class="vertical">
-      {{ready?'Another players can invite you':'Another players can\'t invite you'}}
+      {{ready?'Ready':'Not ready'}}
       <p-inputSwitch [(ngModel)]="ready" (onChange)="changeReadyState()"></p-inputSwitch>
     </div>
   </div>
@@ -54,15 +54,20 @@
     <path class="ground"
           style="fill-opacity:1;fill-rule:nonzero;stroke:#808080;stroke-width:3.07989478;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
           d="m 404.84108,452.46347 0.30495,4.42161 3.35432,6.70865 1.90586,6.78489 -0.99104,8.46206 -4.49785,7.0136 -4.04044,9.30062 5.9463,4.87904 6.25126,2.59198 -3.9642,11.13025 3.65925,2.59199 7.77595,-0.30493 15.39941,13.56978 16.16175,-7.62347 2.89693,-2.28705 8.08087,-1.37223 8.99569,1.98211 3.20187,-0.15247 -5.79384,-8.08087 -1.37223,-6.40372 0.91483,-12.5025 0.91481,-14.4846 -5.33643,-9.4531 -1.98211,-10.06299 -0.60988,-7.92842 3.84301,-0.30492 3.32306,-4.42162 5.79384,-4.87902 7.31853,-8.84324 5.79384,-8.84321 2.59197,-3.65928 -1.82963,-4.87901 -4.26913,-7.92841 -3.96422,-7.471 -0.60988,-6.86114 -8.38582,3.20186 -7.47099,3.35432 -4.57409,13.11238 -4.26914,4.57409 -4.42161,1.37222 -5.18397,5.94631 -3.65925,10.21546 -9.75803,3.81172 -10.97782,0.30495 -7.01359,3.9642 -8.84324,6.86113 -0.60987,2.59198 z"
-          id="Kusagakure"
-    ></path>
+          id="Kusagakure"></path>
 
 
     <use xlink:href="../../assets/map.svg#svg2"></use>
-    <image id="Kurama" class="bidju" xlink:href="../../assets/bidju/9.png" x="480" y="450" height="125" width="125"></image>
-    <image id="Isobu" class="bidju" xlink:href="../../assets/bidju/3.png" x="1030" y="500" height="125" width="125"></image>
-    <image id="Gyuki" class="bidju" xlink:href="../../assets/bidju/8.png" x="210" y="310" height="125" width="125"></image>
-    <image id="Shukaku" class="bidju" xlink:href="../../assets/bidju/1.png" x="210" y="510" height="125" width="125"></image>
+    <image id="Kurama" class="bidju" xlink:href="../../assets/bidju/9.png" x="480" y="450" height="125"
+           width="125"></image>
+    <image id="Isobu" class="bidju" xlink:href="../../assets/bidju/3.png" x="1030" y="500" height="125"
+           width="125"></image>
+    <image id="Gyuki" class="bidju" xlink:href="../../assets/bidju/8.png" x="210" y="310" height="125"
+           width="125"></image>
+    <image id="Shukaku" class="bidju" xlink:href="../../assets/bidju/1.png" x="210" y="510" height="125"
+           width="125"></image>
   </svg>
 </div>
-<app-chat></app-chat>
+<div class="section">
+  <app-chat></app-chat>
+</div>

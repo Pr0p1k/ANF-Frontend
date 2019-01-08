@@ -27,6 +27,8 @@ import { DialogueComponent } from './dialogue/dialogue.component';
 import {ToastModule} from 'primeng/toast';
 import { ChatComponent } from './chat/chat.component';
 import { QueueComponent } from './queue/queue.component';
+import { FightComponent } from './fight/fight.component';
+import { CharacterComponent } from './character/character.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { QueueComponent } from './queue/queue.component';
     FriendsPageComponent,
     DialogueComponent,
     ChatComponent,
-    QueueComponent],
+    QueueComponent,
+    FightComponent,
+    CharacterComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

@@ -1,5 +1,4 @@
 <div id="chat">
-  <label id="header">Chat</label>
   <ul>
     <li *ngFor="let msg of messages">
       <label *ngIf="msg.author === 'SYSTEM'" class="admin">{{msg.author}}: {{msg.text}}</label>
@@ -7,7 +6,7 @@
     </li>
   </ul>
   <div id="write">
-      <input type="text" pInputText id="text" [(ngModel)]="input">
+      <input type="text" pInputText id="text" [(ngModel)]="input" (keyup.enter)="send()">
       <p-button id="send" label="Send" (onClick)="send()"></p-button>
     </div>
 </div>
