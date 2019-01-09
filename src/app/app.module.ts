@@ -29,6 +29,7 @@ import { ChatComponent } from './chat/chat.component';
 import { QueueComponent } from './queue/queue.component';
 import { FightComponent } from './fight/fight.component';
 import { CharacterComponent } from './character/character.component';
+import { SingleMessageComponent } from './single-message/single-message.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { CharacterComponent } from './character/character.component';
     ChatComponent,
     QueueComponent,
     FightComponent,
-    CharacterComponent],
+    CharacterComponent,
+    SingleMessageComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -63,7 +65,7 @@ import { CharacterComponent } from './character/character.component';
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
-  entryComponents: [AuthComponent, QueueComponent]
+  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent]
 })
 export class AppModule {
 }

@@ -3,7 +3,8 @@
 <ul>
   <li *ngFor="let friend of friends">
     <span class="login">{{friend.login}}</span><span class="buttons">
-      <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">Invite to PVP</button>
+      <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">Invite to Fight</button>
+      <button class="invite" (click)="showMessageInput(friend)">Send a message</button><br>
       <button class="decline" (click)="deleteFriend(friend)">Remove from friends</button></span><br>
     <label *ngIf="friend.online" class="online">Ready</label>
     <label *ngIf="friend.offline" class="offline">Unready</label>

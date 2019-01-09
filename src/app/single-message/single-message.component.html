@@ -1,0 +1,7 @@
+<h2 id="header">{{parent.receiver}}</h2>
+<div>
+  <label for="text">Message:</label><br>
+  <input id="text" type="text" pInputText [(ngModel)]="input"/>
+</div>
+<p-button label="Send" (onClick)="confirm()"></p-button>
+  <p-button label="Cancel" (onClick)="cancel()"></p-button>

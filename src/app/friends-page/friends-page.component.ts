@@ -3,11 +3,14 @@ import {User} from '../classes/user';
 import {HttpClient, HttpParams, HttpHeaderResponse, HttpHeaders} from '@angular/common/http';
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { SingleMessageComponent} from '../single-message/single-message.component';
+import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-friends-page',
   templateUrl: './friends-page.component.html',
-  styleUrls: ['./friends-page.component.less']
+  styleUrls: ['./friends-page.component.less'],
+  providers: [DialogService, ConfirmationService]
 })
 export class FriendsPageComponent implements OnInit {
 
@@ -15,8 +18,11 @@ export class FriendsPageComponent implements OnInit {
   inRequested: User[];
   outRequested: User[];
   private stompClient;
+  private dialog: DynamicDialogRef;
+  receiver: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private dialogService: DialogService,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.friends = [];
@@ -219,6 +225,27 @@ export class FriendsPageComponent implements OnInit {
 
   inviteToPVP(usr: User):void {
     
+  }
+
+  showMessageInput(user: User): void {
+    this.receiver = user.login;
+    this.dialog = this.dialogService.open(SingleMessageComponent, {
+      width: '800px', height: '400px'
+    });
+  }
+
+  sendMessage(msg: string): void {
+    this.http.post('http://localhost:31480/profile/messages', null, {
+      withCredentials: true,
+      params: new HttpParams()
+        .append('message', msg)
+        .append('receiver', this.receiver)
+    }).subscribe();
+    this.dialog.close();
+  }
+
+  cancelMessage(): void {
+    this.dialog.close();
   }
 
 }
