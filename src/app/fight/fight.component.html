@@ -1,6 +1,11 @@
 <div id="fight">
   <div *ngFor="let ally of allies" class="ally">
+    {{ally.login}}
     <app-character></app-character>
+  </div>
+  <div *ngFor="let enemy of enemies" class="foe">
+    {{enemy.login}}
+    <app-character class="foe-char"></app-character>
   </div>
   <div id="ground">
   </div>

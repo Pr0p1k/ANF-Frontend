@@ -26,7 +26,5 @@ export class FightService {
   }
 
   constructor() {
-    this.allies = [];
-    this.enemies = [];
   }
 }
