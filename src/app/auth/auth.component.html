@@ -6,7 +6,8 @@
   </div>
   <div>
     <label for="sign-in-password">Password: </label><br>
-    <input id="sign-in-password" type="password" pPassword [feedback]="false" [(ngModel)]="firstPassword"/>
+    <input id="sign-in-password" type="password" pPassword [feedback]="false"
+           [(ngModel)]="firstPassword" (keyup.enter)="tryToLogin()"/>
   </div>
   <p-button label="Sign in" (onClick)="tryToLogin()"></p-button>
   <p-button label="BK" (onClick)="tryToSignInWithVk()"></p-button>
@@ -24,7 +25,8 @@
   </div>
   <div>
     <label for="sign-up-confirm">Confirm password: </label><br>
-    <input id="sign-up-confirm" type="password" pPassword [(ngModel)]="secondPassword"/>
+    <input id="sign-up-confirm" type="password" pPassword
+           [(ngModel)]="secondPassword" (keyup.enter)="tryToSignUp()"/>
   </div>
   <p-button label="Sign up" (onClick)="tryToSignUp()"></p-button>
 </div>

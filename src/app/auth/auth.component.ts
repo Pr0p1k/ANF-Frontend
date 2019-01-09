@@ -190,12 +190,14 @@ export class AuthComponent implements OnInit {
   }
 
   setGender() {
+    const males = document.getElementsByClassName('male');
+    const females = document.getElementsByClassName('female');
     if (this.gender) {
-      (<HTMLElement>document.getElementById('female')).style.display = 'block';
-      (<HTMLElement>document.getElementById('male')).style.display = 'none';
+      (<HTMLElement>females[0]).style.display = 'block';
+      (<HTMLElement>males[0]).style.display = 'none';
     } else {
-      (<HTMLElement>document.getElementById('male')).style.display = 'block';
-      (<HTMLElement>document.getElementById('female')).style.display = 'none';
+      (<HTMLElement>males[0]).style.display = 'block';
+      (<HTMLElement>females[0]).style.display = 'none';
     }
     this.appearance.gender = this.gender ? 'FEMALE' : 'MALE';
   }

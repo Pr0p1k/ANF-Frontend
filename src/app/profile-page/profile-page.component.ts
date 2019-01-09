@@ -5,7 +5,7 @@ import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
 import {DialogService} from 'primeng/api';
 import {QueueComponent} from '../queue/queue.component';
-import {AreaService} from '../area.service';
+import {AreaService} from '../services/area/area.service';
 import {Observable} from 'rxjs';
 import {CookieService} from 'ngx-cookie-service';
 
@@ -29,9 +29,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loaded = true;
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
-      // this.loaded = true;
       this.user = data;
       const dialogService = this.dialogService;
       const areaService = this.areaService;
@@ -43,13 +41,11 @@ export class ProfilePageComponent implements OnInit {
           areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
         };
       }
-      console.log((<HTMLElement>document.getElementById('male')));
-      console.log(document.getElementsByClassName('hair'));
-      console.log(this.user.character.appearance);
       this.changeClothes();
       this.changeHair();
       this.changeSkin();
       this.setGender();
+      this.loaded = true;
     }, () => {
       this.parent.router.navigateByUrl('start');
     });
@@ -74,7 +70,6 @@ export class ProfilePageComponent implements OnInit {
 
   changeHair() {
     const array = document.getElementsByClassName('hair');
-    console.log(array);
     let color = this.user.character.appearance.hairColour;
     switch (this.user.character.appearance.hairColour) {
       case 'YELLOW':
@@ -87,8 +82,7 @@ export class ProfilePageComponent implements OnInit {
         color = '#2D221C';
         break;
     }
-    for (let i = 0; i < 11; i++) {
-      console.log(array.item(i));
+    for (let i = 0; i < array.length; i++) {
       (<HTMLElement>array[i]).style.fill = color;
       (<HTMLElement>array[i]).style.stroke = color;
     }
@@ -138,12 +132,14 @@ export class ProfilePageComponent implements OnInit {
   }
 
   setGender() {
-    if (this.user.character.appearance.gender) {
-      (<HTMLElement>document.getElementById('female')).style.display = 'block';
-      (<HTMLElement>document.getElementById('male')).style.display = 'none';
+    const males = document.getElementsByClassName('male');
+    const females = document.getElementsByClassName('female');
+    if (this.user.character.appearance.gender === 'FEMALE') {
+      (<HTMLElement>females[0]).style.display = 'block';
+      (<HTMLElement>males[0]).style.display = 'none';
     } else {
-      (<HTMLElement>document.getElementById('male')).style.display = 'block';
-      (<HTMLElement>document.getElementById('female')).style.display = 'none';
+      (<HTMLElement>males[0]).style.display = 'block';
+      (<HTMLElement>females[0]).style.display = 'none';
     }
     this.user.character.appearance.gender = this.user.character.appearance.gender ? 'FEMALE' : 'MALE';
   }

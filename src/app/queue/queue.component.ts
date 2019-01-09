@@ -1,8 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {AreaService} from '../area.service';
+import {Component, Injector, OnInit} from '@angular/core';
+import {AreaService} from '../services/area/area.service';
 import {HttpClient, HttpSentEvent} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {Button} from 'primeng/button';
+import {FightComponent} from '../fight/fight.component';
+import {FightService} from '../services/fight/fight.service';
+import {User} from '../classes/user';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   selector: 'app-queue',
@@ -16,8 +20,11 @@ export class QueueComponent implements OnInit {
   selected: string[];
   type: string;
   disabled: boolean;
+  parent = this.injector.get(MainComponent);
 
-  constructor(private areaService: AreaService, private http: HttpClient, private cookieService: CookieService) {
+  constructor(private areaService: AreaService, private http: HttpClient,
+              private cookieService: CookieService, private fightService: FightService,
+              private injector: Injector) {
   }
 
   ngOnInit() {
@@ -46,5 +53,13 @@ export class QueueComponent implements OnInit {
     for (let i = 0; i < this.selected.length + this.users.length - max; i++) {
       this.users.push(this.selected.pop());
     }
+  }
+
+  startFight() {
+    this.fightService.allies = [];
+    for (let i = 0; i <= this.selected.length; i++) {
+      this.fightService.allies.push(new User());
+    }
+    this.parent.router.navigateByUrl('fight');
   }
 }
