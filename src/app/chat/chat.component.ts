@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Stomp } from '@stomp/stompjs';
+import {Component, OnInit} from '@angular/core';
+import {Stomp} from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { ChatMessage } from '../classes/chat-message';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../classes/user';
+import {ChatMessage} from '../classes/chat-message';
+import {HttpClient} from '@angular/common/http';
+import {User} from '../classes/user';
 
 @Component({
   selector: 'app-chat',
@@ -20,35 +20,35 @@ export class ChatComponent implements OnInit {
 
   constructor(private http: HttpClient) {
     this.initializeWebSocketConnection();
-   }
+  }
 
-  initializeWebSocketConnection(){
-    let ws = new SockJS(this.subscriptionURL);
+  initializeWebSocketConnection() {
+    const ws = new SockJS(this.subscriptionURL);
     this.stompClient = Stomp.over(ws);
-    let that = this;
-    this.stompClient.connect({}, function(frame) {
-      that.stompClient.subscribe("/chat", (message) => {
-          var str = message.body;
-          var i = str.indexOf(':');
-          var author = str.substring(0, i);
-          var msg = str.substring(i+1, str.length);
-          var mes = new ChatMessage(author, msg);
-          that.messages.push(mes);
-          //console.log(message.body);
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/chat', (message) => {
+        const str = message.body;
+        const i = str.indexOf(':');
+        const author = str.substring(0, i);
+        const msg = str.substring(i + 1, str.length);
+        const mes = new ChatMessage(author, msg);
+        that.messages.push(mes);
+        // console.log(message.body);
       });
     });
   }
 
   send(): void {
-    var txt = this.user.login + ": "+this.input;
-    this.stompClient.send("/app/send/message" , {}, txt);
+    const txt = this.user.login + ': ' + this.input;
+    this.stompClient.send('/app/send/message', {}, txt);
     this.input = '';
-    //this.messages.push(text);
+    // this.messages.push(text);
   }
 
   ngOnInit() {
     this.messages = [];
-    var msg = new ChatMessage('SYSTEM', 'Welcome to the chat!');
+    const msg = new ChatMessage('SYSTEM', 'Welcome to the chat!');
     this.messages.push(msg);
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.user = data;
