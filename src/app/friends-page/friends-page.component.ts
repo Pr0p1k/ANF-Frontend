@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../classes/user';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpHeaderResponse, HttpHeaders} from '@angular/common/http';
 import {FriendsRequest} from '../classes/friends-request';
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
@@ -68,8 +68,16 @@ export class FriendsPageComponent implements OnInit {
 
   addFriend(req: User): void {
     //var id = req.request_id;
-    this.http.post<string>('http://localhost:31480/profile/friends', {withCredentials: true,
-  params: new HttpParams().append('login', req.login)}).subscribe( data => {
+    //let header = new HttpHeaders();
+    //header = header.set('Content-Type', 'application/x-www-form-urlencoded');
+    this.http.post('http://localhost:31480/profile/friends', 
+    new HttpParams().set('login', req.login),
+    { headers:
+      new HttpHeaders (
+      {   
+          "Content-Type": "application/x-www-form-urlencoded"
+      }), 
+    withCredentials: true }).subscribe( data => {
     console.log(data);
   });
   this.friends.push(req);
