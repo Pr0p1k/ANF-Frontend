@@ -7,6 +7,8 @@
   </ul>
   <div id="write">
       <input type="text" pInputText id="text" [(ngModel)]="input" (keyup.enter)="send()">
-      <p-button id="send" label="Send" (onClick)="send()"></p-button>
+      <p-button id="send" label="Send" (onClick)="send()"></p-button><br>
+      <label *ngIf="admin" id="lbl">{{asSystem?'Send as system':'Send as user'}}</label>
+      <p-inputSwitch *ngIf="admin" [(ngModel)]="asSystem"></p-inputSwitch>
     </div>
 </div>

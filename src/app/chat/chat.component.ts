@@ -17,6 +17,8 @@ export class ChatComponent implements OnInit {
   private subscriptionURL = 'http://localhost:31480/socket';
   private stompClient;
   input: string;
+  asSystem: boolean = false;
+  admin: boolean = false;
 
   constructor(private http: HttpClient) {
     this.initializeWebSocketConnection();
@@ -37,10 +39,13 @@ export class ChatComponent implements OnInit {
         // console.log(message.body);
       });
     });
+    
   }
 
   send(): void {
-    const txt = this.user.login + ': ' + this.input;
+    var txt = this.user.login + ': ' + this.input;
+    if (this.admin && this.asSystem)
+      txt = 'SYSTEM: '+this.input;
     this.stompClient.send('/app/send/message', {}, txt);
     this.input = '';
     // this.messages.push(text);
@@ -52,6 +57,9 @@ export class ChatComponent implements OnInit {
     this.messages.push(msg);
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.user = data;
+      this.user.roles.forEach(role => console.log(role));
+      if (this.user.roles.map(role => role.role).includes('ADMIN')) 
+        this.admin = true;
     });
   }
 

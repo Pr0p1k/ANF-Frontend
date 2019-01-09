@@ -2,6 +2,7 @@ import {Stats} from './stats';
 import {Message} from './message';
 import {Character} from './character';
 import {FriendsRequest} from './friends-request';
+import { Role } from './role';
 
 export class User {
 
@@ -10,7 +11,7 @@ export class User {
   stats: Stats;
   incomingMessages: Message[];
   outgoingMessages: Message[];
-  roles: string[];
+  roles: Role[];
   friendRequestsIn: FriendsRequest[];
   friendRequestsOut: FriendsRequest[];
   online = false;
