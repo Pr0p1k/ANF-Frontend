@@ -1,10 +1,10 @@
 <div class="section">
-  <div id="profile_info" *ngIf="loaded">
+  <div id="profile_info">
     <div id="img_and_immutable">
     <div id="avatar">
       <app-character></app-character>
     </div>
-      <span id="user_parameters">
+      <span id="user_parameters" *ngIf="loaded">
       <label class="stats">{{user.login}}</label><br>
       <label class="stats">Level: {{user.stats.level}}</label><br>
       <label class="stats">Rating: {{user.stats.rating}}</label><br>
@@ -12,7 +12,7 @@
       <label class="stats">Animal Race: {{user.character.animalRace}}</label>
     </span>
     </div>
-    <div id="stats">
+    <div id="stats" *ngIf="loaded">
       <label class="stats">Number of fights: {{user.stats.fightsNum}}</label><br>
       <label class="stats">Number of wins: {{user.stats.wins}}</label><br>
       <label class="stats">Number of losses: {{user.stats.losses}}</label><br>
