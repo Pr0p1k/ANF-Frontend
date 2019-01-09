@@ -5,8 +5,8 @@
     <span class="login">{{friend.login}}</span><span class="buttons">
       <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">Invite to PVP</button>
       <button class="decline" (click)="deleteFriend(friend)">Remove from friends</button></span><br>
-    <label *ngIf="friend.online" class="online">Online</label>
-    <label *ngIf="friend.offline" class="offline">Offline</label>
+    <label *ngIf="friend.online" class="online">Ready</label>
+    <label *ngIf="friend.offline" class="offline">Unready</label>
   </li>
 </ul>
 <label class="header">Incoming requests</label>

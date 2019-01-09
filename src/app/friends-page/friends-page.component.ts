@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from '../classes/user';
 import {HttpClient, HttpParams, HttpHeaderResponse, HttpHeaders} from '@angular/common/http';
-import {FriendsRequest} from '../classes/friends-request';
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 
@@ -63,13 +62,89 @@ export class FriendsPageComponent implements OnInit {
               });
           }
       });
+      that.stompClient.subscribe("/user/social", message => {
+        var str = message.body;
+        var i = str.indexOf(':');
+        var event = str.substring(0, i);
+        //console.log("event: "+event);
+        if (event === 'friend') {
+          var type = str.substring(i+1, i+2);
+          //console.log("type: "+type);
+          if (type === '+'){
+            var username = str.substring(i+2, str.length);
+            var user: User;
+            //console.log("username: "+username);
+            var url = 'http://localhost:31480/users/'+username;
+            that.http.get<User>(url, {withCredentials: true})
+              .subscribe(data => {
+                user = data;
+                user.online = false;
+                user.offline = true;
+                var ready = [];
+                that.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
+              .subscribe(data => {
+                ready = data;
+                if (ready.includes(user.login)) {
+                  user.online = true;
+                  user.offline = false;
+                }
+              });
+              that.friends.push(user);
+              });
+            var ind = that.outRequested.indexOf(user);
+            that.outRequested.splice(ind, 1);
+          } else {
+            var username = str.substring(i+2, str.length);
+            var user: User;
+            //console.log("username: "+username);
+            var url = 'http://localhost:31480/users/'+username;
+            that.http.get<User>(url, {withCredentials: true})
+              .subscribe(data => {user = data});
+            that.friends.splice(that.friends.indexOf(user), 1);
+          }
+        } else if (event === 'request'){
+          var type = str.substring(i+1, i+2);
+          //console.log("type: "+type);
+          if (type === '+'){
+            var username = str.substring(i+2, str.length);
+            var user: User;
+            //console.log("username: "+username);
+            var url = 'http://localhost:31480/users/'+username;
+            that.http.get<User>(url, {withCredentials: true})
+              .subscribe(data => {
+                user = data;
+                that.inRequested.push(user);
+              });
+          } else {
+            var username = str.substring(i+2, str.length);
+            var user: User;
+            //console.log("username: "+username);
+            var url = 'http://localhost:31480/users/'+username;
+            that.http.get<User>(url, {withCredentials: true})
+              .subscribe(data => {
+                user = data;
+                that.inRequested.splice(that.inRequested.indexOf(user), 1);
+              });
+          }
+        } else {
+          var username = str.substring(i+1, str.length);
+            var user: User;
+            //console.log("username: "+username);
+            var url = 'http://localhost:31480/users/'+username;
+            that.http.get<User>(url, {withCredentials: true})
+              .subscribe(data => {
+                user = data;
+                that.outRequested.splice(that.outRequested.indexOf(user), 1);
+              });
+            
+        }
+      });
     });
   }
 
   addFriend(req: User): void {
-    //var id = req.request_id;
-    //let header = new HttpHeaders();
-    //header = header.set('Content-Type', 'application/x-www-form-urlencoded');
+    req.offline = true;
+    req.online = false;
     this.http.post('http://localhost:31480/profile/friends', 
     new HttpParams().set('login', req.login),
     { headers:
@@ -77,11 +152,17 @@ export class FriendsPageComponent implements OnInit {
       {   
           "Content-Type": "application/x-www-form-urlencoded"
       }), 
-    withCredentials: true }).subscribe( data => {
-    console.log(data);
-  });
-  this.friends.push(req);
-  this.inRequested.splice(this.inRequested.indexOf(req), 1);
+    withCredentials: true }).subscribe( msg => {});
+    this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
+      .subscribe(data => {
+        var ready: string[] = data;
+        if (ready.includes(req.login)) {
+          req.offline = false;
+          req.online = true;
+        }
+      });
+    this.friends.push(req);
+    this.inRequested.splice(this.inRequested.indexOf(req), 1);
   }
 
   deleteRequest(req: User): void {
