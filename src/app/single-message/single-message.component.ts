@@ -1,5 +1,8 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { FriendsPageComponent } from '../friends-page/friends-page.component';
+import { UsersListComponent } from '../users-list/users-list.component';
+import { SingleMessageService } from '../services/single-message.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-single-message',
@@ -8,21 +11,27 @@ import { FriendsPageComponent } from '../friends-page/friends-page.component';
 })
 export class SingleMessageComponent implements OnInit {
 
-  private parent = this.injector.get(FriendsPageComponent);
   private input: string;
   private username: string;
-
-  constructor(private injector: Injector) { }
+  constructor(private serv: SingleMessageService,
+    private http: HttpClient) { }
 
   ngOnInit() {
+    this.username = this.serv.username;
   }
 
   confirm(): void {
-    this.parent.sendMessage(this.input);
+    this.http.post('http://localhost:31480/profile/messages', null, {
+      withCredentials: true,
+      params: new HttpParams()
+        .append('message', this.input)
+        .append('receiver', this.username)
+    }).subscribe();
+    this.serv.exit();
   }
 
   cancel(): void {
-    this.parent.cancelMessage();
+    this.serv.exit();
   }
 
 }

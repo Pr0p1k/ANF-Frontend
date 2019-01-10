@@ -1,0 +1,25 @@
+<h2>Users:</h2>
+<div class="fullScope">
+  
+  <ul id = "usersList">
+    <li *ngFor='let userdata of usersList'>
+      <label class='username'>{{userdata.user.login}}</label>
+      <label class='status'>{{userdata.user.online ? 'Ready' : 'Unready'}}</label>
+      <label *ngIf='userdata.friend' class='friend'>Friend</label> <br>
+      <label *ngIf='userdata.requested' class='requested'>Requested 
+        <p-button class='removeRequest' label='Delete request' (onClick) = 'deleteReq(userdata)'></p-button>
+      </label>
+      <label *ngIf='userdata.requesting' class='requesting'>Requesting 
+        <p-button class='acceptRequest' label='Accept request' (onClick) = 'acceptReq(userdata)'></p-button>        
+        <p-button class='removeRequest' label='Decline request' (onClick) = 'declineReq(userdata)'></p-button>
+        <br>
+      </label>
+        <p-button class='neutral' label='Send message' (onClick)='openMessageWindow(userdata)'></p-button>
+        <p-button *ngIf= 'userdata.noRelations' class='neutral' label='Send friends request' (onClick)='sendRequest(userdata)'></p-button> 
+      <label *ngIf='adminView' class = 'adminPanel'>
+        {{userdata.admin ? 'Admin' : 'User' }}
+        <p-button *ngIf='userdata.notAdmin' class='acceptRequest' label='Grant admin role' (onClick)='grantAdmin(userdata)'></p-button>
+      </label>
+      </li>
+  </ul>
+</div>

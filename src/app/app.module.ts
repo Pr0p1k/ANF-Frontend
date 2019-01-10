@@ -30,6 +30,7 @@ import { QueueComponent } from './queue/queue.component';
 import { FightComponent } from './fight/fight.component';
 import { CharacterComponent } from './character/character.component';
 import { SingleMessageComponent } from './single-message/single-message.component';
+import { UsersListComponent } from './users-list/users-list.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { SingleMessageComponent } from './single-message/single-message.componen
     QueueComponent,
     FightComponent,
     CharacterComponent,
-    SingleMessageComponent],
+    SingleMessageComponent,
+    UsersListComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
