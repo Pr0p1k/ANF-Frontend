@@ -70,12 +70,18 @@ export class QueueComponent implements OnInit {
         });
       });
     } else {
-      // this.fightService.allies = [];
-      // this.fightService.enemies = [];
-      // for (let i = 0; i <= this.selected.length; i++) {
-      //   this.fightService.allies.push(new User());
-      // }
-      // this.parent.router.navigateByUrl('fight');
+      this.fightService.allies = [];
+      this.selected.push(this.parent.login);
+      for (let i = 0; i < this.selected.length; i++) {
+        this.http.get<User>('http://localhost:31480/users/' + this.selected[i], {
+          withCredentials: true
+        }).subscribe(ally => {
+          this.fightService.allies.push(ally);
+          if (i === this.selected.length - 1) {
+            this.parent.router.navigateByUrl('fight');
+          }
+        });
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {User} from '../classes/user';
 
 @Component({
   selector: 'app-character',
@@ -11,11 +12,6 @@ export class CharacterComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  setEnemy() {
-    console.log('In setEnemy: ');
-    document.getElementsByClassName('character')[0].classList.add('enemy');
   }
 
 }

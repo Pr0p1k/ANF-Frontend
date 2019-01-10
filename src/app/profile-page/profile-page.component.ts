@@ -8,7 +8,7 @@ import {QueueComponent} from '../queue/queue.component';
 import {AreaService} from '../services/area/area.service';
 import {Observable} from 'rxjs';
 import {CookieService} from 'ngx-cookie-service';
-import { Stomp } from '@stomp/stompjs';
+import {Stomp} from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 
 @Component({
@@ -57,20 +57,21 @@ export class ProfilePageComponent implements OnInit {
   }
 
   subscribeForWebsockets() {
-    let ws = new SockJS("http://localhost:31480/socket");
+    const ws = new SockJS('http://localhost:31480/socket');
     this.stompClient = Stomp.over(ws);
-    let that = this;
-    this.stompClient.connect({}, function(frame) {
-      that.stompClient.subscribe("/online", (message) => {
-        var str = message.body; //format: {username}:{online/offline}
-          var i = str.indexOf(':');
-          var user = str.substring(0, i);
-          var type = str.substring(i+1, str.length);
-          if (user === that.user.login && type === 'offline' && that.ready === true) {
-            that.ready = false;
-            
-          }
-      });});
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/online', (message) => {
+        const str = message.body; // format: {username}:{online/offline}
+        const i = str.indexOf(':');
+        const user = str.substring(0, i);
+        const type = str.substring(i + 1, str.length);
+        if (user === that.user.login && type === 'offline' && that.ready === true) {
+          that.ready = false;
+
+        }
+      });
+    });
   }
 
   public changeReadyState() {

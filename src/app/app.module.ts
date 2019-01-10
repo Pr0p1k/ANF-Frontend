@@ -65,7 +65,7 @@ import { SingleMessageComponent } from './single-message/single-message.componen
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
-  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent]
+  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent, CharacterComponent]
 })
 export class AppModule {
 }
