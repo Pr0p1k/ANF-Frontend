@@ -56,10 +56,32 @@ export class QueueComponent implements OnInit {
   }
 
   startFight() {
-    this.fightService.allies = [];
-    for (let i = 0; i <= this.selected.length; i++) {
-      this.fightService.allies.push(new User());
+    if (this.areaService.pvp) {
+      this.http.get<User>('http://localhost:31480/users/' + this.parent.login, {
+        withCredentials: true
+      }).subscribe(ally => {
+        this.fightService.allies = [ally];
+        this.http.get<User>('http://localhost:31480/users/' + this.selected[0], {
+          withCredentials: true
+        }).subscribe(enemy => {
+          this.fightService.enemies = [enemy];
+          this.parent.router.navigateByUrl('fight');
+          // TODO close dialog
+        });
+      });
+    } else {
+      this.fightService.allies = [];
+      this.selected.push(this.parent.login);
+      for (let i = 0; i < this.selected.length; i++) {
+        this.http.get<User>('http://localhost:31480/users/' + this.selected[i], {
+          withCredentials: true
+        }).subscribe(ally => {
+          this.fightService.allies.push(ally);
+          if (i === this.selected.length - 1) {
+            this.parent.router.navigateByUrl('fight');
+          }
+        });
+      }
     }
-    this.parent.router.navigateByUrl('fight');
   }
 }

@@ -67,7 +67,7 @@ import { UsersListComponent } from './users-list/users-list.component';
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
-  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent]
+  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent, CharacterComponent]
 })
 export class AppModule {
 }

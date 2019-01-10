@@ -6,15 +6,29 @@
     position: fixed;
     height: 120px;
     bottom: 0;
-    background: linear-gradient(0deg, #d45c00, #f8bc22);
+    //background: linear-gradient(0deg, #d45c00, #f8bc22);
+    background-image: url("../../assets/ground.png");
+    background-size: cover;
     width: 100%;
+    z-index: 5;
   }
 }
 
 .ally {
-  position: relative;
-  float: left;
+  position: absolute;
+  z-index: 10;
+}
 
+.foe {
+  position: absolute;
+  z-index: 10;
+}
+
+#fighters {
+  position: absolute;
+  bottom: 40px;
+  width: 95%;
+  margin-left: auto;
 }
 
 .character {

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {User} from '../classes/user';
 
 @Component({
   selector: 'app-character',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CharacterComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
