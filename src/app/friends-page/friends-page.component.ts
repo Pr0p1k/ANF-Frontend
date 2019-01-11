@@ -95,7 +95,8 @@ export class FriendsPageComponent implements OnInit {
                   user.offline = false;
                 }
               });
-              that.friends.push(user);
+              if (!that.friends.map(us => us.login).includes(user.login))
+                that.friends.push(user);
               });
               if (type === '+') {
                 var ind = that.outRequested.indexOf(user);
@@ -104,7 +105,7 @@ export class FriendsPageComponent implements OnInit {
                 var ind = that.inRequested.indexOf(user);
                 that.inRequested.splice(ind, 1);
               }
-          } else {
+          } else if (type === '-'){
             var username = str.substring(i+2, str.length);
             var user: User;
             //console.log("username: "+username);
@@ -137,7 +138,10 @@ export class FriendsPageComponent implements OnInit {
             that.http.get<User>(url, {withCredentials: true})
               .subscribe(data => {
                 user = data;
-                that.inRequested.splice(that.inRequested.indexOf(user), 1);
+                if (type === '-')
+                  that.inRequested.splice(that.inRequested.indexOf(user), 1);
+                else
+                  that.outRequested.splice(that.outRequested.indexOf(user), 1);
               });
           }
         } else {
