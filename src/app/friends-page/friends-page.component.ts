@@ -4,6 +4,7 @@ import {HttpClient, HttpParams, HttpHeaderResponse, HttpHeaders} from '@angular/
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { SingleMessageComponent} from '../single-message/single-message.component';
+import { SingleMessageService } from '../services/single-message.service';
 import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 
 @Component({
@@ -19,10 +20,9 @@ export class FriendsPageComponent implements OnInit {
   outRequested: User[];
   private stompClient;
   private dialog: DynamicDialogRef;
-  receiver: string;
 
   constructor(private http: HttpClient, private dialogService: DialogService,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService, private msgServ: SingleMessageService) { }
 
   ngOnInit() {
     this.friends = [];
@@ -76,7 +76,7 @@ export class FriendsPageComponent implements OnInit {
         if (event === 'friend') {
           var type = str.substring(i+1, i+2);
           //console.log("type: "+type);
-          if (type === '+'){
+          if (type === '+' || type === 'o'){
             var username = str.substring(i+2, str.length);
             var user: User;
             //console.log("username: "+username);
@@ -97,8 +97,13 @@ export class FriendsPageComponent implements OnInit {
               });
               that.friends.push(user);
               });
-            var ind = that.outRequested.indexOf(user);
-            that.outRequested.splice(ind, 1);
+              if (type === '+') {
+                var ind = that.outRequested.indexOf(user);
+                that.outRequested.splice(ind, 1);
+              } else {
+                var ind = that.inRequested.indexOf(user);
+                that.inRequested.splice(ind, 1);
+              }
           } else {
             var username = str.substring(i+2, str.length);
             var user: User;
@@ -111,7 +116,7 @@ export class FriendsPageComponent implements OnInit {
         } else if (event === 'request'){
           var type = str.substring(i+1, i+2);
           //console.log("type: "+type);
-          if (type === '+'){
+          if (type === '+' || type === 'o'){
             var username = str.substring(i+2, str.length);
             var user: User;
             //console.log("username: "+username);
@@ -119,7 +124,10 @@ export class FriendsPageComponent implements OnInit {
             that.http.get<User>(url, {withCredentials: true})
               .subscribe(data => {
                 user = data;
-                that.inRequested.push(user);
+                if (type === '+')
+                  that.inRequested.push(user);
+                else
+                  that.outRequested.push(user);
               });
           } else {
             var username = str.substring(i+2, str.length);
@@ -228,24 +236,11 @@ export class FriendsPageComponent implements OnInit {
   }
 
   showMessageInput(user: User): void {
-    this.receiver = user.login;
+    this.msgServ.username = user.login;
     this.dialog = this.dialogService.open(SingleMessageComponent, {
       width: '800px', height: '400px'
     });
-  }
-
-  sendMessage(msg: string): void {
-    this.http.post('http://localhost:31480/profile/messages', null, {
-      withCredentials: true,
-      params: new HttpParams()
-        .append('message', msg)
-        .append('receiver', this.receiver)
-    }).subscribe();
-    this.dialog.close();
-  }
-
-  cancelMessage(): void {
-    this.dialog.close();
+    this.msgServ.closingObj = this.dialog;
   }
 
 }
