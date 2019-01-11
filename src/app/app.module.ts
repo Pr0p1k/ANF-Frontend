@@ -31,6 +31,7 @@ import { FightComponent } from './fight/fight.component';
 import { CharacterComponent } from './character/character.component';
 import { SingleMessageComponent } from './single-message/single-message.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { SearchUsersPipe } from './services/search-users.pipe';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { UsersListComponent } from './users-list/users-list.component';
     FightComponent,
     CharacterComponent,
     SingleMessageComponent,
-    UsersListComponent],
+    UsersListComponent,
+    SearchUsersPipe],
   imports: [
     BrowserModule,
     HttpClientModule,

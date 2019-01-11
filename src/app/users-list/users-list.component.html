@@ -1,8 +1,9 @@
 <h2>Users:</h2>
+<input [(ngModel)]="searchText" placeholder="Search">
 <div class="fullScope">
   
   <ul id = "usersList">
-    <li *ngFor='let userdata of usersList'>
+    <li *ngFor='let userdata of usersList | searchUsers : searchText'>
       <label class='username'>{{userdata.user.login}}</label>
       <label class='status'>{{userdata.user.online ? 'Ready' : 'Unready'}}</label>
       <label *ngIf='userdata.friend' class='friend'>Friend</label> <br>
