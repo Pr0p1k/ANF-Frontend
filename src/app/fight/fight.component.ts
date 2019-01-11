@@ -23,6 +23,7 @@ export class FightComponent implements OnInit, AfterContentInit {
   enemies: User[] | Boss[];
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
+  fightersElements: HTMLElement[];
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver) {
   }
@@ -35,17 +36,26 @@ export class FightComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     const factory = this.resolver.resolveComponentFactory(CharacterComponent);
     let character: ComponentRef<CharacterComponent>;
+    this.fightersElements = [];
     console.log('Allies: ' + this.allies.length);
     for (let i = 0; i < this.allies.length; i++) {
       character = this.alliesContainer.createComponent(factory);
       const genderId = this.allies[this.allies.length - i - 1].character.appearance.gender === 'FEMALE' ? 1 : 0;
-      const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[genderId]);
-      console.log(element);
+      const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[1 + genderId]);
+      this.fightersElements.push(element);
       element.style.display = 'block';
       this.setPosition(element, i);
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
-        .childNodes[(genderId + 1) % 2]).style.display = 'none';
-      console.log(element);
+        .childNodes[1 + (genderId + 1) % 2]).style.display = 'none';
+      const stats = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[0]);
+      this.fightersElements.push(stats);
+      this.setPosition(stats, i, 125);
+
+      (<HTMLElement>stats
+        .getElementsByClassName('name')[0])
+        .innerText = this.allies[this.allies.length - i - 1].login;
+      this.setHPPercent(stats, Math.random() * 100);
+      this.setChakraPercent(stats, Math.random() * 100);
       this.setAppearance(element, this.allies[this.allies.length - i - 1]);
     }
     // console.log(this.enemies[0].type);
@@ -64,10 +74,18 @@ export class FightComponent implements OnInit, AfterContentInit {
     // }
   }
 
-  setPosition(element: HTMLElement, i: number) {
+  setPosition(element: HTMLElement, i: number, margin = 0) {
     element.style.position = 'absolute';
-    element.style.bottom = (40 * ((i + 1) % 2)) + 'px';
+    element.style.bottom = (margin + 40 * ((i + 1) % 2)) + 'px';
     element.style.left = (80 * Math.round(i / 2) + 40 * ((i + 1) % 2)) + 'px';
+  }
+
+  setHPPercent(stats: HTMLElement, hp: number) {
+    (<HTMLElement>stats.getElementsByClassName('hp')[0]).style.width = hp + '%';
+  }
+
+  setChakraPercent(stats: HTMLElement, mp: number) {
+    (<HTMLElement>stats.getElementsByClassName('mp')[0]).style.width = mp + '%';
   }
 
   setAppearance(element: HTMLElement, user: User) {
