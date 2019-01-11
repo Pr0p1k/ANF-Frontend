@@ -132,7 +132,8 @@ export class UsersListComponent implements OnInit {
         var event = str.substring(0, i);
         if (event === 'friend') {
           var type = str.substring(i+1, i+2);
-          var username = str.substring(1+2, str.length);
+          var username = str.substring(i+2, str.length);
+          console.log('usersList: friend '+type+' '+username+';');
           that.usersList.forEach(ud => {
             if (ud.user.login === username){
               if (type === '+' || type === 'o') {
@@ -173,7 +174,8 @@ export class UsersListComponent implements OnInit {
         }
       });
       if (that.adminView) {
-        that.stompClient.subscribe("/admin/admins", logn => {
+        that.stompClient.subscribe("/admin/admins", message => {
+          var logn = message.body;
           that.usersList.forEach(ud => {
             if (ud.user.login === logn) {
               ud.admin = true;

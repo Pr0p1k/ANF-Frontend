@@ -95,7 +95,8 @@ export class FriendsPageComponent implements OnInit {
                   user.offline = false;
                 }
               });
-              that.friends.push(user);
+              if (!that.friends.map(us => us.login).includes(user.login))
+                that.friends.push(user);
               });
               if (type === '+') {
                 var ind = that.outRequested.indexOf(user);
