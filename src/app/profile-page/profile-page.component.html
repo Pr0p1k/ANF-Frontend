@@ -19,7 +19,7 @@
       <label class="stats">{{'Number of deaths:' | translate }} {{user.stats.deaths}}</label>
     </div>
     <div class="vertical">
-      <p *ngIf='ready'>{{'Ready'| translate}}</p> <p *ngIf='notReady'>{{'Not ready' | translate }}</p>
+      <div *ngIf='ready'>{{'Ready'| translate}}</div> <div *ngIf='notReady'>{{'Not ready' | translate }}</div>
       <p-inputSwitch [(ngModel)]="ready" (onChange)="changeReadyState()"></p-inputSwitch>
       <br>
       <app-friends-page></app-friends-page>

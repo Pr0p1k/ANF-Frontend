@@ -13,5 +13,8 @@
 	"Ready":"Ready",
 	"Not ready":"Not ready",
 	"English":"English",
-	"Russian":"Russian"
+	"Russian":"Russian",
+	"About project":"About project",
+	"Profile":"Profile",
+	"Logged in as:":"Logged in as:"
 }
