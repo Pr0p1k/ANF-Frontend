@@ -38,6 +38,7 @@ export class QueueComponent implements OnInit {
     });
     this.selected = [];
     this.disabled = this.areaService.pvp;
+    this.initializeWebsockets();
   }
 
   validateAmount(event) {
