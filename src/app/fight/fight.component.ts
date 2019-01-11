@@ -35,17 +35,18 @@ export class FightComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     const factory = this.resolver.resolveComponentFactory(CharacterComponent);
     let character: ComponentRef<CharacterComponent>;
+    console.log('Allies: ' + this.allies.length);
     for (let i = 0; i < this.allies.length; i++) {
       character = this.alliesContainer.createComponent(factory);
-      const genderId = this.allies[i].character.appearance.gender === 'FEMALE' ? 1 : 0;
+      const genderId = this.allies[this.allies.length - i - 1].character.appearance.gender === 'FEMALE' ? 1 : 0;
       const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[genderId]);
+      console.log(element);
       element.style.display = 'block';
-      element.style.marginBottom = (40 + 10 * i).toString(); // TODO readjust every player
-      element.style.marginLeft = (40 * i).toString();
+      this.setPosition(element, i);
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
         .childNodes[(genderId + 1) % 2]).style.display = 'none';
       console.log(element);
-      this.setAppearance(element, this.allies[i]);
+      this.setAppearance(element, this.allies[this.allies.length - i - 1]);
     }
     // console.log(this.enemies[0].type);
     // if (this.enemies[0].type === Boss) {
@@ -61,6 +62,12 @@ export class FightComponent implements OnInit, AfterContentInit {
     //   console.log(element);
     //   this.setAppearance(element, this.enemies[0]);
     // }
+  }
+
+  setPosition(element: HTMLElement, i: number) {
+    element.style.position = 'absolute';
+    element.style.bottom = (40 * ((i + 1) % 2)) + 'px';
+    element.style.left = (80 * Math.round(i / 2) + 40 * ((i + 1) % 2)) + 'px';
   }
 
   setAppearance(element: HTMLElement, user: User) {
