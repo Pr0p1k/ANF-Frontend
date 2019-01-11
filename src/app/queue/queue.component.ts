@@ -77,14 +77,18 @@ export class QueueComponent implements OnInit {
     } else {
       this.fightService.allies = [];
       this.selected.push(this.parent.login);
+      console.log('Selected: ' + this.selected);
+      let responded = 0;
       for (let i = 0; i < this.selected.length; i++) {
         this.send('pve', this.selected[i]);
         this.http.get<User>('http://localhost:31480/users/' + this.selected[i], {
           withCredentials: true
         }).subscribe(ally => {
           this.fightService.allies.push(ally);
-          if (i === this.selected.length - 1) {
+          responded++;
+          if (responded === this.selected.length) {
             this.parent.router.navigateByUrl('fight');
+            // TODO close dialog
           }
         });
       }
