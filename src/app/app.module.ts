@@ -75,7 +75,7 @@ export function setupTranslateFactory(
     PickListModule,
     ConfirmDialogModule
   ],
-  providers: [CookieService, MessageService, TranslateService,
+  providers: [CookieService, MessageService, TranslatePipe, TranslateService,
     {
       provide: APP_INITIALIZER,
       useFactory: setupTranslateFactory,

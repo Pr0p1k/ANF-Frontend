@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/
 import {CookieService} from 'ngx-cookie-service';
 import {MainComponent} from '../main/main.component';
 import {Appearance} from '../classes/appearance';
+import {TranslatePipe} from '../services/translate.pipe';
 
 @Component({
   selector: 'app-auth',
@@ -21,18 +22,19 @@ export class AuthComponent implements OnInit {
   appearance = new Appearance();
   gender: false;
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService, private injector: Injector) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private injector: Injector,
+    private pipe: TranslatePipe) {
   }
 
   ngOnInit() {
     this.pages = [{
-      label: 'Sign in', command: function () {
+      label: this.pipe.transform('Sign in'), command: function () {
         document.getElementById('sign-in').style.display = 'block';
         document.getElementById('sign-up').style.display = 'none';
       }
     },
       {
-        label: 'Sign up', command: function () {
+        label: this.pipe.transform('Sign up'), command: function () {
           document.getElementById('sign-in').style.display = 'none';
           document.getElementById('sign-up').style.display = 'block';
         }
