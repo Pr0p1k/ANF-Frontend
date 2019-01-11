@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, APP_INITIALIZER} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {MainComponent} from './main/main.component';
 import {StartPageComponent} from './start-page/start-page.component';
@@ -32,6 +32,13 @@ import { CharacterComponent } from './character/character.component';
 import { SingleMessageComponent } from './single-message/single-message.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { SearchUsersPipe } from './services/search-users.pipe';
+import { TranslateService } from './services/translate.service';
+import { TranslatePipe } from './services/translate.pipe';
+
+export function setupTranslateFactory(
+  service: TranslateService): Function {
+  return () => service.use('en');
+}
 
 @NgModule({
   declarations: [
@@ -49,7 +56,8 @@ import { SearchUsersPipe } from './services/search-users.pipe';
     CharacterComponent,
     SingleMessageComponent,
     UsersListComponent,
-    SearchUsersPipe],
+    SearchUsersPipe,
+    TranslatePipe],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -67,9 +75,14 @@ import { SearchUsersPipe } from './services/search-users.pipe';
     PickListModule,
     ConfirmDialogModule
   ],
-  providers: [CookieService, MessageService],
+  providers: [CookieService, MessageService, TranslateService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: setupTranslateFactory,
+      deps: [ TranslateService ],
+      multi: true
+    }],
   bootstrap: [MainComponent],
   entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent, CharacterComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

@@ -4,6 +4,7 @@ import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} fr
 import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import { TranslateService } from '../services/translate.service';
 
 @Component({
   selector: 'app-main',
@@ -14,12 +15,14 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 export class MainComponent implements OnInit {
   constructor(public router: Router, private dialogService: DialogService,
               private cookieService: CookieService, private http: HttpClient,
-              public messageService: MessageService, private confirmationService: ConfirmationService) {
+              public messageService: MessageService, private confirmationService: ConfirmationService,
+              private translate: TranslateService) {
   }
 
   loggedIn: boolean;
   login: string;
   dialog: DynamicDialogRef;
+  russian: boolean  = false;
 
   ngOnInit() {
     this.loggedIn = this.cookieService.get('loggedIn') === 'true';
@@ -36,6 +39,17 @@ export class MainComponent implements OnInit {
           this.cookieService.delete('username');
           this.router.navigateByUrl('start');
         });
+    }
+  }
+
+  changeLanguage(): void {
+    if (this.russian) {
+      this.russian = false;
+      this.translate.use('en');
+    }
+    else {
+      this.russian = true;
+      this.translate.use('ru');
     }
   }
 

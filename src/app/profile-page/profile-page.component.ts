@@ -23,6 +23,7 @@ export class ProfilePageComponent implements OnInit {
   public friends: string[];
   public parent = this.injector.get(MainComponent);
   public ready = false;
+  public notReady = true;
   private stompClient;
 
   constructor(private http: HttpClient, private injector: Injector,
@@ -53,6 +54,7 @@ export class ProfilePageComponent implements OnInit {
       this.parent.router.navigateByUrl('start');
     });
     this.ready = this.cookieService.get('ready') === 'true';
+    this.notReady = !this.ready;
     this.subscribeForWebsockets();
   }
 
@@ -68,7 +70,7 @@ export class ProfilePageComponent implements OnInit {
         const type = str.substring(i + 1, str.length);
         if (user === that.user.login && type === 'offline' && that.ready === true) {
           that.ready = false;
-
+          that.notReady = true;
         }
       });
     });
@@ -77,8 +79,10 @@ export class ProfilePageComponent implements OnInit {
   public changeReadyState() {
     let request: Observable<Object>;
     if (this.ready) {
+      this.notReady = false;
       request = this.http.get('http://localhost:31480/profile/online', {withCredentials: true});
     } else {
+      this.notReady = true;
       request = this.http.get('http://localhost:31480/profile/offline', {withCredentials: true});
     }
     request.subscribe(() => {
