@@ -23,7 +23,6 @@ export class FightComponent implements OnInit, AfterContentInit {
   enemies: User[] | Boss[];
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
-  componentRef: ComponentRef;
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver) {
   }
@@ -34,8 +33,8 @@ export class FightComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    const factory: ComponentFactory = this.resolver.resolveComponentFactory(CharacterComponent);
-    let character: ComponentRef;
+    const factory = this.resolver.resolveComponentFactory(CharacterComponent);
+    let character: ComponentRef<CharacterComponent>;
     for (let i = 0; i < this.allies.length; i++) {
       character = this.alliesContainer.createComponent(factory);
       const genderId = this.allies[i].character.appearance.gender === 'FEMALE' ? 1 : 0;
@@ -48,20 +47,20 @@ export class FightComponent implements OnInit, AfterContentInit {
       console.log(element);
       this.setAppearance(element, this.allies[i]);
     }
-    console.log(this.enemies[0].type);
-    if (this.enemies[0].type === Boss) {
-      // smth
-    } else {
-      character = this.enemiesContainer.createComponent(factory);
-      const genderId = this.enemies[0].character.appearance.gender === 'FEMALE' ? 1 : 0;
-      const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[genderId]);
-      element.style.display = 'block';
-      element.classList.add('enemy');
-      (<HTMLElement>(<HTMLElement>character.location.nativeElement)
-        .childNodes[(genderId + 1) % 2]).style.display = 'none';
-      console.log(element);
-      this.setAppearance(element, this.enemies[0]);
-    }
+    // console.log(this.enemies[0].type);
+    // if (this.enemies[0].type === Boss) {
+    //   // smth
+    // } else {
+    //   character = this.enemiesContainer.createComponent(factory);
+    //   const genderId = this.enemies[0].character.appearance.gender === 'FEMALE' ? 1 : 0;
+    //   const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[genderId]);
+    //   element.style.display = 'block';
+    //   element.classList.add('enemy');
+    //   (<HTMLElement>(<HTMLElement>character.location.nativeElement)
+    //     .childNodes[(genderId + 1) % 2]).style.display = 'none';
+    //   console.log(element);
+    //   this.setAppearance(element, this.enemies[0]);
+    // }
   }
 
   setAppearance(element: HTMLElement, user: User) {
