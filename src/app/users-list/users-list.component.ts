@@ -68,6 +68,7 @@ export class UsersListComponent implements OnInit {
                           this.viewer = usr;
                           if (this.viewer.roles.map(role => role.role).includes('ADMIN')) 
                             this.adminView = true;
+                            this.initializeWebSockets();
                           tempUsrs.forEach(ud => {
                             if (ud.user.login === this.viewer.login)
                               tempUsrs.splice(tempUsrs.indexOf(ud), 1);
@@ -100,7 +101,7 @@ export class UsersListComponent implements OnInit {
                     });
                 });
             });  
-      this.initializeWebSockets();
+      
   }
 
   initializeWebSockets(): void {
@@ -134,7 +135,7 @@ export class UsersListComponent implements OnInit {
           var username = str.substring(1+2, str.length);
           that.usersList.forEach(ud => {
             if (ud.user.login === username){
-              if (type === '+') {
+              if (type === '+' || type === 'o') {
                 ud.friend = true;
                 ud.requested = false;
                 ud.requesting = false;
@@ -171,6 +172,16 @@ export class UsersListComponent implements OnInit {
           });
         }
       });
+      if (that.adminView) {
+        that.stompClient.subscribe("/admin/admins", logn => {
+          that.usersList.forEach(ud => {
+            if (ud.user.login === logn) {
+              ud.admin = true;
+              ud.notAdmin = false;
+            }
+          });
+        });
+      }
     });
   }
 
