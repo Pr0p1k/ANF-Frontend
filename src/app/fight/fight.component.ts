@@ -24,6 +24,7 @@ export class FightComponent implements OnInit, AfterContentInit {
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
   fightersElements: HTMLElement[];
+  skills: string[] = ['kek', 'lol'];
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver) {
   }

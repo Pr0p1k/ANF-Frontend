@@ -71,6 +71,9 @@ export class ProfilePageComponent implements OnInit {
 
         }
       });
+      // that.stompClient.subscribe('/user/invite', (message) => {
+      //   console.log(message);
+      // });
     });
   }
 
@@ -150,6 +153,7 @@ export class ProfilePageComponent implements OnInit {
   }
 
   setGender() {
+    (<HTMLElement>document.getElementsByClassName('powers')[0]).style.display = 'none';
     const males = document.getElementsByClassName('male');
     const females = document.getElementsByClassName('female');
     if (this.user.character.appearance.gender === 'FEMALE') {

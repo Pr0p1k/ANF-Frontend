@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DynamicDialogRef } from 'primeng/api'; 
+import { DynamicDialogRef } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class SingleMessageService {
   constructor() {}
 
 
-  exit(){
+  exit() {
     this.closingObj.close();
   }
 

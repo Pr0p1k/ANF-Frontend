@@ -7,7 +7,7 @@
               [showSourceControls]="false" [showTargetControls]="false"
               [responsive]="true" [dragdrop]="true"
               filterBy="toString()" (onMoveToTarget)="validateAmount($event)"
-              [metaKeySelection]="false" (onMoveAllToTarget)="break($event)" [showTargetFilter]="false">
+              [metaKeySelection]="false"  [showTargetFilter]="false">
     <ng-template let-user pTemplate="item">
       <div class="ready">
         {{user}}

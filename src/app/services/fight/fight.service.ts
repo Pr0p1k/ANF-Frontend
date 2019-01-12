@@ -8,6 +8,33 @@ import {Boss} from '../../classes/boss';
 export class FightService {
   private _allies: User[];
   private _enemies: User[] | Boss[];
+  private _id: number;
+  private _type: string;
+  private _author: string;
+
+  get id(): number {
+    return this._id;
+  }
+
+  set id(value: number) {
+    this._id = value;
+  }
+
+  get type(): string {
+    return this._type;
+  }
+
+  set type(value: string) {
+    this._type = value;
+  }
+
+  get author(): string {
+    return this._author;
+  }
+
+  set author(value: string) {
+    this._author = value;
+  }
 
   get allies(): User[] {
     return this._allies;

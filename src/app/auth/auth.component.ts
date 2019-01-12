@@ -40,6 +40,7 @@ export class AuthComponent implements OnInit {
     this.appearance.hairColour = 'YELLOW';
     this.appearance.clothesColour = 'GREEN';
     this.appearance.skinColour = 'WHITE';
+    this.appearance.gender = 'MALE';
     this.changeClothes();
     this.changeHair();
     this.changeSkin();

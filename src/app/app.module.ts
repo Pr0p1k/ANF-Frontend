@@ -21,16 +21,17 @@ import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {FormsModule} from '@angular/forms';
-import { MessagesComponent } from './messages/messages.component';
-import { FriendsPageComponent } from './friends-page/friends-page.component';
-import { DialogueComponent } from './dialogue/dialogue.component';
+import {MessagesComponent} from './messages/messages.component';
+import {FriendsPageComponent} from './friends-page/friends-page.component';
+import {DialogueComponent} from './dialogue/dialogue.component';
 import {ToastModule} from 'primeng/toast';
-import { ChatComponent } from './chat/chat.component';
-import { QueueComponent } from './queue/queue.component';
-import { FightComponent } from './fight/fight.component';
-import { CharacterComponent } from './character/character.component';
-import { SingleMessageComponent } from './single-message/single-message.component';
-import { UsersListComponent } from './users-list/users-list.component';
+import {ChatComponent} from './chat/chat.component';
+import {QueueComponent} from './queue/queue.component';
+import {FightComponent} from './fight/fight.component';
+import {CharacterComponent} from './character/character.component';
+import {SingleMessageComponent} from './single-message/single-message.component';
+import {UsersListComponent} from './users-list/users-list.component';
+import {RoomComponent} from './room/room.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { UsersListComponent } from './users-list/users-list.component';
     FightComponent,
     CharacterComponent,
     SingleMessageComponent,
-    UsersListComponent],
+    UsersListComponent,
+    RoomComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -67,7 +69,12 @@ import { UsersListComponent } from './users-list/users-list.component';
   ],
   providers: [CookieService, MessageService],
   bootstrap: [MainComponent],
-  entryComponents: [AuthComponent, QueueComponent, SingleMessageComponent, CharacterComponent]
+  entryComponents: [
+    AuthComponent,
+    QueueComponent,
+    SingleMessageComponent,
+    CharacterComponent,
+    RoomComponent]
 })
 export class AppModule {
 }
