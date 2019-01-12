@@ -1,9 +1,9 @@
 <div>
   <p>
-    {{type}} fight: {{area}}
+    {{type}} {{'fight' | translate}}: {{area}}
   </p>
-  <p-pickList sourceHeader="Ready users" [source]="users"
-              targetHeader="Invited users" [target]="selected"
+  <p-pickList sourceHeader="{{'Ready users' | translate}}" [source]="users"
+              targetHeader="{{'Invited users' | translate}}" [target]="selected"
               [showSourceControls]="false" [showTargetControls]="false"
               [responsive]="true" [dragdrop]="true"
               filterBy="toString()" (onMoveToTarget)="validateAmount($event)"
@@ -14,6 +14,6 @@
       </div>
     </ng-template>
   </p-pickList>
-  <p-button id="start" label="Start" [disabled]="disabled" (onClick)="startFight()"></p-button>
+  <p-button id="start" label="{{'Start' | translate}}" [disabled]="disabled" (onClick)="startFight()"></p-button>
 
 </div>

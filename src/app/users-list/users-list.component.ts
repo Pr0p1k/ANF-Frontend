@@ -110,10 +110,11 @@ export class UsersListComponent implements OnInit {
     let that = this;
     this.stompClient.connect({}, function(frame) {
       that.stompClient.subscribe("/online", (message) => {
-        var str = message.body; //format: {username}:{online/offline}
+        var str = message.body; //format: {online/offline/new}:{username}
         var i = str.indexOf(':');
-        var user = str.substring(0, i);
-        var type = str.substring(i+1, str.length);
+        var type = str.substring(0, i);
+        var user = str.substring(i+1, str.length);
+        if (type !== 'new')
         that.usersList.forEach(ud => {
           if (ud.user.login === user) {
             if (type === 'online') {
@@ -125,6 +126,23 @@ export class UsersListComponent implements OnInit {
             }
           }
         });
+        else {
+          var newUser: User;
+          that.http.get<User>('http://localhost:31480/users/'+user, {withCredentials: true})
+            .subscribe(usr => {
+              newUser = usr;
+              var newUd: Userdata = new Userdata();
+          newUd.admin = false;
+          newUd.friend = false;
+          newUd.noRelations = true;
+          newUd.notAdmin = true;
+          newUd.requested = false;
+          newUd.requesting = false;
+          newUd.user = newUser;
+          that.usersList.push(newUd);
+            });
+          
+        }
     });
       that.stompClient.subscribe("/user/social", message => {
         var str = message.body;
@@ -163,7 +181,7 @@ export class UsersListComponent implements OnInit {
               }
             }
           });
-        } else {
+        } else if (event === 'decline'){
           var username = str.substring(i+1, str.length);
           that.usersList.forEach(ud => {
             if (ud.user.login === username) {
@@ -171,7 +189,7 @@ export class UsersListComponent implements OnInit {
               ud.noRelations = true;
             }
           });
-        }
+        } 
       });
       if (that.adminView) {
         that.stompClient.subscribe("/admin/admins", message => {

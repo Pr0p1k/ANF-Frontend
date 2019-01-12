@@ -8,6 +8,8 @@ import * as SockJS from 'sockjs-client';
 import {CompatClient, Stomp} from '@stomp/stompjs';
 import {RoomComponent} from '../room/room.component';
 import {FightService} from '../services/fight/fight.service';
+import { TranslateService } from '../services/translate.service';
+import { TranslatePipe } from '../services/translate.pipe';
 
 @Component({
   selector: 'app-main',
@@ -19,13 +21,16 @@ export class MainComponent implements OnInit {
   constructor(public router: Router, private dialogService: DialogService,
               private cookieService: CookieService, private http: HttpClient,
               public messageService: MessageService, private fightService: FightService,
-              private confirmationService: ConfirmationService) {
+              private confirmationService: ConfirmationService,
+              public messageService: MessageService, private confirmationService: ConfirmationService,
+              private translate: TranslateService, private pipe: TranslatePipe) {
   }
 
   loggedIn: boolean;
   login: string;
   dialog: DynamicDialogRef;
   private stompClient: CompatClient;
+  russian = false;
 
   ngOnInit() {
     this.loggedIn = this.cookieService.get('loggedIn') === 'true';
@@ -46,6 +51,17 @@ export class MainComponent implements OnInit {
     this.initializeWebsockets();
   }
 
+  changeLanguage(): void {
+    if (this.russian) {
+      this.russian = false;
+      this.translate.use('en');
+    }
+    else {
+      this.russian = true;
+      this.translate.use('ru');
+    }
+  }
+
   showLoginBlock() {
     this.dialog = this.dialogService.open(AuthComponent, {
       width: '800px', height: '400px'
@@ -53,7 +69,7 @@ export class MainComponent implements OnInit {
   }
 
   loginSuccess() {
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Authorized'});
+    this.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('Authorized')});
     this.dialog.close();
     this.loggedIn = true;
     this.login = this.cookieService.get('username');
@@ -65,7 +81,7 @@ export class MainComponent implements OnInit {
     this.router.navigateByUrl('start');
     this.cookieService.delete('loggedIn');
     this.cookieService.delete('username');
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
+    this.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('Logged out')});
   }
 
   initializeWebsockets(): void {

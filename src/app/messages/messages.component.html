@@ -1,8 +1,8 @@
 <div id="messages">
-  <label id="header">Dialogues</label><br>
+  <label id="header">{{'Dialogues' | translate }}</label><br>
   <ul class="list">
     <li *ngFor="let dialogue of dialogues" class="row" (click)="parent.router.navigateByUrl('dialogue/' + dialogue)">
-      Interlocutor: {{dialogue}}
+      {{'Interlocutor' | translate }}: {{dialogue}}
     </li>
   </ul>
 </div>

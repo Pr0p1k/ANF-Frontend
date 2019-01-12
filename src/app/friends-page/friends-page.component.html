@@ -1,29 +1,31 @@
 <div class="friendsList">
-  <label class="header">Friends</label>
+  <label class="header">{{'Friends' | translate }}</label>
 <ul>
   <li *ngFor="let friend of friends">
-    <span class="login">{{friend.login}}</span><span class="buttons">
-      <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">Invite to Fight</button>
-      <button class="invite" (click)="showMessageInput(friend)">Send a message</button><br>
-      <button class="decline" (click)="deleteFriend(friend)">Remove from friends</button></span><br>
-    <label *ngIf="friend.online" class="online">Ready</label>
-    <label *ngIf="friend.offline" class="offline">Unready</label>
+    <div class="userdata">{{friend.login}}<br>
+        <label *ngIf="friend.online" class="online">{{'Ready' | translate }}</label>
+        <label *ngIf="friend.offline" class="offline">{{'Not ready' | translate }}</label><br>
+      <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">{{'Invite to Fight' | translate }}</button>
+      <br *ngIf="friend.online">
+      <button class="invite" (click)="showMessageInput(friend)">{{'Send a message' | translate }}</button><br>
+      <button class="decline" (click)="deleteFriend(friend)">{{'Remove from friends' | translate }}</button></div>
+    
   </li>
 </ul>
-<label class="header">Incoming requests</label>
+<label class="header">{{'Incoming requests' | translate }}</label>
 <ul>
   <li *ngFor="let inReq of inRequested">
     <span class="login">{{inReq.login}}</span><span class="buttons">
-      <button (click)="addFriend(inReq)" class="accept">Accept</button>
-      <button (click)="declineReq(inReq)" class="decline">Decline</button>
+      <button (click)="addFriend(inReq)" class="accept">{{'Accept' | translate }}</button>
+      <button (click)="declineReq(inReq)" class="decline">{{'Decline' | translate }}</button>
     </span>
   </li>
 </ul>
-<label class="header">Outgoing requests</label>
+<label class="header">{{'Outgoing requests' | translate }}</label>
 <ul>
   <li *ngFor="let outReq of outRequested">
     <span class="login">{{outReq.login}}</span><span class="buttons">
-      <button (click)="deleteRequest(outReq)" class="decline">Delete request</button>
+      <button (click)="deleteRequest(outReq)" class="decline">{{'Delete request' | translate }}</button>
     </span>
   </li>
 </ul>

@@ -1,25 +1,30 @@
 <div id="header">
   <img id="logo" src="../../assets/logo.png" (click)="router.navigateByUrl('start')"/>
   <div class="menu">
+    <div id="languages">
+      {{'English' | translate }}
+      <p-inputSwitch (onChange)="changeLanguage()">
+      </p-inputSwitch> {{'Russian' | translate }}
+    </div>
     <div *ngIf="router.url !== '/start'" class="pages" (click)="router.navigateByUrl('start')">
-      <p>Main</p>
+      <p>{{'Main' | translate }}</p>
     </div>
     <div *ngIf="router.url === '/start'" class="pages" (click)="router.navigateByUrl('info')">
-      <p i18n="@@info_page_link">Some bullshit</p>
+      <p>{{'About project' | translate }}</p>
     </div>
     <div *ngIf="router.url === '/start'" class="pages">
-      <p>Some other хуйня</p>
+      <p>FAQ</p>
     </div>
     <div *ngIf="router.url === '/profile'" class="pages" (click)="router.navigateByUrl('messages')">
-      <p>Messages</p>
+      <p>{{'Messages' | translate }}</p>
     </div>
     <div *ngIf="loggedIn && router.url !== '/profile'" class="pages" (click)="router.navigateByUrl('profile')">
-      <p>Profile</p>
+      <p>{{'Profile' | translate }}</p>
     </div>
   </div>
-  <p-button id="account-button" label="Log in" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
-  <p id="login" *ngIf="loggedIn">Logged in as: {{login}}</p>
-  <p-button id="logout-button" label="Log out" *ngIf="loggedIn" (click)="logout()"></p-button>
+  <p-button id="account-button" label="{{'Log in' | translate }}" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
+  <p id="login" *ngIf="loggedIn">{{'Logged in as:' | translate }} {{login}}</p>
+  <p-button id="logout-button" label="{{'Log out' | translate }}" *ngIf="loggedIn" (click)="logout()"></p-button>
   <p-confirmDialog></p-confirmDialog>
 </div>
 <div id="content">
