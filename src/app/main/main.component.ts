@@ -5,6 +5,7 @@ import {AuthComponent} from '../auth/auth.component';
 import {CookieService} from 'ngx-cookie-service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { TranslateService } from '../services/translate.service';
+import { TranslatePipe } from '../services/translate.pipe';
 
 @Component({
   selector: 'app-main',
@@ -16,7 +17,7 @@ export class MainComponent implements OnInit {
   constructor(public router: Router, private dialogService: DialogService,
               private cookieService: CookieService, private http: HttpClient,
               public messageService: MessageService, private confirmationService: ConfirmationService,
-              private translate: TranslateService) {
+              private translate: TranslateService, private pipe: TranslatePipe) {
   }
 
   loggedIn: boolean;
@@ -60,7 +61,7 @@ export class MainComponent implements OnInit {
   }
 
   loginSuccess() {
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Authorized'});
+    this.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('Authorized')});
     this.dialog.close();
     this.loggedIn = true;
     this.login = this.cookieService.get('username');
@@ -72,7 +73,7 @@ export class MainComponent implements OnInit {
     this.router.navigateByUrl('start');
     this.cookieService.delete('loggedIn');
     this.cookieService.delete('username');
-    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Logged out'});
+    this.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('Logged out')});
   }
 
 }

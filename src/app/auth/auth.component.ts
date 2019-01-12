@@ -49,9 +49,9 @@ export class AuthComponent implements OnInit {
 
   tryToLogin() {
     if (this.username.length < 6) {
-      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Login is too short'});
+      this.parent.messageService.add({severity: 'error', summary: this.pipe.transform('Error'), detail: this.pipe.transform('Login is too short')});
     } else if (this.firstPassword.length < 6) {
-      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Password is too short'});
+      this.parent.messageService.add({severity: 'error', summary: this.pipe.transform('Error'), detail: this.pipe.transform('Password is too short')});
     } else {
       const sendParams = new HttpParams()
         .append('username', this.username)
@@ -69,8 +69,8 @@ export class AuthComponent implements OnInit {
       }, (error) => {
         this.parent.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: 'Unauthorized'
+          summary: this.pipe.transform('Error'),
+          detail: this.pipe.transform('Unauthorized')
         });
       });
     }
@@ -78,11 +78,11 @@ export class AuthComponent implements OnInit {
 
   tryToSignUp() {
     if (this.username.length < 6) {
-      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Login is too short'});
+      this.parent.messageService.add({severity: 'error', summary: this.pipe.transform('Error'), detail: this.pipe.transform('Login is too short')});
     } else if (this.firstPassword.length < 6) {
-      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Password is too short'});
+      this.parent.messageService.add({severity: 'error', summary: this.pipe.transform('Error'), detail: this.pipe.transform('Password is too short')});
     } else if (this.firstPassword !== this.secondPassword) {
-      this.parent.messageService.add({severity: 'error', summary: 'Error', detail: 'Passwords are not the same'});
+      this.parent.messageService.add({severity: 'error', summary: this.pipe.transform('Error'), detail: this.pipe.transform('Passwords are not the same')});
     } else {
       console.log('request sent');
       this.httpClient.post('http://localhost:31480/registration', {
@@ -108,20 +108,20 @@ export class AuthComponent implements OnInit {
           }, (error) => {
             this.parent.messageService.add({
               severity: 'error',
-              summary: 'Error',
-              detail: 'Unauthorized'
+              summary: this.pipe.transform('Error'),
+              detail: this.pipe.transform('Unauthorized')
             });
           });
           this.parent.messageService.add({
             severity: 'success',
-            summary: 'Almost done',
-            detail: 'Now create your character'
+            summary: this.pipe.transform('Almost done'),
+            detail: this.pipe.transform('Now create your character')
           });
         },
         (error: HttpErrorResponse) => {
           this.parent.messageService.add({
             severity: 'error',
-            summary: 'Error',
+            summary: this.pipe.transform('Error'),
             detail: error.message
           });
         });
@@ -215,11 +215,11 @@ export class AuthComponent implements OnInit {
           .append('clothesColour', this.appearance.clothesColour)
       }).subscribe((response) => {
       this.parent.dialog.close();
-      this.parent.messageService.add({severity: 'success', summary: 'Success', detail: 'You are successfully registered'});
+      this.parent.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('You are successfully registered')});
     }, (error: HttpErrorResponse) => {
       this.parent.messageService.add({
         severity: 'error',
-        summary: 'Error',
+        summary: this.pipe.transform('Error'),
         detail: error.message
       });
     });
