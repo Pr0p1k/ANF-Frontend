@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit} from '@angular/core';
+import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
 import {AreaService} from '../services/area/area.service';
 import {HttpClient, HttpParams, HttpSentEvent} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
@@ -9,13 +9,14 @@ import {User} from '../classes/user';
 import {MainComponent} from '../main/main.component';
 import {CompatClient, Stomp} from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import {ProfilePageComponent} from '../profile-page/profile-page.component';
 
 @Component({
   selector: 'app-queue',
   templateUrl: './queue.component.html',
   styleUrls: ['./queue.component.less']
 })
-export class QueueComponent implements OnInit {
+export class QueueComponent implements OnInit, OnDestroy {
 
   area: string;
   users: string[];
@@ -25,6 +26,7 @@ export class QueueComponent implements OnInit {
   disabled: boolean;
   parent = this.injector.get(MainComponent);
   id: number;
+  approved: string[];
 
   constructor(private areaService: AreaService, private http: HttpClient,
               private cookieService: CookieService, private fightService: FightService,
@@ -45,18 +47,13 @@ export class QueueComponent implements OnInit {
     }).subscribe((response: { queueId: number }) => {
       this.id = response.queueId;
     });
+    this.approved = [];
   }
 
   validateAmount(event) {
-    console.log('Move one called');
     const max = this.areaService.pvp ? 1 : 5;
     if (this.selected.length > max) {
       this.users.push(this.selected.pop());
-    }
-
-    if (this.selected.length > 0) {
-      this.disabled = false;
-      // TODO enable if joined
     }
 
     for (let i = 0; i < this.selected.length; i++) {
@@ -75,8 +72,7 @@ export class QueueComponent implements OnInit {
         }).subscribe(enemy => {
           this.fightService.enemies = [enemy];
           this.parent.router.navigateByUrl('fight');
-
-          // TODO close dialog
+          this.parent.dialog.close();
         });
       });
     } else {
@@ -92,7 +88,7 @@ export class QueueComponent implements OnInit {
           responded++;
           if (responded === this.selected.length) {
             this.parent.router.navigateByUrl('fight');
-            // TODO close dialog
+            this.parent.dialog.close();
           }
         });
       }
@@ -100,6 +96,7 @@ export class QueueComponent implements OnInit {
   }
 
   send(type: string, username: string, id: number): void {
+    this.disabled = true;
     this.http.get('http://localhost:31480/fight/invite', {
       withCredentials: true,
       params: new HttpParams()
@@ -129,15 +126,37 @@ export class QueueComponent implements OnInit {
         const username = message.body.substring(0, message.body.indexOf(':'));
         const pending = document.getElementsByClassName('ui-picklist-target')[0]
           .getElementsByClassName('pending');
+        that.approved.push(username);
+        that.checkReadiness();
         for (let i = 0; i < pending.length; i++) {
-          console.log(pending[i].innerHTML);
-          if (pending[i].innerHTML === username) {
+          if (pending[i].innerHTML.substring(1, pending[i].innerHTML.length - 1) === username) {
             pending[i].classList.replace('pending', 'ready');
             break;
           }
         }
       });
     });
+  }
+
+  checkReadiness() {
+    let check = false;
+    for (let i = 0; i < this.selected.length; i++) {
+      if (!this.approved.includes(this.selected[i])) {
+        check = true;
+        break;
+      }
+    }
+    if (this.areaService.pvp && this.selected.length < 1) {
+      check = true;
+    }
+    this.disabled = check;
+  }
+
+  ngOnDestroy() {
+    this.http.get('http://localhost:31480/fight/closeQueue', {
+      withCredentials: true,
+      params: new HttpParams().append('id', this.id.toString())
+    }).subscribe();
   }
 
 }

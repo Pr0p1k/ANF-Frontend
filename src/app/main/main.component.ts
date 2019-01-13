@@ -22,7 +22,6 @@ export class MainComponent implements OnInit {
               private cookieService: CookieService, private http: HttpClient,
               public messageService: MessageService, private fightService: FightService,
               private confirmationService: ConfirmationService,
-              public messageService: MessageService, private confirmationService: ConfirmationService,
               private translate: TranslateService, private pipe: TranslatePipe) {
   }
 
