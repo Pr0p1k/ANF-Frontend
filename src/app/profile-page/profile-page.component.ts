@@ -3,7 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} fro
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
-import {DialogService} from 'primeng/api';
+import {DialogService, DynamicDialogRef} from 'primeng/api';
 import {QueueComponent} from '../queue/queue.component';
 import {AreaService} from '../services/area/area.service';
 import {Observable} from 'rxjs';
@@ -39,9 +39,10 @@ export class ProfilePageComponent implements OnInit {
       const dialogService = this.dialogService;
       const areaService = this.areaService;
       const array = document.querySelectorAll('.ground, .bidju');
+      const that = this;
       for (let i = 0; i < array.length; i++) {
         (<HTMLElement>array[i]).onclick = function () {
-          dialogService.open(QueueComponent, {width: '440px', height: '200px'});
+          that.parent.dialog = dialogService.open(QueueComponent, {width: '440px', height: '200px'});
           areaService.selectedArea = (<HTMLElement>this).id;
           areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
         };
@@ -74,9 +75,6 @@ export class ProfilePageComponent implements OnInit {
           that.notReady = true;
         }
       });
-      // that.stompClient.subscribe('/user/invite', (message) => {
-      //   console.log(message);
-      // });
     });
   }
 
