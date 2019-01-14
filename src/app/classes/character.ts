@@ -5,8 +5,8 @@ export class Character {
     animalRace: string;
     cretionDate: Date;
     appearance: Appearance;
-    maxChakraAmount: number;
-    maxHP: number;
+    maxChakra: number;
+    maxHp: number;
     physicalDamage: number;
     resistance: number;
 

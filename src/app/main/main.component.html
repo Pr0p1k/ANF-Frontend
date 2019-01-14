@@ -1,19 +1,16 @@
 <div id="header">
   <img id="logo" src="../../assets/logo.png" (click)="router.navigateByUrl('start')"/>
   <div class="menu">
-    <div id="languages">
+    <div class="pages"> <p>
       {{'English' | translate }}
       <p-inputSwitch (onChange)="changeLanguage()">
-      </p-inputSwitch> {{'Russian' | translate }}
+      </p-inputSwitch> {{'Russian' | translate }}</p>
     </div>
     <div *ngIf="router.url !== '/start'" class="pages" (click)="router.navigateByUrl('start')">
       <p>{{'Main' | translate }}</p>
     </div>
     <div *ngIf="router.url === '/start'" class="pages" (click)="router.navigateByUrl('info')">
       <p>{{'About project' | translate }}</p>
-    </div>
-    <div *ngIf="router.url === '/start'" class="pages">
-      <p>FAQ</p>
     </div>
     <div *ngIf="router.url === '/profile'" class="pages" (click)="router.navigateByUrl('messages')">
       <p>{{'Messages' | translate }}</p>
@@ -23,8 +20,10 @@
     </div>
   </div>
   <p-button id="account-button" label="{{'Log in' | translate }}" *ngIf="!loggedIn" (click)="showLoginBlock()"></p-button>
-  <p id="login" *ngIf="loggedIn">{{'Logged in as:' | translate }} {{login}}</p>
-  <p-button id="logout-button" label="{{'Log out' | translate }}" *ngIf="loggedIn" (click)="logout()"></p-button>
+  <div id="login" *ngIf="loggedIn">{{'Logged in as:' | translate }} {{login}} <br>
+    <p-button id="logout-button" label="{{'Log out' | translate }}" *ngIf="loggedIn" (click)="logout()"></p-button>
+  </div>
+  
   <p-confirmDialog></p-confirmDialog>
 </div>
 <div id="content">

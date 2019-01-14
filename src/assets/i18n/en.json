@@ -11,7 +11,7 @@
 	"Number of wins:":"Number of wins:",
 	"Number of losses:":"Number of losses:",
 	"Number of deaths:":"Number of deaths:",
-	"Ready":"Ready",
+	"Ready":"Ready    ",
 	"Not ready":"Not ready",
 	"English":"English",
 	"Russian":"Russian",
@@ -98,6 +98,11 @@
 	"Now create your character":"Now create your character",
 	"You are successfully registered":"You are successfully registered",
 	"Authorized":"Authorized",
-	"Logged out":"Logged out"
+	"Logged out":"Logged out",
+		"Damage":"Damage",
+		"Max HP":"Max HP",
+		"Max chakra":"Max Chakra",
+		"Resistance":"Resistance",
+		"Upgrade points:":"Upgrade points:"
 
 }

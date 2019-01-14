@@ -19,17 +19,26 @@
   #account-button {
     position: relative;
     float: right;
-    margin-right: @margin-value; // TODO vertical margin
+    margin-right: @margin-value;
+    margin-top: @margin-value;
+  }
+  #login {
+    height: available;
+    position: relative;
+    float: right;
+    margin-right: @margin-value;
+    margin-top: @margin-value;
   }
   .menu {
-    position: relative;
-    margin-left: 400px; // TODO pizdec
-    .pages, #languages {
+    //position: relative;
+    margin: auto;
+    width: 90%;
+    .pages {
       position: relative;
       float: left;
       color: white;
       text-shadow: @secondary;
-      height: available;
+      height: 80px;
       padding: @margin-value;
       border-right: 1px @secondary solid;
     }

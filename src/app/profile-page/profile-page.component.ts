@@ -1,5 +1,5 @@
 import {Component, Injector, Input, OnInit, Output} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams, HttpRequest} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
@@ -35,6 +35,7 @@ export class ProfilePageComponent implements OnInit {
   ngOnInit() {
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.user = data;
+      this.user.character.resistance = parseFloat(this.user.character.resistance.toFixed(2));
       const dialogService = this.dialogService;
       const areaService = this.areaService;
       const array = document.querySelectorAll('.ground, .bidju');
@@ -169,4 +170,25 @@ export class ProfilePageComponent implements OnInit {
     }
     this.user.character.appearance.gender = this.user.character.appearance.gender ? 'FEMALE' : 'MALE';
   }
+
+  upgrade(param: string): void {
+    this.http.post('http://localhost:31480/profile/character', 
+    new HttpParams().set('quality', param),
+    { headers:
+      new HttpHeaders (
+      {   
+          "Content-Type": "application/x-www-form-urlencoded"
+      }), 
+    withCredentials: true }).subscribe( msg => {});
+    if (param === 'hp')
+      this.user.character.maxHp += 15;
+    else if (param === 'chakra')
+      this.user.character.maxChakra += 7;
+    else if (param === 'damage')
+      this.user.character.physicalDamage += 4;
+    else
+      this.user.character.resistance += parseFloat(((1 - this.user.character.resistance)/4).toFixed(2));
+    this.user.stats.upgradePoints --;
+  }
+
 }

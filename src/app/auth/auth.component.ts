@@ -64,6 +64,7 @@ export class AuthComponent implements OnInit {
         observe: 'response'
       }).subscribe((response) => {
         console.log(response);
+        this.parent.login = this.username;
         this.parent.loginSuccess();
         this.cookieService.set('username', this.username);
         this.cookieService.set('loggedIn', 'true');
