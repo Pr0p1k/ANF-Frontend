@@ -3,18 +3,20 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} fro
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
 import {MainComponent} from '../main/main.component';
-import {DialogService, DynamicDialogRef} from 'primeng/api';
+import {DialogService, ConfirmationService, DynamicDialogRef} from 'primeng/api';
 import {QueueComponent} from '../queue/queue.component';
 import {AreaService} from '../services/area/area.service';
 import {Observable} from 'rxjs';
 import {CookieService} from 'ngx-cookie-service';
 import {Stomp} from '@stomp/stompjs';
+import { AnimalRaceChoiceComponent } from '../animal-race-choice/animal-race-choice.component';
 import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
-  styleUrls: ['./profile-page.component.less']
+  styleUrls: ['./profile-page.component.less'],
+  providers: [DialogService, ConfirmationService]
 })
 export class ProfilePageComponent implements OnInit {
   public user: User;
@@ -23,12 +25,13 @@ export class ProfilePageComponent implements OnInit {
   public friends: string[];
   public parent = this.injector.get(MainComponent);
   public ready = false;
+  dialog: DynamicDialogRef;
   public notReady = true;
   private stompClient;
 
   constructor(private http: HttpClient, private injector: Injector,
               private dialogService: DialogService, private areaService: AreaService,
-              private cookieService: CookieService) {
+              private cookieService: CookieService, private confService: ConfirmationService) {
 
   }
 
@@ -187,6 +190,10 @@ export class ProfilePageComponent implements OnInit {
     else
       this.user.character.resistance += parseFloat(((1 - this.user.character.resistance)/4).toFixed(2));
     this.user.stats.upgradePoints --;
+  }
+
+  chooseAnimalRace(): void {
+    this.dialog = this.dialogService.open(AnimalRaceChoiceComponent, {width: '800px', height: '600px'});
   }
 
 }

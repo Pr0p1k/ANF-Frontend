@@ -10,8 +10,9 @@
       <label class="stats">{{'Level:' | translate}} {{user.stats.level}}</label><br>
       <label class="stats">{{'Rating:' | translate}} {{user.stats.rating}}</label><br>
       <label class="stats">{{'XP:' | translate }} {{user.stats.experience}}</label><br>
-      <label class="stats">{{'Animal Race:' | translate }} <br> *Racename*{{user.character.animalRace}}</label>
-      </div>
+      <label *ngIf="user.character.animalRace != undefined" class="stats">{{'Animal Race:' | translate }} <br> *Racename*{{user.character.animalRace}}</label>
+      <label *ngIf="user.character.animalRace == undefined" class="stats">{{'Animal Race:' | translate }} <br> <p-button label="Choose" (onClick)="chooseAnimalRace()"></p-button></label>
+    </div>
     </div>
     <br><br><br><br><br><br><br>
     <div id="stats" *ngIf="loaded">

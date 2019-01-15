@@ -35,6 +35,7 @@ import { SearchUsersPipe } from './services/search-users.pipe';
 import { TranslateService } from './services/translate.service';
 import { TranslatePipe } from './services/translate.pipe';
 import {RoomComponent} from './room/room.component';
+import { AnimalRaceChoiceComponent } from './animal-race-choice/animal-race-choice.component';
 
 export function setupTranslateFactory(
   service: TranslateService): Function {
@@ -59,7 +60,8 @@ export function setupTranslateFactory(
     UsersListComponent,
     SearchUsersPipe,
     TranslatePipe,
-    RoomComponent],
+    RoomComponent,
+    AnimalRaceChoiceComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -90,6 +92,7 @@ export function setupTranslateFactory(
     QueueComponent,
     SingleMessageComponent,
     CharacterComponent,
-    RoomComponent]
+    RoomComponent,
+    AnimalRaceChoiceComponent]
 })
 export class AppModule {}
