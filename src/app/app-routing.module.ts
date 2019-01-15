@@ -15,7 +15,7 @@ const routes: Routes = [{path: 'start', component: StartPageComponent},
   {path: 'messages', component: MessagesComponent},
   {path: 'friends', component: FriendsPageComponent},
   {path: 'dialogue/:login', component: DialogueComponent},
-  {path: 'fight', component: FightComponent}];
+  {path: 'fight/:id', component: FightComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

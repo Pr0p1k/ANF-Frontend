@@ -8,8 +8,8 @@ import * as SockJS from 'sockjs-client';
 import {CompatClient, Stomp} from '@stomp/stompjs';
 import {RoomComponent} from '../room/room.component';
 import {FightService} from '../services/fight/fight.service';
-import { TranslateService } from '../services/translate.service';
-import { TranslatePipe } from '../services/translate.pipe';
+import {TranslateService} from '../services/translate.service';
+import {TranslatePipe} from '../services/translate.pipe';
 
 @Component({
   selector: 'app-main',
@@ -54,8 +54,7 @@ export class MainComponent implements OnInit {
     if (this.russian) {
       this.russian = false;
       this.translate.use('en');
-    }
-    else {
+    } else {
       this.russian = true;
       this.translate.use('ru');
     }
@@ -99,6 +98,12 @@ export class MainComponent implements OnInit {
           width: '200px',
           height: '200px'
         });
+      });
+      that.stompClient.subscribe('user/startFight', (response) => {
+        const message = response.body;
+        console.log('Fight started: ' + message);
+        that.router.navigateByUrl('fight/' + message.substring(message.indexOf(':') + 1));
+        that.dialog.close();
       });
     });
   }

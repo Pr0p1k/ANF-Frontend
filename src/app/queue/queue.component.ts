@@ -71,8 +71,14 @@ export class QueueComponent implements OnInit, OnDestroy {
           withCredentials: true
         }).subscribe(enemy => {
           this.fightService.enemies = [enemy];
-          this.parent.router.navigateByUrl('fight');
-          this.parent.dialog.close();
+          this.http.get('http://localhost:31480/fight/startPvp', {
+            withCredentials: true,
+            params: new HttpParams().append('queueId', this.id.toString())
+          }).subscribe((data: { fightId: number }) => {
+            this.parent.router.navigateByUrl('fight/' + data.fightId);
+            this.parent.dialog.close();
+          });
+
         });
       });
     } else {
