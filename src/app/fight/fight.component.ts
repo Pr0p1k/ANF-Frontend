@@ -3,7 +3,7 @@ import {
   Component,
   ComponentFactory,
   ComponentFactoryResolver,
-  ComponentRef,
+  ComponentRef, Injector,
   OnInit,
   ViewChild,
   ViewContainerRef
@@ -13,6 +13,7 @@ import {User} from '../classes/user';
 import {Boss} from '../classes/boss';
 import {CharacterComponent} from '../character/character.component';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {MainComponent} from '../main/main.component';
 
 @Component({
   selector: 'app-fight',
@@ -26,21 +27,47 @@ export class FightComponent implements OnInit, AfterContentInit {
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
   fightersElements: HTMLElement[];
   skills: string[] = ['kek', 'lol'];
+  parent = this.injector.get(MainComponent);
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver,
-              private http: HttpClient) {
+              private http: HttpClient, private injector: Injector) {
   }
 
   ngOnInit() {
-    // const id = window.location.toString().substring(window.location.toString().lastIndexOf('/') + 1);
-    // this.http.post('http://localhost:31480/fight/info', null, {
-    //   withCredentials: true,
-    //   params: new HttpParams().append('id', id.toString())
-    // }).subscribe((data) => {
-    //   console.log(data);
-    // });
-    this.allies = this.fightService.allies;
-    this.enemies = this.fightService.enemies;
+    let ally: User;
+    let foe: User;
+    const id = window.location.toString().substring(window.location.toString().lastIndexOf('/') + 1);
+    this.http.post('http://localhost:31480/fight/info', null, {
+      withCredentials: true,
+      params: new HttpParams().append('id', id.toString())
+    }).subscribe((data: {
+      id: number,
+      fighter1: string,
+      fighter2: string
+    }) => {
+      console.log(data);
+      this.http.get<User>('http://localhost:31480/users/' + data.fighter1, {
+        withCredentials: true
+      }).subscribe(user => {
+        ally = user;
+      });
+
+      this.http.get<User>('http://localhost:31480/users/' + data.fighter2, {
+        withCredentials: true
+      }).subscribe(user => {
+        foe = user;
+      });
+
+      if (data.fighter2 === this.parent.login) {
+        const tmp = ally;
+        ally = foe;
+        foe = tmp;
+      }
+      this.allies = [ally];
+      this.enemies = [foe];
+    });
+    // this.allies = this.fightService.allies;
+    // this.enemies = this.fightService.enemies;
   }
 
   ngAfterContentInit() {
