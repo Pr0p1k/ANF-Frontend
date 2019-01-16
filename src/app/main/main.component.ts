@@ -70,7 +70,7 @@ export class MainComponent implements OnInit {
     this.messageService.add({severity: 'success', summary: this.pipe.transform('Success'), detail: this.pipe.transform('Authorized')});
     this.dialog.close();
     this.loggedIn = true;
-    //this.login = this.cookieService.get('username');
+    this.initializeWebsockets();
   }
 
   logout() {
@@ -99,7 +99,7 @@ export class MainComponent implements OnInit {
           height: '200px'
         });
       });
-      that.stompClient.subscribe('user/startFight', (response) => {
+      that.stompClient.subscribe('/user/start', (response) => {
         const message = response.body;
         console.log('Fight started: ' + message);
         that.router.navigateByUrl('fight/' + message.substring(message.indexOf(':') + 1));

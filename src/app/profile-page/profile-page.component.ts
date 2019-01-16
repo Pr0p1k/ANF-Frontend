@@ -173,22 +173,23 @@ export class ProfilePageComponent implements OnInit {
   }
 
   upgrade(param: string): void {
-    this.http.post('http://localhost:31480/profile/character', 
+    this.http.post('http://localhost:31480/profile/character',
     new HttpParams().set('quality', param),
     { headers:
       new HttpHeaders (
-      {   
-          "Content-Type": "application/x-www-form-urlencoded"
-      }), 
+      {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }),
     withCredentials: true }).subscribe( msg => {});
-    if (param === 'hp')
+    if (param === 'hp') {
       this.user.character.maxHp += 15;
-    else if (param === 'chakra')
+    } else if (param === 'chakra') {
       this.user.character.maxChakra += 7;
-    else if (param === 'damage')
+         } else if (param === 'damage') {
       this.user.character.physicalDamage += 4;
-    else
-      this.user.character.resistance += parseFloat(((1 - this.user.character.resistance)/4).toFixed(2));
+         } else {
+      this.user.character.resistance += parseFloat(((1 - this.user.character.resistance) / 4).toFixed(2));
+         }
     this.user.stats.upgradePoints --;
   }
 

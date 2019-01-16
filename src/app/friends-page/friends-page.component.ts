@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from '../classes/user';
 import {HttpClient, HttpParams, HttpHeaderResponse, HttpHeaders} from '@angular/common/http';
-import { Stomp } from '@stomp/stompjs';
+import {Stomp} from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { SingleMessageComponent} from '../single-message/single-message.component';
-import { SingleMessageService } from '../services/single-message.service';
+import {SingleMessageComponent} from '../single-message/single-message.component';
+import {SingleMessageService} from '../services/single-message.service';
 import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 
 @Component({
@@ -22,7 +22,8 @@ export class FriendsPageComponent implements OnInit {
   private dialog: DynamicDialogRef;
 
   constructor(private http: HttpClient, private dialogService: DialogService,
-    private confirmationService: ConfirmationService, private msgServ: SingleMessageService) { }
+              private confirmationService: ConfirmationService, private msgServ: SingleMessageService) {
+  }
 
   ngOnInit() {
     this.friends = [];
@@ -34,127 +35,133 @@ export class FriendsPageComponent implements OnInit {
       .subscribe(data => this.outRequested = data);
     this.http.get<User[]>('http://localhost:31480/friends', {withCredentials: true})
       .subscribe(data => {
-        this.friends = data
+        this.friends = data;
         this.checkOnline();
       });
-    
-  this.initializeWebSockets();
+
+    this.initializeWebSockets();
   }
 
-  initializeWebSockets(){
-    let ws = new SockJS("http://localhost:31480/socket");
+  initializeWebSockets() {
+    const ws = new SockJS('http://localhost:31480/socket');
     this.stompClient = Stomp.over(ws);
-    let that = this;
-    this.stompClient.connect({}, function(frame) {
-      that.stompClient.subscribe("/online", (message) => {
-          var str = message.body; //format: {username}:{online/offline}
-          var i = str.indexOf(':');
-          var user = str.substring(0, i);
-          var type = str.substring(i+1, str.length);
-          if (that.friends.map(friend => friend.login).includes(user)){
-            if (type === 'online')
-              that.friends.forEach(friend => {
-                if (friend.login === user) {
-                  friend.online = true;
-                  friend.offline = false;
-                }
-              });
-            else 
-              that.friends.forEach(friend => {
-                if (friend.login === user) {
-                  friend.offline = true;
-                  friend.online = false;
-                }
-              });
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/online', (message) => {
+        const str = message.body; // format: {username}:{online/offline}
+        const i = str.indexOf(':');
+        const user = str.substring(0, i);
+        const type = str.substring(i + 1, str.length);
+        if (that.friends.map(friend => friend.login).includes(user)) {
+          if (type === 'online') {
+            that.friends.forEach(friend => {
+              if (friend.login === user) {
+                friend.online = true;
+                friend.offline = false;
+              }
+            });
+          } else {
+            that.friends.forEach(friend => {
+              if (friend.login === user) {
+                friend.offline = true;
+                friend.online = false;
+              }
+            });
           }
+        }
       });
-      that.stompClient.subscribe("/user/social", message => {
-        var str = message.body;
-        var i = str.indexOf(':');
-        var event = str.substring(0, i);
-        //console.log("event: "+event);
+      that.stompClient.subscribe('/user/social', message => {
+        const str = message.body;
+        const i = str.indexOf(':');
+        const event = str.substring(0, i);
+        // console.log("event: "+event);
         if (event === 'friend') {
-          var type = str.substring(i+1, i+2);
-          //console.log("type: "+type);
-          if (type === '+' || type === 'o'){
-            var username = str.substring(i+2, str.length);
-            var user: User;
-            //console.log("username: "+username);
-            var url = 'http://localhost:31480/users/'+username;
+          const type = str.substring(i + 1, i + 2);
+          // console.log("type: "+type);
+          if (type === '+' || type === 'o') {
+            const username = str.substring(i + 2, str.length);
+            let user: User;
+            // console.log("username: "+username);
+            const url = 'http://localhost:31480/users/' + username;
             that.http.get<User>(url, {withCredentials: true})
               .subscribe(data => {
                 user = data;
                 user.online = false;
                 user.offline = true;
-                var ready = [];
+                let ready = [];
                 that.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
-              .subscribe(data => {
-                ready = data;
-                if (ready.includes(user.login)) {
-                  user.online = true;
-                  user.offline = false;
+                  .subscribe(data => {
+                    ready = data;
+                    if (ready.includes(user.login)) {
+                      user.online = true;
+                      user.offline = false;
+                    }
+                  });
+                if (!that.friends.map(us => us.login).includes(user.login)) {
+                  that.friends.push(user);
                 }
               });
-              if (!that.friends.map(us => us.login).includes(user.login))
-                that.friends.push(user);
-              });
-              if (type === '+') {
-                var ind = that.outRequested.indexOf(user);
-                that.outRequested.splice(ind, 1);
-              } else {
-                var ind = that.inRequested.indexOf(user);
-                that.inRequested.splice(ind, 1);
-              }
-          } else if (type === '-'){
-            var username = str.substring(i+2, str.length);
-            var user: User;
-            //console.log("username: "+username);
-            var url = 'http://localhost:31480/users/'+username;
+            if (type === '+') {
+              const ind = that.outRequested.indexOf(user);
+              that.outRequested.splice(ind, 1);
+            } else {
+              const ind = that.inRequested.indexOf(user);
+              that.inRequested.splice(ind, 1);
+            }
+          } else if (type === '-') {
+            const username = str.substring(i + 2, str.length);
+            let user: User;
+            // console.log("username: "+username);
+            const url = 'http://localhost:31480/users/' + username;
             that.http.get<User>(url, {withCredentials: true})
-              .subscribe(data => {user = data});
+              .subscribe(data => {
+                user = data;
+              });
             that.friends.splice(that.friends.indexOf(user), 1);
           }
-        } else if (event === 'request'){
-          var type = str.substring(i+1, i+2);
-          //console.log("type: "+type);
-          if (type === '+' || type === 'o'){
-            var username = str.substring(i+2, str.length);
-            var user: User;
-            //console.log("username: "+username);
-            var url = 'http://localhost:31480/users/'+username;
+        } else if (event === 'request') {
+          const type = str.substring(i + 1, i + 2);
+          // console.log("type: "+type);
+          if (type === '+' || type === 'o') {
+            const username = str.substring(i + 2, str.length);
+            let user: User;
+            // console.log("username: "+username);
+            const url = 'http://localhost:31480/users/' + username;
             that.http.get<User>(url, {withCredentials: true})
               .subscribe(data => {
                 user = data;
-                if (type === '+')
+                if (type === '+') {
                   that.inRequested.push(user);
-                else
+                } else {
                   that.outRequested.push(user);
+                }
               });
           } else {
-            var username = str.substring(i+2, str.length);
-            var user: User;
-            //console.log("username: "+username);
-            var url = 'http://localhost:31480/users/'+username;
+            const username = str.substring(i + 2, str.length);
+            let user: User;
+            // console.log("username: "+username);
+            const url = 'http://localhost:31480/users/' + username;
             that.http.get<User>(url, {withCredentials: true})
               .subscribe(data => {
                 user = data;
-                if (type === '-')
+                if (type === '-') {
                   that.inRequested.splice(that.inRequested.indexOf(user), 1);
-                else
+                } else {
                   that.outRequested.splice(that.outRequested.indexOf(user), 1);
+                }
               });
           }
         } else {
-          var username = str.substring(i+1, str.length);
-            var user: User;
-            //console.log("username: "+username);
-            var url = 'http://localhost:31480/users/'+username;
-            that.http.get<User>(url, {withCredentials: true})
-              .subscribe(data => {
-                user = data;
-                that.outRequested.splice(that.outRequested.indexOf(user), 1);
-              });
-            
+          const username = str.substring(i + 1, str.length);
+          let user: User;
+          // console.log("username: "+username);
+          const url = 'http://localhost:31480/users/' + username;
+          that.http.get<User>(url, {withCredentials: true})
+            .subscribe(data => {
+              user = data;
+              that.outRequested.splice(that.outRequested.indexOf(user), 1);
+            });
+
         }
       });
     });
@@ -163,17 +170,20 @@ export class FriendsPageComponent implements OnInit {
   addFriend(req: User): void {
     req.offline = true;
     req.online = false;
-    this.http.post('http://localhost:31480/profile/friends', 
-    new HttpParams().set('login', req.login),
-    { headers:
-      new HttpHeaders (
-      {   
-          "Content-Type": "application/x-www-form-urlencoded"
-      }), 
-    withCredentials: true }).subscribe( msg => {});
+    this.http.post('http://localhost:31480/profile/friends',
+      new HttpParams().set('login', req.login),
+      {
+        headers:
+          new HttpHeaders(
+            {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }),
+        withCredentials: true
+      }).subscribe(msg => {
+    });
     this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
       .subscribe(data => {
-        var ready: string[] = data;
+        const ready: string[] = data;
         if (ready.includes(req.login)) {
           req.offline = false;
           req.online = true;
@@ -184,39 +194,43 @@ export class FriendsPageComponent implements OnInit {
   }
 
   deleteRequest(req: User): void {
-    var username = req.login;
-    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {withCredentials: true,
-  params: new HttpParams().append('username', username).append('type', 'out')}).subscribe( data=> {
-    console.log(data);
-  });
-  const id = this.outRequested.indexOf(req);
-  this.outRequested.splice(id, 1);
+    const username = req.login;
+    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {
+      withCredentials: true,
+      params: new HttpParams().append('username', username).append('type', 'out')
+    }).subscribe(data => {
+      console.log(data);
+    });
+    const id = this.outRequested.indexOf(req);
+    this.outRequested.splice(id, 1);
   }
 
-  checkOnline(){
+  checkOnline() {
     this.friends.forEach(frnd => {
       frnd.offline = true;
       frnd.online = false;
     });
-    let ready: string[];
     this.http.get<string[]>('http://localhost:31480/ready', {withCredentials: true})
       .subscribe(result => {
         console.log(result);
         this.friends.forEach(friend => {
-          if (result.includes(friend.login)){
+          if (result.includes(friend.login)) {
             friend.online = true;
             friend.offline = false;
-          };
+          }
+
+        });
       });
-    });
-    //ready.forEach(rd => console.log(rd));
-    
+    // ready.forEach(rd => console.log(rd));
+
   }
 
   declineReq(req: User): void {
-    var username = req.login;
-    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {withCredentials: true,
-    params: new HttpParams().append('username', username).append('type', 'in')}).subscribe(data => {
+    const username = req.login;
+    this.http.delete<string>('http://localhost:31480/profile/friends/requests', {
+      withCredentials: true,
+      params: new HttpParams().append('username', username).append('type', 'in')
+    }).subscribe(data => {
       console.log(data);
     });
     const id = this.inRequested.indexOf(req);
@@ -224,7 +238,7 @@ export class FriendsPageComponent implements OnInit {
   }
 
   deleteFriend(usr: User): void {
-    var username = usr.login;
+    const username = usr.login;
     this.http.delete<string>('http://localhost:31480/profile/friends', {
       withCredentials: true,
       params: new HttpParams().append('username', username)
@@ -235,8 +249,8 @@ export class FriendsPageComponent implements OnInit {
     this.friends.splice(id, 1);
   }
 
-  inviteToPVP(usr: User):void {
-    
+  inviteToPVP(usr: User): void {
+
   }
 
   showMessageInput(user: User): void {

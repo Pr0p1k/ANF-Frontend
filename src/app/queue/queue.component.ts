@@ -27,6 +27,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   parent = this.injector.get(MainComponent);
   id: number;
   approved: string[];
+  started = false;
 
   constructor(private areaService: AreaService, private http: HttpClient,
               private cookieService: CookieService, private fightService: FightService,
@@ -36,6 +37,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.area = this.areaService.selectedArea;
     this.type = this.areaService.pvp ? 'PVP' : 'PVE';
+    console.log(this.areaService);
     this.http.get('http://localhost:31480/ready', {withCredentials: true}).subscribe((data: string[]) => {
       this.users = data.filter((item) => item !== this.cookieService.get('username'));
     });
@@ -62,7 +64,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   startFight() {
-    if (this.areaService.pvp) {
+    if (this.type === 'PVP') {
       this.http.get<User>('http://localhost:31480/users/' + this.parent.login, {
         withCredentials: true
       }).subscribe(ally => {
@@ -75,6 +77,7 @@ export class QueueComponent implements OnInit, OnDestroy {
             withCredentials: true,
             params: new HttpParams().append('queueId', this.id.toString())
           }).subscribe((data: { fightId: number }) => {
+            this.started = true;
             this.parent.router.navigateByUrl('fight/' + data.fightId);
             this.parent.dialog.close();
           });
@@ -159,10 +162,12 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.http.get('http://localhost:31480/fight/closeQueue', {
-      withCredentials: true,
-      params: new HttpParams().append('id', this.id.toString())
-    }).subscribe();
+    if (!this.started) {
+      this.http.get('http://localhost:31480/fight/closeQueue', {
+        withCredentials: true,
+        params: new HttpParams().append('id', this.id.toString())
+      }).subscribe();
+    }
   }
 
 }

@@ -12,6 +12,7 @@ import {FightService} from '../services/fight/fight.service';
 import {User} from '../classes/user';
 import {Boss} from '../classes/boss';
 import {CharacterComponent} from '../character/character.component';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-fight',
@@ -26,10 +27,18 @@ export class FightComponent implements OnInit, AfterContentInit {
   fightersElements: HTMLElement[];
   skills: string[] = ['kek', 'lol'];
 
-  constructor(private fightService: FightService, private resolver: ComponentFactoryResolver) {
+  constructor(private fightService: FightService, private resolver: ComponentFactoryResolver,
+              private http: HttpClient) {
   }
 
   ngOnInit() {
+    // const id = window.location.toString().substring(window.location.toString().lastIndexOf('/') + 1);
+    // this.http.post('http://localhost:31480/fight/info', null, {
+    //   withCredentials: true,
+    //   params: new HttpParams().append('id', id.toString())
+    // }).subscribe((data) => {
+    //   console.log(data);
+    // });
     this.allies = this.fightService.allies;
     this.enemies = this.fightService.enemies;
   }
