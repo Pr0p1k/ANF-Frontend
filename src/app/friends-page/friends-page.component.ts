@@ -29,6 +29,7 @@ export class FriendsPageComponent implements OnInit {
     this.friends = [];
     this.inRequested = [];
     this.outRequested = [];
+    
     this.http.get<User[]>('http://localhost:31480/friends/requests/incoming', {withCredentials: true})
       .subscribe(data => this.inRequested = data);
     this.http.get<User[]>('http://localhost:31480/friends/requests/outgoing', {withCredentials: true})

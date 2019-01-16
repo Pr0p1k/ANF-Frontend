@@ -1,6 +1,8 @@
 <div class="friendsList">
-  <label class="header">{{'Friends' | translate }}</label>
-<ul>
+  <p-tabView>
+      <p-tabPanel header="Friends">
+        <label *ngIf="friends.length == 0">No friends yet</label>
+  <ul>
   <li *ngFor="let friend of friends">
     <div class="userdata">{{friend.login}}<br>
         <label *ngIf="friend.online" class="online">{{'Ready' | translate }}</label>
@@ -12,7 +14,9 @@
     
   </li>
 </ul>
-<label class="header">{{'Incoming requests' | translate }}</label>
+</p-tabPanel>
+<p-tabPanel header="In">
+    <label *ngIf="inRequested.length == 0">No requests yet</label>
 <ul>
   <li *ngFor="let inReq of inRequested">
     <span class="login">{{inReq.login}}</span><span class="buttons">
@@ -21,7 +25,9 @@
     </span>
   </li>
 </ul>
-<label class="header">{{'Outgoing requests' | translate }}</label>
+</p-tabPanel>
+<p-tabPanel header="Out">
+    <label *ngIf="outRequested.length == 0">No one is requested</label>
 <ul>
   <li *ngFor="let outReq of outRequested">
     <span class="login">{{outReq.login}}</span><span class="buttons">
@@ -29,4 +35,6 @@
     </span>
   </li>
 </ul>
+</p-tabPanel>
+</p-tabView>
 </div>
