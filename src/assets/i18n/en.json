@@ -120,5 +120,11 @@
 		"Spells":"Spells",
 		"Your spell level":"Your spell level",
 		"Learn spell":"Learn spell",
-		"Upgrade spell":"Upgrade spell"
+		"Upgrade spell":"Upgrade spell",
+		"Date":"Date",
+		"Type":"Type",
+		"Result":"Result",
+		"XPchange":"Experience",
+		"RatingChange":"Rating",
+		"Rival":"Rival"
 	}

@@ -120,5 +120,11 @@
 		"Spells":"Заклинания",
 		"Your spell level":"Ваш уровень владения",
 		"Learn spell":"Выучить заклинание",
-		"Upgrade spell":"Улучшить владение"
+		"Upgrade spell":"Улучшить владение",
+		"Date":"Дата",
+		"Type":"Тип",
+		"Result":"Результат",
+		"XPchange":"Опыт",
+		"RatingChange":"Рейтинг",
+		"Rival":"Противник"
 }
