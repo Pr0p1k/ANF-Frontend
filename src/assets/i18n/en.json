@@ -109,5 +109,16 @@
 		"dmg":"The animals of this race are true killers: they will tear your enemies apart with their attacks, but their health points are much weaker than those of other races. On level 1 you can summon Lauva - a beast with 30 damage and 50 hp. On level 10 and higher Lusis will take your side in fights. It's an ultimate killing machine with 120 damage and 150 health. Do you want to see your enemies' blood?",
 		"blc":"These animals are balanced with their hp and damage. On level 1 you'll be able to summon Erglis - an animal with 20 damage and 100 hp. On level 10 and higher, Lapsa will become your Johny on the spot. She has 70 damage and 250 health points. Do you need a calm, stable partner?",
 		"rel":"Advice: read it in Russian. These animals would definetly be glad to visit your parents. And you, Sych, will have to sit with them and tell everyone about your future plans (which don't exist, obviously, if you're playing ANF). Do you want this nightmare to happen? No? Send them to the battlefield instead of your home then. On the level 1 you'll summon Тётя Срака (Aunt Ass) and she will make your enemies go crazy. Who is a Тётя Срака? Well... she is a badly-educated woman of 57 years and she strongly believes in government's ability to solve all the problems and that 'They can see better from their positions', hence she's voting for Putin and hates liberalism. Aunt Ass approves locking someone up for reposts/likes and likes restrictive rules and laws. Approves home violation, because 'if he beats you - he loves you'. Тётя Срака is extremely superstitious, hates USA, Europe and Ukraine, loves drinking alcohol and watching Russian TV. Find more: https://m2ch.hk/po/res/29646195.html . On the level 10 you'll summon Дядя Бафомет (Uncle Devil), a husband of Тётя Срака. He loves teaching you how to live and explaining why the way you live is totally wrong. Loves alcohol, beating Тётя Срака up and watching TV.",
-		"AnimalRaceHeader":"Choose animal race"
+		"AnimalRaceHeader":"Choose animal race",
+		"earth":"The Earth Strike is a basic spell - classic nuke with low chakra consumption and low-tier damage. Has no effects or special abilities. Base damage is 25 and it increments by 7 for each level of the spell. Base chakra consumption is 12 and it increments by 3 on each level. Required character level to use this spell is 1.",
+		"water":"The Water Strike is the second spell you can learn - its damage is higher then earth's one. The base damage is 40 and it increases by 10 per each spell level. Chakra consumption is 20 + 4*spellLevel. Becomes available on the fifth character level.",
+		"fire":"The first spell with special effect: its damage doubles if target's resistance is lower than 0.8. Base damage is 90 and it increases by 15 each level. Chakra consumption is 40 + 5*spellLevel. Becomes available on the 12th character level.",
+		"air":"The strongest spell in the game. It deals pure damage, i.e. it ignores target's resistance. Base damage is 150 and it increases by 20 each level. Chakra consumption is 70 + 10*spellLevel. Becomes available on 25th character level.",
+		"reach5":"Reach level 5 to unlock!",
+		"reach12":"Reach level 12 to unlock!",
+		"reach25":"Reach level 25 to unlock!",
+		"Spells":"Spells",
+		"Your spell level":"Your spell level",
+		"Learn spell":"Learn spell",
+		"Upgrade spell":"Upgrade spell"
 	}

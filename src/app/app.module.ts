@@ -37,6 +37,8 @@ import { TranslateService } from './services/translate.service';
 import { TranslatePipe } from './services/translate.pipe';
 import {RoomComponent} from './room/room.component';
 import { AnimalRaceChoiceComponent } from './animal-race-choice/animal-race-choice.component';
+import { HistoryComponent } from './history/history.component';
+import { SpellsComponent } from './spells/spells.component';
 
 export function setupTranslateFactory(
   service: TranslateService): Function {
@@ -62,7 +64,9 @@ export function setupTranslateFactory(
     SearchUsersPipe,
     TranslatePipe,
     RoomComponent,
-    AnimalRaceChoiceComponent],
+    AnimalRaceChoiceComponent,
+    HistoryComponent,
+    SpellsComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

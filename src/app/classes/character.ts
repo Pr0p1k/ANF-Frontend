@@ -1,4 +1,5 @@
 import {Appearance} from './appearance';
+import { SpellHandling } from './spell-handling';
 
 export class Character {
 
@@ -9,5 +10,6 @@ export class Character {
     maxHp: number;
     physicalDamage: number;
     resistance: number;
+    spellsKnown: SpellHandling[];
 
 }

@@ -21,6 +21,12 @@
     <div *ngIf="loggedIn && router.url !== '/profile'" class="pages" (click)="router.navigateByUrl('profile')">
       <p>{{'Profile' | translate }}</p>
     </div>
+    <div *ngIf="loggedIn && router.url === '/profile'" class="pages" (click)="router.navigateByUrl('history')">
+      <p>{{'History' | translate }}</p>
+    </div>
+    <div *ngIf="loggedIn && router.url === '/profile'" class="pages" (click)="router.navigateByUrl('spells')">
+      <p>{{'Spells' | translate }}</p>
+    </div>
   </div>
   <div class="login">
     <p-button id="account-button" label="{{'Log in' | translate }}" *ngIf="!loggedIn"
