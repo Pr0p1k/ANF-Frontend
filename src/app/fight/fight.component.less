@@ -1,3 +1,5 @@
+@header-height: 80px;
+
 #fight {
   background-image: url(../../assets/background0.png);
   background-size: cover;
@@ -15,19 +17,26 @@
 }
 
 .ally {
-  position: relative;
+  position: absolute;
   z-index: 10;
+  height: 150px;
+  width: fit-content;
 }
 
 .foe {
   position: absolute;
   z-index: 10;
+  right: 40px;
+  bottom: 40px;
+  height: fit-content;
+  width: fit-content;
 }
 
 #fighters {
   position: absolute;
   bottom: 40px;
   width: 95%;
+  height: 150px;
   margin-left: auto;
 }
 
@@ -37,20 +46,60 @@
 
 #attacks {
   position: relative;
-  width: 95%;
-  margin: auto;
+  width: 100%;
   top: 5%;
-  height: 10%;
+  height: fit-content;
+  padding: 1vh 1vh 1vh 1vh + 20%;
   border-radius: 0.5vw;
   box-shadow: 0 0 10px 10px rgba(127, 127, 127, 0.7);
+  display: flex;
 }
 
 .attack {
   position: relative;
-  width: 8vh;
-  height: 8vh;
-  margin: auto;
+  height: fit-content;
   float: left;
-  border-radius: 0.5vw;
-  box-shadow: 0 0 10px 10px rgba(127, 127, 127, 0.7);
+  flex: 1 1 auto;
+  div {
+    width: fit-content;
+    border-radius: 0.5vw;
+    box-shadow: 0 0 10px 10px rgba(127, 127, 127, 0.7);
+    img {
+      position: relative;
+      width: 6vh;
+      height: auto;
+    }
+  }
+}
+
+.container {
+  @media (min-width: 1238px) {
+    top: @header-height;
+  }
+
+  @media (max-width: 1238px) and (min-width: 700px) {
+    top: @header-height + 20;
+  }
+
+  @media (max-width: 700px) {
+    top: @header-height + 40;
+  }
+  margin: auto;
+  width: 95%;
+}
+
+.label {
+  margin: auto;
+  @media (min-width: 1238px) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 1238px) and (min-width: 700px) {
+    font-size: 30px;
+  }
+
+  @media (max-width: 700px) {
+    font-size: 34px;
+  }
+
 }

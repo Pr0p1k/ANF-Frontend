@@ -6,8 +6,7 @@ import {Boss} from '../../classes/boss';
   providedIn: 'root'
 })
 export class FightService {
-  private _allies: User[];
-  private _enemies: User[] | Boss[];
+  private _valuesSet  = false;
   private _id: number;
   private _type: string;
   private _author: string;
@@ -36,22 +35,14 @@ export class FightService {
     this._author = value;
   }
 
-  get allies(): User[] {
-    return this._allies;
-  }
-
-  set allies(value: User[]) {
-    this._allies = value;
-  }
-
-  get enemies(): User[] | Boss[] {
-    return this._enemies;
-  }
-
-  set enemies(value: User[] | Boss[]) {
-    this._enemies = value;
-  }
-
   constructor() {
+  }
+
+  get valuesSet(): boolean {
+    return this._valuesSet;
+  }
+
+  set valuesSet(value: boolean) {
+    this._valuesSet = value;
   }
 }

@@ -26,10 +26,12 @@
     <p-button id="account-button" label="{{'Log in' | translate }}" *ngIf="!loggedIn"
               (click)="showLoginBlock()"></p-button>
   </div>
-  <div class="login" *ngIf="loggedIn"><p id="login">{{login}}</p> <br>
+  <div class="login" *ngIf="loggedIn"><br>
     <p-button id="logout-button" label="{{'Log out' | translate }}" *ngIf="loggedIn" (click)="logout()"></p-button>
   </div>
-
+  <div class="login">
+    <p id="login">{{login}}</p>
+  </div>
   <p-confirmDialog></p-confirmDialog>
 </div>
 <div id="content">

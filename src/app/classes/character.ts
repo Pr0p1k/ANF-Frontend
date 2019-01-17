@@ -1,4 +1,5 @@
 import {Appearance} from './appearance';
+import {User} from './user';
 
 export class Character {
 
@@ -7,6 +8,7 @@ export class Character {
     appearance: Appearance;
     maxChakra: number;
     maxHp: number;
+    user: User;
     physicalDamage: number;
     resistance: number;
 

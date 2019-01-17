@@ -1,6 +1,13 @@
 <div id="fight">
-  <div id="attacks">
-    <div class="attack" *ngFor="let skill of skills"></div>
+  <div class="container">
+    <p class="label">Attacks: </p>
+    <div id="attacks">
+      <div class="attack" *ngFor="let skill of skills">
+        <div (click)="selectSpell($event)" >
+          <img id="{{skill}}" src="../../assets/elements/{{skill}}.png">
+        </div>
+      </div>
+    </div>
   </div>
   <div id="fighters">
     <div class="ally">
