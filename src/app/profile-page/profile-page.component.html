@@ -1,7 +1,7 @@
-<div class="section" id="userdata">
+<div class="section" id="userdata" [@load1]="checked? 'default': 'hidden'">
   <div id="profile_info" *ngIf="loaded">
     <div id="img_and_immutable">
-      <label>{{user.login}}</label><br>
+      <p>{{user.login}}</p><br>
       <div id="avatar">
         <app-character></app-character>
       </div>
@@ -48,7 +48,7 @@
   </div>
 </div>
 
-<div class="section" id="nav" *ngIf="loaded">
+<div class="section" id="nav" *ngIf="loaded" [@load2]="checked? 'default': 'hidden'">
   <svg viewBox="0 0 1500 882" id="map">
 
     <path class="region"
@@ -91,7 +91,7 @@
   </svg>
 </div>
 
-<div class="section" *ngIf="loaded" id="comm">
+<div class="section" *ngIf="loaded" id="comm" [@load3]="checked? 'default': 'hidden'">
   <div id="chad">
     <app-chat></app-chat>
   </div>

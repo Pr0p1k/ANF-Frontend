@@ -16,7 +16,7 @@ import {
   MessageService,
   InputSwitchModule,
   RadioButtonModule,
-  PickListModule, ConfirmDialogModule
+  PickListModule, ConfirmDialogModule, TooltipModule
 } from 'primeng/primeng';
 import {ProfilePageComponent} from './profile-page/profile-page.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -83,7 +83,8 @@ export function setupTranslateFactory(
     InputSwitchModule,
     RadioButtonModule,
     PickListModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
   providers: [CookieService, MessageService, TranslatePipe, TranslateService,
     {

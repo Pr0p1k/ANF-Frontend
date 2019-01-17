@@ -1,4 +1,4 @@
-<div id="messages">
+<div id="messages" [@load]="loaded? 'default' : 'hidden'">
   <label id="header">{{'Dialogues' | translate }}</label><br>
   <ul class="list">
     <li *ngFor="let dialogue of dialogues" class="row" (click)="parent.router.navigateByUrl('dialogue/' + dialogue)">

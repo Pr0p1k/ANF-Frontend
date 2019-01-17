@@ -26,33 +26,37 @@ export class SpellsComponent implements OnInit {
   ngOnInit() {
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true})
       .subscribe(data => {
-        this.user = data; 
-        var airSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike');
-        if (airSpellHandling == undefined)
+        this.user = data;
+        const airSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike');
+        if (airSpellHandling === undefined) {
           this.airHandling = 0;
-        else
+        } else {
           this.airHandling = airSpellHandling.spellLevel;
+        }
 
-        var earthSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike');
-        if (earthSpellHandling == undefined)
+        const earthSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike');
+        if (earthSpellHandling === undefined) {
           this.earthHandling = 0;
-        else
+        } else {
           this.earthHandling = earthSpellHandling.spellLevel;
+        }
 
-        var waterSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike');
-        if (waterSpellHandling == undefined)
+        const waterSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike');
+        if (waterSpellHandling === undefined) {
           this.waterHandling = 0;
-        else
+        } else {
           this.waterHandling = waterSpellHandling.spellLevel;
+        }
 
-        var fireSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike');
-        if (fireSpellHandling == undefined)
+        const fireSpellHandling = this.user.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike');
+        if (fireSpellHandling === undefined) {
           this.fireHandling = 0;
-        else
-          this.fireHandling = fireSpellHandling.spellLevel;     
+        } else {
+          this.fireHandling = fireSpellHandling.spellLevel;
+        }
         this.freePoints = this.user.stats.upgradePoints;
       });
-    
+
   }
 
   learnOrUpgrade(spell: string): void {
@@ -65,16 +69,17 @@ export class SpellsComponent implements OnInit {
               'Content-Type': 'application/x-www-form-urlencoded'
             }),
         withCredentials: true
-      }).subscribe(msg => {
+      }).subscribe(() => {
     });
-    if (spell === 'Earth Strike')
+    if (spell === 'Earth Strike') {
       this.earthHandling++;
-    else if (spell === 'Water Strike')
+    } else if (spell === 'Water Strike') {
       this.waterHandling++;
-    else if (spell === 'Fire Strike')
+         } else if (spell === 'Fire Strike') {
       this.fireHandling++;
-    else
+         } else {
       this.airHandling++;
+         }
     this.freePoints--;
   }
 

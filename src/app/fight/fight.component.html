@@ -3,14 +3,15 @@
     <p class="label">Attacks: </p>
     <div id="attacks">
       <div class="attack" *ngFor="let skill of skills">
-        <div (click)="selectSpell($event)" >
-          <img id="{{skill}}" src="../../assets/elements/{{skill}}.png">
+        <div (click)="selectSpell($event)" pTooltip="{{map[skill]}}">
+          <img id="{{skill}}"
+               src="../../assets/elements/{{skill.substring(0, skill.indexOf(' ')).toLowerCase()}}.png">
         </div>
       </div>
     </div>
   </div>
   <div id="fighters">
-    <div [@attack]="!clicked? 'default' : 'forward'" class="ally">
+    <div class="ally">
       <template #alliesContainer></template>
     </div>
     <div class="foe">
@@ -20,3 +21,6 @@
   <div id="ground">
   </div>
 </div>
+<img src="../../assets/elements/{{selectedSpell
+          .substring(0, selectedSpell.indexOf(' ')).toLowerCase()}}.png"
+     [@attack]="kek ? 'use' : 'default'">

@@ -25,31 +25,42 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   styleUrls: ['./fight.component.less'],
   animations: [
     trigger('attack', [
-      state('default', style({})),
-      state('forward', style({
-        left: '40px'
+      state('default', style({
+        display: 'none',
+        position: 'fixed',
+        width: '15%',
+        height: 'auto',
+        top: '250px',
+        left: '50%'
       })),
-      transition('default => forward', [
-        animate('0.05s')
+      state('use', style({
+        position: 'fixed',
+        display: 'block',
+        width: '15%',
+        height: 'auto'
+      })),
+      transition('default => use', [
+        animate('0.5s')
       ]),
-      transition('forward => default', animate('0.05s'))
+      transition('use => default', animate('0.5s'))
     ]),
   ]
 })
-export class FightComponent implements OnInit/*, AfterContentInit*/ {
+export class FightComponent implements OnInit {
   allies: User[] = [];
   enemies: User[] = [];
   boss: Boss;
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
   fightersElements: HTMLElement[];
-  skills: string[] = ['earth', 'fire', 'water', 'wind'];
+  skills: string[] = [];
   parent = this.injector.get(MainComponent);
   loaded = false;
   type: string;
   id: number;
   selectedSpell: string;
-  clicked = false;
+  map: { [key: string]: string } = {};
+  kek = false;
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver,
               private http: HttpClient, private injector: Injector) {
@@ -78,6 +89,16 @@ export class FightComponent implements OnInit/*, AfterContentInit*/ {
       }
       this.allies = [data.fighters1];
       this.enemies = [data.fighters2];
+      console.log(data);
+      const spells = data.fighters1.character.spellsKnown;
+      this.skills.push('Physical attack');
+      this.map['Physical attack'] = 'Physical attack\n' +
+        'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
+      spells.forEach((it) => {
+        this.skills.push(it.spellUse.name);
+        this.map[it.spellUse.name] = it.spellUse.name +
+          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+      });
       this.loaded = true;
       this.init();
     });
@@ -130,28 +151,8 @@ export class FightComponent implements OnInit/*, AfterContentInit*/ {
   }
 
   attack(enemyNumber: number): any {
-    // TODO animation of attack. Works, but govnocode
-    // let value = Number.parseInt(this.fightersElements[0].style.left, 10);
-    // let count = 0;
-    // const val = setInterval(() => {
-    //   count++;
-    //   value += 10;
-    //   this.fightersElements[0].style.left = value + 'px';
-    //   if (count === 4) {
-    //     clearInterval(val);
-    //     const val2 = setInterval(() => {
-    //       count++;
-    //       value -= 10;
-    //       this.fightersElements[0].style.left = value + 'px';
-    //       if (count === 8) {
-    //         clearInterval(val2);
-    //       }
-    //     }, 500 / 50);
-    //   }
-    // }, 500 / 50);
-    // TODO angular animation
-    // this.clicked = !this.clicked;
     console.log('attack');
+    this.kek = true;
     this.http.post('http://localhost:31480/fight/attack', null, {
       withCredentials: true,
       params: new HttpParams()

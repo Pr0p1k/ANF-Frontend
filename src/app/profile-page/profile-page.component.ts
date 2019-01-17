@@ -11,12 +11,54 @@ import {CookieService} from 'ngx-cookie-service';
 import {Stomp} from '@stomp/stompjs';
 import {AnimalRaceChoiceComponent} from '../animal-race-choice/animal-race-choice.component';
 import * as SockJS from 'sockjs-client';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.less'],
-  providers: [DialogService, ConfirmationService]
+  providers: [DialogService, ConfirmationService],
+  animations: [
+    trigger('load1', [
+      state('hidden', style({
+          bottom: '-20%',
+          display: 'none',
+          opacity: '0.3'
+        })
+      ),
+      state('default', style({})
+      ),
+      transition('hidden => default', [
+        animate('0.5s')
+      ])]
+    ),
+    trigger('load2', [
+      state('hidden', style({
+          bottom: '-20%',
+          display: 'none',
+          opacity: '0.3'
+        })
+      ),
+      state('default', style({})
+      ),
+      transition('hidden => default', [
+        animate('0.8s')
+      ])]
+    ),
+    trigger('load3', [
+      state('hidden', style({
+          bottom: '-20%',
+          display: 'none',
+          opacity: '0.3'
+        })
+      ),
+      state('default', style({})
+      ),
+      transition('hidden => default', [
+        animate('1.1s')
+      ])]
+    )
+  ]
 })
 export class ProfilePageComponent implements OnInit, AfterViewChecked {
   public user: User;
@@ -26,7 +68,6 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   public parent = this.injector.get(MainComponent);
   public ready = false;
   dialog: DynamicDialogRef;
-  public notReady = true;
   private stompClient;
   private checked = false;
 
@@ -41,22 +82,11 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
       this.loaded = true;
       this.user = data;
       this.user.character.resistance = parseFloat(this.user.character.resistance.toFixed(2));
-      const dialogService = this.dialogService;
-      const areaService = this.areaService;
-      const array = document.querySelectorAll('.ground, .bidju');
-      const that = this;
-      for (let i = 0; i < array.length; i++) {
-        (<HTMLElement>array[i]).onclick = function () {
-          that.parent.dialog = dialogService.open(QueueComponent, {width: '440px', height: '200px'});
-          areaService.selectedArea = (<HTMLElement>this).id;
-          areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
-        };
-      }
     }, () => {
+      this.parent.loggedIn = false;
       this.parent.router.navigateByUrl('start');
     });
     this.ready = this.cookieService.get('ready') === 'true';
-    this.notReady = !this.ready;
     this.subscribeForWebsockets();
   }
 
@@ -72,7 +102,6 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
         const type = str.substring(i + 1, str.length);
         if (user === that.user.login && type === 'offline' && that.ready === true) {
           that.ready = false;
-          that.notReady = true;
         }
       });
     });
@@ -81,14 +110,17 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   public changeReadyState() {
     let request: Observable<Object>;
     if (this.ready) {
-      this.notReady = false;
+      this.ready = true;
+      setTimeout(() => {
+        this.ready = false;
+      }, 300000);
       request = this.http.get('http://localhost:31480/profile/online', {withCredentials: true});
     } else {
-      this.notReady = true;
+      this.ready = false;
       request = this.http.get('http://localhost:31480/profile/offline', {withCredentials: true});
     }
     request.subscribe(() => {
-      this.cookieService.set('ready', this.ready.toString());
+      this.cookieService.set('ready', this.ready.toString(), new Date(Date.now() + 300000));
     });
   }
 
@@ -204,6 +236,18 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
       this.changeHair();
       this.changeSkin();
       this.setGender();
+      const dialogService = this.dialogService;
+      const areaService = this.areaService;
+      const array = document.querySelectorAll('.ground, .bidju');
+      const that = this;
+      for (let i = 0; i < array.length; i++) {
+        (<HTMLElement>array[i]).onclick = function () {
+          console.log('kek');
+          that.parent.dialog = dialogService.open(QueueComponent, {width: '440px', height: '200px'});
+          areaService.selectedArea = (<HTMLElement>this).id;
+          areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
+        };
+      }
     }
   }
 
