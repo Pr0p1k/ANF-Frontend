@@ -12,17 +12,17 @@ import { PVPFight } from '../classes/pvpfight';
 export class HistoryComponent implements OnInit {
 
   user: User;
-  fights: HistoryFight[];
+  fights: HistoryFight[] = [];
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.http.get<User>('http://localhost:31480/profile')
+    this.http.get<User>('http://localhost:31480/profile', {withCredentials: true})
       .subscribe(data => {
         this.user = data;
         this.user.character.fights.forEach(fight => {
           var histrecord: HistoryFight = new HistoryFight();
           histrecord.ratingCh = 0;
-          histrecord.type = 'PVE',
+          histrecord.type = 'PVE';
           histrecord.result = fight.result;
           histrecord.date = fight.fight.fight_date;
           histrecord.rival = fight.fight.boss.name;
