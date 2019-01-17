@@ -1,45 +1,45 @@
 @primary-colour: beige;
 @label-colour: #aa825a;
 @label-hovered-colour: #aa8296;
+@margin-value: 10px;
 #profile_info {
-  background-color: @primary-colour;
   display: inline-block;
-  //float: left;
   #avatar {
     //display: inline-block;
     float: left;
   }
-#user_parameters{
-  float: left;
-}
-#img_and_immutable {
-  display: block;
-  width:100%;
-}
-.upgradable {
-  button{
-    //height: 15px;
-    color: white;
-    background-color: #55F;  
+  #user_parameters {
+    float: left;
   }
-}
-#stats {
-  display:block;
-}
+  #img_and_immutable {
+    display: block;
+    width: 100%;
+  }
+  .upgradable {
+
+    button {
+      //height: 15px;
+      color: white;
+      background-color: #55F;
+    }
+  }
+  #stats {
+    display: block;
+    background-color: #1f7ed0;
+  }
 
   .stats {
     position: relative;
     //float: right;
-    background-color: @label-colour;
     font-family: Arial, Helvetica, sans-serif;
     font-size: small;
     margin: 1px 1px 1px 1px;
+    background-color: #1f7ed0;
   }
   .social {
     position: relative;
     //float: left;
     width: 30%;
-    background-color: @label-colour;
     font-family: Arial, Helvetica, sans-serif;
     font-size: medium;
     margin: 10px 10px 10px 10px;
@@ -49,16 +49,22 @@
     box-shadow: 0, 0, 4, @label-hovered-colour;
   }
   height: 100%;
+  .scroll {
+    position: relative;
+    overflow-y: scroll;
+    height: 20%;
+    width: 100%;
+  }
+  width: 100%;
 }
 
 .section {
   position: relative;
   float: left;
   height: 100%;
-  width: 15%;
-  + .section {
-    margin: auto;
-  }
+  width: 17.5%;
+  padding: @margin-value;
+  overflow-y: hidden;
 }
 
 #nav {
@@ -74,6 +80,7 @@
 #social {
   width: 20%;
 }
+
 .vertical {
   position: relative;
   float: top;
@@ -84,6 +91,14 @@
   &:hover {
     fill: red;
   }
+}
+
+#comm, #userdata {
+  background-color: rgba(19, 23, 27, 0.9);
+}
+
+#chad {
+  height: 20%;
 }
 
 

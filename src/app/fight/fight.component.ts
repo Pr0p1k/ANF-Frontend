@@ -17,11 +17,24 @@ import {MainComponent} from '../main/main.component';
 import {Character} from '../classes/character';
 import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {log} from 'util';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-fight',
   templateUrl: './fight.component.html',
-  styleUrls: ['./fight.component.less']
+  styleUrls: ['./fight.component.less'],
+  animations: [
+    trigger('attack', [
+      state('default', style({})),
+      state('forward', style({
+        left: '40px'
+      })),
+      transition('default => forward', [
+        animate('0.05s')
+      ]),
+      transition('forward => default', animate('0.05s'))
+    ]),
+  ]
 })
 export class FightComponent implements OnInit/*, AfterContentInit*/ {
   allies: User[] = [];
@@ -36,6 +49,7 @@ export class FightComponent implements OnInit/*, AfterContentInit*/ {
   type: string;
   id: number;
   selectedSpell: string;
+  clicked = false;
 
   constructor(private fightService: FightService, private resolver: ComponentFactoryResolver,
               private http: HttpClient, private injector: Injector) {
@@ -135,6 +149,8 @@ export class FightComponent implements OnInit/*, AfterContentInit*/ {
     //     }, 500 / 50);
     //   }
     // }, 500 / 50);
+    // TODO angular animation
+    // this.clicked = !this.clicked;
     console.log('attack');
     this.http.post('http://localhost:31480/fight/attack', null, {
       withCredentials: true,
@@ -144,8 +160,8 @@ export class FightComponent implements OnInit/*, AfterContentInit*/ {
         .append('spellname', this.selectedSpell)
     }).subscribe((data) => {
       console.log(data);
+    }, () => {
     });
-
   }
 
   selectSpell(event: MouseEvent) {

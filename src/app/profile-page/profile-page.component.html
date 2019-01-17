@@ -1,44 +1,54 @@
-<div class="section">
-  <div id="profile_info">
+<div class="section" id="userdata">
+  <div id="profile_info" *ngIf="loaded">
     <div id="img_and_immutable">
-        <label>{{user.login}}</label><br>
-    <div id="avatar">
-      <app-character></app-character>
+      <label>{{user.login}}</label><br>
+      <div id="avatar">
+        <app-character></app-character>
+      </div>
+      <div id="user_parameters">
+        <label class="stats">{{'Level:' | translate}} {{user.stats.level}}</label><br>
+        <label class="stats">{{'Rating:' | translate}} {{user.stats.rating}}</label><br>
+        <label class="stats">{{'XP:' | translate }} {{user.stats.experience}}</label><br>
+        <label *ngIf="user.character.animalRace != undefined" class="stats">{{'Animal Race:' | translate }} <br>
+          {{user.character.animalRace}}</label>
+        <label *ngIf="user.character.animalRace == undefined" class="stats">{{'Animal Race:' | translate }} <br>
+          <p-button label="{{'Choose' | translate }}" (onClick)="chooseAnimalRace()"></p-button>
+        </label>
+      </div>
     </div>
-      <div id="user_parameters" *ngIf="loaded">
-      
-      <label class="stats">{{'Level:' | translate}} {{user.stats.level}}</label><br>
-      <label class="stats">{{'Rating:' | translate}} {{user.stats.rating}}</label><br>
-      <label class="stats">{{'XP:' | translate }} {{user.stats.experience}}</label><br>
-      <label *ngIf="user.character.animalRace != undefined" class="stats">{{'Animal Race:' | translate }} <br> {{user.character.animalRace}}</label>
-      <label *ngIf="user.character.animalRace == undefined" class="stats">{{'Animal Race:' | translate }} <br> <p-button label="{{'Choose' | translate }}" (onClick)="chooseAnimalRace()"></p-button></label>
-    </div>
-    </div>
-    <br><br><br><br><br><br><br>
-    <div id="stats" *ngIf="loaded">
-      <label class="stats">{{'Number of fights:' | translate }} {{user.stats.fights}}</label><br>
-      <label class="stats">{{'Number of wins:' | translate }} {{user.stats.wins}}</label><br>
-      <label class="stats">{{'Number of losses:' | translate }} {{user.stats.losses}}</label><br>
-      <label class="stats">{{'Number of deaths:' | translate }} {{user.stats.deaths}}</label><br>
-      <label class="stats">{{'Upgrade points:' | translate}}{{user.stats.upgradePoints}}</label>
-    </div>
-    <div class="upgradable" *ngIf="loaded">
-      <label class="stats">{{'Damage' | translate}}: {{user.character.physicalDamage}} <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('damage')">+</button></label><br>
-      <label class="stats">{{'Max HP' | translate}}: {{user.character.maxHp}} <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('hp')">+</button></label><br>
-      <label class="stats">{{'Max chakra' | translate}}: {{user.character.maxChakra}} <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('chakra')">+</button></label><br>
-      <label class="stats">{{'Resistance' | translate}}: {{user.character.resistance}} <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('resistance')">+</button></label><br>
+    <div class="scroll">
+      <div id="stats" *ngIf="loaded">
+        <label class="stats">{{'Number of fights:' | translate }} {{user.stats.fights}}</label><br>
+        <label class="stats">{{'Number of wins:' | translate }} {{user.stats.wins}}</label><br>
+        <label class="stats">{{'Number of losses:' | translate }} {{user.stats.losses}}</label><br>
+        <label class="stats">{{'Number of deaths:' | translate }} {{user.stats.deaths}}</label><br>
+        <label class="stats">{{'Upgrade points:' | translate}}{{user.stats.upgradePoints}}</label>
+      </div>
+      <div class="upgradable" *ngIf="loaded">
+        <label class="stats">{{'Damage' | translate}}: {{user.character.physicalDamage}}
+          <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('damage')">+</button>
+        </label><br>
+        <label class="stats">{{'Max HP' | translate}}: {{user.character.maxHp}}
+          <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('hp')">+</button>
+        </label><br>
+        <label class="stats">{{'Max chakra' | translate}}: {{user.character.maxChakra}}
+          <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('chakra')">+</button>
+        </label><br>
+        <label class="stats">{{'Resistance' | translate}}: {{user.character.resistance}}
+          <button *ngIf="user.stats.upgradePoints > 0" (click)="upgrade('resistance')">+</button>
+        </label><br>
+      </div>
     </div>
     <div class="vertical">
-      {{ready ? ('Ready'| translate) : ('Not ready' | translate )}}
       <p-inputSwitch [(ngModel)]="ready" (onChange)="changeReadyState()"></p-inputSwitch>
+      {{ready ? ('Ready'| translate) : ('Not ready' | translate )}}
       <br>
       <app-friends-page></app-friends-page>
     </div>
   </div>
-
 </div>
 
-<div class="section" id="nav">
+<div class="section" id="nav" *ngIf="loaded">
   <svg viewBox="0 0 1500 882" id="map">
 
     <path class="region"
@@ -80,7 +90,11 @@
            width="125"></image>
   </svg>
 </div>
-<div class="section">
-  <app-chat></app-chat>
+
+<div class="section" *ngIf="loaded" id="comm">
+  <div id="chad">
+    <app-chat></app-chat>
+  </div>
   <app-users-list></app-users-list>
+
 </div>

@@ -1,5 +1,9 @@
 @import '../node_modules/primeng/resources/themes/luna-blue/theme.css';
 @import '../node_modules/primeng/resources/primeng.min.css';
+@font-face {
+  font-family: "kek";
+  src: url("assets/12489.ttf");
+}
 
 body {
   margin: 0;
@@ -7,8 +11,38 @@ body {
 
 * {
   font-weight: bold;
-  font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-family: kek;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  //font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+  position: relative;
+  width: 1.5%;
+  @media (min-width: 1238px) {
+    width: 10px;
+  }
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

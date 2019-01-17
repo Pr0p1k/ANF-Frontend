@@ -28,7 +28,6 @@ export class QueueComponent implements OnInit, OnDestroy {
   id: number;
   approved: string[];
   started = false;
-
   constructor(private areaService: AreaService, private http: HttpClient,
               private cookieService: CookieService, private fightService: FightService,
               private injector: Injector) {
@@ -84,7 +83,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       }) => {
         this.started = true;
         console.log(data);
-        this.parent.router.navigateByUrl('fight/' + this.type + '/' + data.id);
+        this.parent.router.navigateByUrl('fight/' + this.type.toLowerCase() + '/' + data.id);
         this.parent.dialog.close();
       });
 

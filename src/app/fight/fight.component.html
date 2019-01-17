@@ -10,7 +10,7 @@
     </div>
   </div>
   <div id="fighters">
-    <div class="ally">
+    <div [@attack]="!clicked? 'default' : 'forward'" class="ally">
       <template #alliesContainer></template>
     </div>
     <div class="foe">

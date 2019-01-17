@@ -1,4 +1,4 @@
-import {Component, Injector, Input, OnInit, Output} from '@angular/core';
+import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, Injector, Input, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
@@ -9,7 +9,7 @@ import {AreaService} from '../services/area/area.service';
 import {Observable} from 'rxjs';
 import {CookieService} from 'ngx-cookie-service';
 import {Stomp} from '@stomp/stompjs';
-import { AnimalRaceChoiceComponent } from '../animal-race-choice/animal-race-choice.component';
+import {AnimalRaceChoiceComponent} from '../animal-race-choice/animal-race-choice.component';
 import * as SockJS from 'sockjs-client';
 
 @Component({
@@ -18,7 +18,7 @@ import * as SockJS from 'sockjs-client';
   styleUrls: ['./profile-page.component.less'],
   providers: [DialogService, ConfirmationService]
 })
-export class ProfilePageComponent implements OnInit {
+export class ProfilePageComponent implements OnInit, AfterViewChecked {
   public user: User;
   public loaded = false;
   public unreadMessages: Message[];
@@ -28,6 +28,7 @@ export class ProfilePageComponent implements OnInit {
   dialog: DynamicDialogRef;
   public notReady = true;
   private stompClient;
+  private checked = false;
 
   constructor(private http: HttpClient, private injector: Injector,
               private dialogService: DialogService, private areaService: AreaService,
@@ -37,6 +38,7 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit() {
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
+      this.loaded = true;
       this.user = data;
       this.user.character.resistance = parseFloat(this.user.character.resistance.toFixed(2));
       const dialogService = this.dialogService;
@@ -50,11 +52,6 @@ export class ProfilePageComponent implements OnInit {
           areaService.pvp = (<HTMLElement>array[i]).classList.contains('ground');
         };
       }
-      this.changeClothes();
-      this.changeHair();
-      this.changeSkin();
-      this.setGender();
-      this.loaded = true;
     }, () => {
       this.parent.router.navigateByUrl('start');
     });
@@ -174,27 +171,40 @@ export class ProfilePageComponent implements OnInit {
 
   upgrade(param: string): void {
     this.http.post('http://localhost:31480/profile/character',
-    new HttpParams().set('quality', param),
-    { headers:
-      new HttpHeaders (
+      new HttpParams().set('quality', param),
       {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      }),
-    withCredentials: true }).subscribe( msg => {});
+        headers:
+          new HttpHeaders(
+            {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }),
+        withCredentials: true
+      }).subscribe(msg => {
+    });
     if (param === 'hp') {
       this.user.character.maxHp += 15;
     } else if (param === 'chakra') {
       this.user.character.maxChakra += 7;
-         } else if (param === 'damage') {
+    } else if (param === 'damage') {
       this.user.character.physicalDamage += 4;
-         } else {
+    } else {
       this.user.character.resistance += parseFloat(((1 - this.user.character.resistance) / 4).toFixed(2));
-         }
-    this.user.stats.upgradePoints --;
+    }
+    this.user.stats.upgradePoints--;
   }
 
   chooseAnimalRace(): void {
     this.dialog = this.dialogService.open(AnimalRaceChoiceComponent, {width: '800px', height: '600px'});
+  }
+
+  ngAfterViewChecked() {
+    if (!this.checked && this.loaded) {
+      this.checked = true;
+      this.changeClothes();
+      this.changeHair();
+      this.changeSkin();
+      this.setGender();
+    }
   }
 
 }

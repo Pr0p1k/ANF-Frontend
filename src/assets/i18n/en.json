@@ -56,8 +56,8 @@
 	"Back":"Back",
 	"Friends":"Friends",
 	"Invite to Fight":"Invite to Fight",
-	"Send a message":"Send a message",
-	"Remove from friends":"Remove from friends",
+	"message":"Message",
+	"delete":"Delete",
 	"Incoming requests":"Incoming requests",
 	"Accept":"Accept",
 	"Decline":"Decline",
@@ -74,7 +74,6 @@
 	"Invited users":"Invited users",
 	"Start":"Start",
 	"Send message to":"Send message to",
-	"Message":"Message",
 	"Cancel":"Cancel",
 	"Search":"Search",
 	"Friend":"Friend",
@@ -83,7 +82,7 @@
 	"Accept request":"Accept request",
 	"Decline request":"Decline request",
 	"Send message":"Send message",
-	"Send friends request":"Send friends request",
+	"Send friends request":"To friends",
 	"User":"User",
 	"Admin":"Admin",
 	"Grant admin role":"Grant admin role",
@@ -126,5 +125,6 @@
 		"Result":"Result",
 		"XPchange":"Experience",
 		"RatingChange":"Rating",
-		"Rival":"Rival"
+		"Rival":"Rival",
+    "switch": "Switch to Russian"
 	}

@@ -1,58 +1,42 @@
 @online: #81e890;
 @offline: #b9bbbb;
 @neutral-button: #808080;
-@backgrnd: beige;
 @red: #f85050;
 @label-hovered-colour: #aa8296;
 @label-colour: #aa825a;
-
-#friendsList{
-
-    height: 220px;
-        //overflow-y: scroll;
-        display: block;
-
-    .onePage{
-        height: 200px;
-        //overflow-y: scroll;
-        //display: block;
-        .list {
-            width: 100%;
-            height: 180px !important; 
-            max-height: 180px !important;
-            overflow-y: auto !important;
-            //display: block;
-        }
+@margin-value: 10px;
+.friendsList {
+  height: 220px;
+  display: block;
+  color: white;
+  .onePage {
+    height: 200px;
+    overflow-y: scroll;
+    .list {
+      width: 100%;
+      height: 180px !important;
+      max-height: 180px !important;
     }
-
-    
-
-    background: @backgrnd;
-
-    #online{
-        color: @online;
-    }
-    #offline{
-        color: @offline;
-    }
-    li{
-        background: @label-colour;
-    }
-    li:hover{
-        background: @label-hovered-colour;
-    }
-    #decline{
-        background: @red;
-    }
-    #accept{
-        background: @online;
-    }
-    #header{
-        font-size: 140%;
-    }
-    
-    
-    #invite{
-        background: @neutral-button;
-    }
+  }
+  .online {
+    color: @online;
+  }
+  .offline {
+    color: @offline;
+  }
+  #accept {
+    background: @online;
+  }
+  #header {
+    font-size: 140%;
+  }
+  ul {
+    padding: 0;
+  }
+  p-button {
+    margin-bottom: @margin-value / 2;
+  }
+  .userdata {
+    margin-bottom: @margin-value;
+  }
 }

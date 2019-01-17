@@ -1,14 +1,17 @@
 <div id="chat">
-  <ul>
-    <li *ngFor="let msg of messages">
-      <label *ngIf="msg.author === 'SYSTEM'" class="admin">{{msg.author | translate}}: {{msg.text}}</label>
-      <label *ngIf="msg.author !== 'SYSTEM'" class="ordinary">{{msg.author}}: {{msg.text}}</label>
-    </li>
-  </ul>
+  <div class="msg">
+    <ul>
+      <li *ngFor="let msg of messages">
+        <label *ngIf="msg.author === 'SYSTEM'" class="admin">{{msg.author | translate}}: {{msg.text}}</label>
+        <label *ngIf="msg.author !== 'SYSTEM'" class="ordinary">{{msg.author}}: {{msg.text}}</label>
+      </li>
+    </ul>
+  </div>
   <div id="write">
-      <input type="text" pInputText id="text" [(ngModel)]="input" (keyup.enter)="send()">
-      <p-button id="send" label="{{'Send' | translate}}" (onClick)="send()"></p-button><br>
-      <label *ngIf="admin" id="lbl">{{asSystem? ('Send as system' | translate) : ('Send as user' | translate) }}</label>
-      <p-inputSwitch *ngIf="admin" [(ngModel)]="asSystem"></p-inputSwitch>
-    </div>
+    <input type="text" pInputText id="text" [(ngModel)]="input" (keyup.enter)="send()">
+    <p-button id="send" label="{{'Send' | translate}}" (onClick)="send()"></p-button>
+    <br>
+    <label *ngIf="admin" id="lbl">{{asSystem? ('Send as system' | translate) : ('Send as user' | translate) }}</label>
+    <p-inputSwitch *ngIf="admin" [(ngModel)]="asSystem"></p-inputSwitch>
+  </div>
 </div>

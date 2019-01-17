@@ -56,8 +56,8 @@
 	"Back":"Назад",
 	"Friends":"Друзья",
 	"Invite to Fight":"Пригласить на бой",
-	"Send a message":"Отправить сообщение",
-	"Remove from friends":"Удалить из друзей",
+	"message":"Сообщение",
+	"delete":"Удалить",
 	"Incoming requests":"Входящие заявки",
 	"Accept":"Принять",
 	"Decline":"Отклонить",
@@ -74,7 +74,6 @@
 	"Invited users":"Приглашены:",
 	"Start":"Начать",
 	"Send message to":"Отправить сообщение",
-	"Message":"Сообщение",
 	"Cancel":"Отмена",
 	"Search":"Поиск",
 	"Friend":"Друг",
@@ -83,7 +82,7 @@
 	"Accept request":"Принять",
 	"Decline request":"Отклонить",
 	"Send message":"Написать сообщение",
-	"Send friends request":"Отправить заявку",
+	"Send friends request":"В друзья",
 	"User":"Юзер",
 	"Admin":"Админ",
 	"Grant admin role":"Дать роль админа",
@@ -126,5 +125,6 @@
 		"Result":"Результат",
 		"XPchange":"Опыт",
 		"RatingChange":"Рейтинг",
-		"Rival":"Противник"
+		"Rival":"Противник",
+    "switch":"Переключить на английский"
 }

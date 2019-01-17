@@ -1,46 +1,49 @@
 <div class="friendsList">
   <p-tabView>
-      <p-tabPanel header="Friends">
-        <div class="onePage">
+    <p-tabPanel header="Friends">
+      <div class="onePage">
         <label *ngIf="friends.length == 0">No friends yet</label>
-  <ul class = "list">
-  <li *ngFor="let friend of friends">
-    <div class="userdata">{{friend.login}}<br>
-        <label *ngIf="friend.online" class="online">{{'Ready' | translate }}</label>
-        <label *ngIf="friend.offline" class="offline">{{'Not ready' | translate }}</label><br>
-      <button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">{{'Invite to Fight' | translate }}</button>
-      <br *ngIf="friend.online">
-      <button class="invite" (click)="showMessageInput(friend)">{{'Send a message' | translate }}</button><br>
-      <button class="decline" (click)="deleteFriend(friend)">{{'Remove from friends' | translate }}</button></div>
-    
-  </li>
-</ul>
-</div>
-</p-tabPanel>
-<p-tabPanel header="In">
-    <div class="onePage">
-    <label *ngIf="inRequested.length == 0">No requests yet</label>
-<ul class = "list">
-  <li *ngFor="let inReq of inRequested">
-    <span class="login">{{inReq.login}}</span><span class="buttons">
-      <button (click)="addFriend(inReq)" class="accept">{{'Accept' | translate }}</button>
-      <button (click)="declineReq(inReq)" class="decline">{{'Decline' | translate }}</button>
+        <ul class="list">
+          <li *ngFor="let friend of friends">
+            <div class="userdata">{{friend.login}}
+              <label *ngIf="friend.online" class="online">⚫</label>
+              <label *ngIf="friend.offline" class="offline">⚫</label><br>
+              <p-button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">{{'Invite to Fight' | translate }}
+              </p-button>
+              <br *ngIf="friend.online">
+              <p-button class="invite" (click)="showMessageInput(friend)" label="{{'message' | translate}}"></p-button>
+              <br>
+              <p-button class="decline" (click)="deleteFriend(friend)" label="{{'delete' | translate}}"></p-button>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="In">
+      <div class="onePage">
+        <label *ngIf="inRequested.length == 0">No requests yet</label>
+        <ul class="list">
+          <li *ngFor="let inReq of inRequested">
+            <span class="login">{{inReq.login}}</span><span class="buttons">
+      <p-button (click)="addFriend(inReq)" class="accept">{{'Accept' | translate }}</p-button>
+      <p-button (click)="declineReq(inReq)" class="decline">{{'Decline' | translate }}</p-button>
     </span>
-  </li>
-</ul>
-</div>
-</p-tabPanel>
-<p-tabPanel header="Out">
-    <div class="onePage">
-    <label *ngIf="outRequested.length == 0">No one is requested</label>
-<ul class = "list">
-  <li *ngFor="let outReq of outRequested">
-    <span class="login">{{outReq.login}}</span><span class="buttons">
-      <button (click)="deleteRequest(outReq)" class="decline">{{'Delete request' | translate }}</button>
+          </li>
+        </ul>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Out">
+      <div class="onePage">
+        <label *ngIf="outRequested.length == 0">No one is requested</label>
+        <ul class="list">
+          <li *ngFor="let outReq of outRequested">
+            <span class="login">{{outReq.login}}</span><span class="buttons">
+      <p-button (click)="deleteRequest(outReq)" class="decline">{{'Delete' | translate }}</p-button>
     </span>
-  </li>
-</ul>
-</div>
-</p-tabPanel>
-</p-tabView>
+          </li>
+        </ul>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
 </div>
