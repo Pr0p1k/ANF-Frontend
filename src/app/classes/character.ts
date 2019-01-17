@@ -1,4 +1,6 @@
 import {Appearance} from './appearance';
+import { SpellHandling } from './spell-handling';
+import { PVEFight } from './pvefight';
 import {User} from './user';
 
 export class Character {
@@ -11,5 +13,7 @@ export class Character {
     user: User;
     physicalDamage: number;
     resistance: number;
+    spellsKnown: SpellHandling[];
+    fights: PVEFight[];
 
 }

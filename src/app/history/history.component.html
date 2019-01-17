@@ -1,0 +1,20 @@
+<div id="fullPage">
+  <table>
+    <tr>
+      <th>{{'Date' | translate }}</th>
+      <th>{{'Type' | translate }}</th>
+      <th>{{'Result' | translate }}</th>
+      <th>{{'XPchange' | translate }}</th>
+      <th>{{'RatingChange' | translate }}</th>
+      <th>{{'Rival' | translate }}</th>
+    </tr>
+    <tr *ngFor = "let fight of fights">
+      <td>{{fight.date}}</td>
+      <td>{{fight.type}}</td>
+      <td>{{fight.result}}</td>
+      <td>{{fight.xpCh}}</td>
+      <td>{{fight.ratingCh}}</td>
+      <td>{{fight.rival}}</td>
+    </tr>
+  </table>
+</div>

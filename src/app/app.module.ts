@@ -4,6 +4,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {MainComponent} from './main/main.component';
 import {StartPageComponent} from './start-page/start-page.component';
 import {ButtonModule} from 'primeng/button';
+import {TabViewModule} from 'primeng/tabview';
 import {InfoPageComponent} from './info-page/info-page.component';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -36,6 +37,8 @@ import { TranslateService } from './services/translate.service';
 import { TranslatePipe } from './services/translate.pipe';
 import {RoomComponent} from './room/room.component';
 import { AnimalRaceChoiceComponent } from './animal-race-choice/animal-race-choice.component';
+import { HistoryComponent } from './history/history.component';
+import { SpellsComponent } from './spells/spells.component';
 
 export function setupTranslateFactory(
   service: TranslateService): Function {
@@ -61,12 +64,15 @@ export function setupTranslateFactory(
     SearchUsersPipe,
     TranslatePipe,
     RoomComponent,
-    AnimalRaceChoiceComponent],
+    AnimalRaceChoiceComponent,
+    HistoryComponent,
+    SpellsComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     ButtonModule,
+    TabViewModule,
     DynamicDialogModule,
     BrowserAnimationsModule,
     TabMenuModule,

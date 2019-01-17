@@ -7,6 +7,8 @@ import {MessagesComponent} from './messages/messages.component';
 import {FriendsPageComponent} from './friends-page/friends-page.component';
 import {DialogueComponent} from './dialogue/dialogue.component';
 import {FightComponent} from './fight/fight.component';
+import {SpellsComponent} from './spells/spells.component';
+import {HistoryComponent} from './history/history.component';
 
 const routes: Routes = [{path: 'start', component: StartPageComponent},
   {path: '', redirectTo: 'start', pathMatch: 'full'},
@@ -15,6 +17,8 @@ const routes: Routes = [{path: 'start', component: StartPageComponent},
   {path: 'messages', component: MessagesComponent},
   {path: 'friends', component: FriendsPageComponent},
   {path: 'dialogue/:login', component: DialogueComponent},
+  {path: 'history', component: HistoryComponent},
+  {path: 'spells', component: SpellsComponent},
   {path: 'fight/:type/:id', component: FightComponent}];
 
 @NgModule({

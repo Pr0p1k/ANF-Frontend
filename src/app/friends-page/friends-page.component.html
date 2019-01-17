@@ -1,6 +1,9 @@
 <div class="friendsList">
-  <label class="header">{{'Friends' | translate }}</label>
-<ul>
+  <p-tabView>
+      <p-tabPanel header="Friends">
+        <div class="onePage">
+        <label *ngIf="friends.length == 0">No friends yet</label>
+  <ul class = "list">
   <li *ngFor="let friend of friends">
     <div class="userdata">{{friend.login}}<br>
         <label *ngIf="friend.online" class="online">{{'Ready' | translate }}</label>
@@ -12,8 +15,12 @@
     
   </li>
 </ul>
-<label class="header">{{'Incoming requests' | translate }}</label>
-<ul>
+</div>
+</p-tabPanel>
+<p-tabPanel header="In">
+    <div class="onePage">
+    <label *ngIf="inRequested.length == 0">No requests yet</label>
+<ul class = "list">
   <li *ngFor="let inReq of inRequested">
     <span class="login">{{inReq.login}}</span><span class="buttons">
       <button (click)="addFriend(inReq)" class="accept">{{'Accept' | translate }}</button>
@@ -21,12 +28,19 @@
     </span>
   </li>
 </ul>
-<label class="header">{{'Outgoing requests' | translate }}</label>
-<ul>
+</div>
+</p-tabPanel>
+<p-tabPanel header="Out">
+    <div class="onePage">
+    <label *ngIf="outRequested.length == 0">No one is requested</label>
+<ul class = "list">
   <li *ngFor="let outReq of outRequested">
     <span class="login">{{outReq.login}}</span><span class="buttons">
       <button (click)="deleteRequest(outReq)" class="decline">{{'Delete request' | translate }}</button>
     </span>
   </li>
 </ul>
+</div>
+</p-tabPanel>
+</p-tabView>
 </div>
