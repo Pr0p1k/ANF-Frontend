@@ -59,7 +59,7 @@ export class FightComponent implements OnInit {
   type: string;
   private stompClient;
   id: number;
-  selectedSpell: string;
+  selectedSpell = 'Physical attack';
   map: { [key: string]: string } = {};
   kek = false;
 
@@ -76,37 +76,10 @@ export class FightComponent implements OnInit {
       this.id = this.fightService.id;
       this.type = this.fightService.type;
     }
-    this.http.post('http://localhost:31480/fight/info', null, {
-      withCredentials: true,
-      params: new HttpParams().append('id', this.id.toString())
-    }).subscribe((data: {
-      id: number, type: string,
-      fighters1: User, fighters2: User
-    }) => {
-      if (data.fighters2.login === this.parent.login) {
-        const tmp = data.fighters1;
-        data.fighters1 = data.fighters2;
-        data.fighters2 = tmp;
-      }
-      this.allies = [data.fighters1];
-      this.enemies = [data.fighters2];
-      console.log(data);
-      const spells = data.fighters1.character.spellsKnown;
-      this.skills.push('Physical attack');
-      this.map['Physical attack'] = 'Physical attack\n' +
-        'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
-      spells.forEach((it) => {
-        this.skills.push(it.spellUse.name);
-        this.map[it.spellUse.name] = it.spellUse.name +
-          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
-      });
-      this.loaded = true;
-      this.init();
-    });
+    this.getFightInfo(this.type);
   }
 
   initializeWebSockets() {
-    
   }
 
   init() {
@@ -138,6 +111,7 @@ export class FightComponent implements OnInit {
       character = this.enemiesContainer.createComponent(factory);
       const genderId = this.enemies[0].character.appearance.gender === 'FEMALE' ? 1 : 0;
       const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[1 + genderId]);
+      this.fightersElements.push(element);
       element.style.display = 'block';
       element.classList.add('enemy');
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
@@ -145,27 +119,66 @@ export class FightComponent implements OnInit {
       console.log(element);
       this.setAppearance(element, this.enemies[0]);
       const stats = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[0]);
+      this.fightersElements.push(stats);
       const login = this.enemies[0].login;
       (<HTMLElement>stats
         .getElementsByClassName('name')[0])
         .innerText = login;
       element.addEventListener('click', () => {
-        this.attack(1);
+        this.attack(login);
       }); // TODO not sure about num
     }
   }
 
-  attack(enemyNumber: number): any {
-    console.log('attack');
+  getFightInfo(type: string) {
+    // if fight pvp
+    this.http.post('http://localhost:31480/fight/info', null, {
+      withCredentials: true,
+      params: new HttpParams().append('id', this.id.toString())
+    }).subscribe((data: {
+      id: number, type: string,
+      fighters1: User, fighters2: User
+    }) => {
+      if (data.fighters2.login === this.parent.login) {
+        const tmp = data.fighters1;
+        data.fighters1 = data.fighters2;
+        data.fighters2 = tmp;
+      }
+      this.allies = [data.fighters1];
+      this.enemies = [data.fighters2];
+      console.log(data);
+      const spells = data.fighters1.character.spellsKnown;
+      this.skills.push('Physical attack');
+      this.map['Physical attack'] = 'Physical attack\n' +
+        'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
+      spells.forEach((it) => {
+        this.skills.push(it.spellUse.name);
+        this.map[it.spellUse.name] = it.spellUse.name +
+          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+      });
+      this.loaded = true;
+      this.init();
+    });
+  }
+
+  attack(enemy: string): any {
     this.kek = true;
     this.http.post('http://localhost:31480/fight/attack', null, {
       withCredentials: true,
       params: new HttpParams()
         .append('fightId', this.id.toString())
-        .append('enemyNumber', enemyNumber.toString())
-        .append('spellname', this.selectedSpell)
-    }).subscribe((data) => {
+        .append('enemy', enemy)
+        .append('spellName', this.selectedSpell)
+    }).subscribe((data: {
+      damage: number,
+      chakra: number,
+      deadly: boolean,
+      code: number
+    }) => {
       console.log(data);
+      const max = this.enemies[0].character.maxHp;
+      this.enemies[0].character.currentHP -= data.damage;
+      this.setHPPercent(this.fightersElements[3], (this.enemies[0].character.currentHP) / max * 100);
     }, () => {
     });
   }

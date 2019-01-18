@@ -11,7 +11,7 @@ export class RoomComponent implements OnInit {
   id: number;
   type: string;
   author: string;
-  accepted: boolean = false;
+  accepted = false;
 
   constructor(private fightService: FightService, private http: HttpClient) {
   }
