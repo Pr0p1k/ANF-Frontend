@@ -57,6 +57,7 @@ export class FightComponent implements OnInit {
   parent = this.injector.get(MainComponent);
   loaded = false;
   type: string;
+  private stompClient;
   id: number;
   selectedSpell: string;
   map: { [key: string]: string } = {};
@@ -102,6 +103,10 @@ export class FightComponent implements OnInit {
       this.loaded = true;
       this.init();
     });
+  }
+
+  initializeWebSockets() {
+    
   }
 
   init() {

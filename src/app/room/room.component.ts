@@ -11,6 +11,7 @@ export class RoomComponent implements OnInit {
   id: number;
   type: string;
   author: string;
+  accepted: boolean = false;
 
   constructor(private fightService: FightService, private http: HttpClient) {
   }
@@ -22,6 +23,7 @@ export class RoomComponent implements OnInit {
   }
 
   join() {
+    this.accepted = true;
     this.http.get('http://localhost:31480/fight/join', {
       withCredentials: true,
       params: new HttpParams()

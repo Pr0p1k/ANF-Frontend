@@ -126,5 +126,6 @@
 		"XPchange":"Experience",
 		"RatingChange":"Rating",
 		"Rival":"Rival",
-    "switch": "Switch to Russian"
+	"switch": "Switch to Russian",
+		"You were invited to fight":"You were invited to fight"
 	}
