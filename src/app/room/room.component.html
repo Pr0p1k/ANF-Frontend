@@ -1,7 +1,7 @@
 <div class="kek">
   <p>
-    E be invitd t fite!
+    {{'You were invited to fight' | translate }}! <br>
     {{type}} : {{author}}
   </p>
-  <p-button label="Join" (onClick)="join()"></p-button>
+  <p-button *ngIf = "!accepted" label="Join" (onClick)="join()"></p-button>
 </div>
