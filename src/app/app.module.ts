@@ -39,6 +39,7 @@ import {RoomComponent} from './room/room.component';
 import { AnimalRaceChoiceComponent } from './animal-race-choice/animal-race-choice.component';
 import { HistoryComponent } from './history/history.component';
 import { SpellsComponent } from './spells/spells.component';
+import { FightResultComponent } from './fight-result/fight-result.component';
 
 export function setupTranslateFactory(
   service: TranslateService): Function {
@@ -66,7 +67,8 @@ export function setupTranslateFactory(
     RoomComponent,
     AnimalRaceChoiceComponent,
     HistoryComponent,
-    SpellsComponent],
+    SpellsComponent,
+    FightResultComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -100,6 +102,7 @@ export function setupTranslateFactory(
     SingleMessageComponent,
     CharacterComponent,
     RoomComponent,
-    AnimalRaceChoiceComponent]
+    AnimalRaceChoiceComponent,
+    FightResultComponent]
 })
 export class AppModule {}

@@ -9,17 +9,21 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {FightService} from '../services/fight/fight.service';
+import {FightEndService} from '../services/fight-end.service';
 import {User} from '../classes/user';
+import {FightResultComponent} from '../fight-result/fight-result.component';
 import {Boss} from '../classes/boss';
 import {CharacterComponent} from '../character/character.component';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {MainComponent} from '../main/main.component';
+import {ConfirmationService, DialogService, DynamicDialogRef, MessageService} from 'primeng/api';
 import {Character} from '../classes/character';
 import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {log} from 'util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import * as SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fight',
@@ -51,6 +55,7 @@ import {Stomp} from '@stomp/stompjs';
 export class FightComponent implements OnInit {
   allies: User[] = [];
   enemies: User[] = [];
+  private dialog: DynamicDialogRef;
   boss: Boss;
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
@@ -66,8 +71,9 @@ export class FightComponent implements OnInit {
   map: { [key: string]: string } = {};
   kek = false;
 
-  constructor(private fightService: FightService, private resolver: ComponentFactoryResolver,
-              private http: HttpClient, private injector: Injector) {
+  constructor(private router: Router, private dialogService: DialogService,
+    private confirmationService: ConfirmationService, private fightService: FightService, private resolver: ComponentFactoryResolver,
+              private http: HttpClient, private injector: Injector, private endServ: FightEndService) {
   }
 
   ngOnInit() {
@@ -91,12 +97,46 @@ export class FightComponent implements OnInit {
       that.stompClient.subscribe('/user/fightState', (response) => {
         const state = <{
           attacker: string,
-          enemy: string,
+          target: string,
+          attackName: string,
+          chakraCost: number,
           damage: number,
-          chakra: number
+          chakraBurn: number,
+          deadly: boolean,
+          everyoneDead: boolean,
+          nextAttacker: string
         }>JSON.parse(response.body);
         console.log(state);
-        that.setChakraPercent(that.statsElements[state.attacker], 30);
+        var attacker: User;
+        var target: User;
+        if (that.enemies.map(us => us.login).includes(state.attacker)) {
+          attacker = that.enemies.find(us => us.login === state.attacker);
+          target = that.allies.find(us => us.login === state.target);
+        } else if (that.allies.map(us => us.login).includes(state.attacker)) {
+          target = that.enemies.find(us => us.login === state.target);
+          attacker = that.allies.find(us => us.login === state.attacker);
+        }
+          target.character.currentHP -= state.damage;
+          target.character.currentChakra -= state.chakraBurn;
+          attacker.character.currentChakra -= state.chakraCost;
+          that.setChakraPercent(that.statsElements[state.attacker], attacker.character.currentChakra / attacker.character.maxChakra * 100);
+          that.setHPPercent(that.statsElements[state.target], target.character.currentHP / target.character.maxHp * 100);
+          that.setChakraPercent(that.statsElements[state.target], target.character.currentChakra / target.character.maxChakra * 100);
+          if (state.deadly) {
+            that.setDead(target);
+            if (state.everyoneDead) {
+              var victory: boolean;
+              var loss: boolean;
+              if (that.allies.map(us => us.login).includes(target.login)) {
+                victory = false;
+                loss = true;
+              } else {
+                victory = true;
+                loss = false;
+              }
+              that.finishFight(false, victory,loss);
+            }
+          }
       });
     });
   }
@@ -201,16 +241,16 @@ export class FightComponent implements OnInit {
       deadly: boolean,
       code: number
     }) => {
-      console.log(data);
+      //console.log(data);
       const max = this.enemies[0].character.maxHp;
-      this.enemies[0].character.currentHP -= data.damage;
-      console.log(this.statsElements[enemy]);
-      console.log((this.enemies[0].character.currentHP) / max * 100);
-      this.setHPPercent(this.statsElements[enemy], (this.enemies[0].character.currentHP) / max * 100);
+      //this.enemies[0].character.currentHP -= data.damage;
+      //console.log(this.statsElements[enemy]);
+      //console.log((this.enemies[0].character.currentHP) / max * 100);
+      //this.setHPPercent(this.statsElements[enemy], (this.enemies[0].character.currentHP) / max * 100);
       const chakra = this.allies[0].character.maxChakra;
-      this.allies[0].character.currentChakra -= data.chakra;
-      this.setChakraPercent(this.statsElements[this.parent.login],
-        (this.allies[0].character.currentChakra) / chakra * 100);
+      //this.allies[0].character.currentChakra -= data.chakra;
+      /*this.setChakraPercent(this.statsElements[this.parent.login],
+        (this.allies[0].character.currentChakra) / chakra * 100);*/
     }, () => {
     });
   }
@@ -286,4 +326,19 @@ export class FightComponent implements OnInit {
         return 'cornflowerblue';
     }
   }
+
+  setDead(user: User): void {
+    console.log(user.login + ' has perished.');
+  }
+
+  finishFight(death: boolean, victory: boolean, loss: boolean): void {
+    this.endServ.death = death;
+    this.endServ.loss = loss;
+    this.endServ.victory = victory;
+    this.dialog = this.dialogService.open(FightResultComponent, {
+      width: '400px', height: '200px'
+    });
+    this.router.navigateByUrl('/profile');
+  }
+
 }
