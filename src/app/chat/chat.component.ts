@@ -38,18 +38,7 @@ export class ChatComponent implements OnInit {
         that.messages.push(mes);
         // console.log(message.body);
       });
-      that.stompClient.subscribe('/user/fightState', message => {
-        console.log("fightstate");
-        console.log("attacker: "+JSON.parse(message.body).attacker);
-        console.log("target: "+JSON.parse(message.body).target);
-        console.log("attackName: "+JSON.parse(message.body).attackName);
-        console.log("chakraCost: "+JSON.parse(message.body).chakraCost);
-        console.log("damage: "+JSON.parse(message.body).damage);
-        console.log("chakraBurn: "+JSON.parse(message.body).chakraBurn);
-        console.log("deadly: "+JSON.parse(message.body).deadly);
-        console.log("everyoneDead: "+JSON.parse(message.body).everyoneDead);
-        console.log("nextAttacker: "+JSON.parse(message.body).nextAttacker);
-      });
+      
     });
     
   }
