@@ -18,6 +18,8 @@ import {Character} from '../classes/character';
 import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {log} from 'util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import * as SockJS from 'sockjs-client';
+import {Stomp} from '@stomp/stompjs';
 
 @Component({
   selector: 'app-fight',
@@ -52,7 +54,8 @@ export class FightComponent implements OnInit {
   boss: Boss;
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
-  fightersElements: HTMLElement[];
+  fightersElements: { [key: string]: HTMLElement } = {};
+  statsElements: { [key: string]: HTMLElement } = {};
   skills: string[] = [];
   parent = this.injector.get(MainComponent);
   loaded = false;
@@ -77,27 +80,46 @@ export class FightComponent implements OnInit {
       this.type = this.fightService.type;
     }
     this.getFightInfo(this.type);
+    this.initializeWebSockets();
   }
 
   initializeWebSockets() {
+    const ws = new SockJS('http://localhost:31480/socket');
+    this.stompClient = Stomp.over(ws);
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/user/fightState', (response) => {
+        const state = <{
+          attacker: string,
+          enemy: string,
+          damage: number,
+          chakra: number
+        }>JSON.parse(response.body);
+        console.log(state);
+        that.setChakraPercent(that.statsElements[state.attacker], 30);
+      });
+    });
   }
 
   init() {
     const factory = this.resolver.resolveComponentFactory(CharacterComponent);
     let character: ComponentRef<CharacterComponent>;
-    this.fightersElements = [];
     console.log(this.allies);
     for (let i = 0; i < this.allies.length; i++) {
       character = this.alliesContainer.createComponent(factory);
       const genderId = this.allies[this.allies.length - i - 1].character.appearance.gender === 'FEMALE' ? 1 : 0;
       const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[1 + genderId]);
-      this.fightersElements.push(element);
+      this.fightersElements[this.allies[this.allies.length - i - 1].login] = element;
       element.style.display = 'block';
       this.setPosition(element, i);
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
         .childNodes[1 + (genderId + 1) % 2]).style.display = 'none';
       const stats = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[0]);
-      this.fightersElements.push(stats);
+      this.statsElements[this.allies[this.allies.length - i - 1].login] = stats;
+      this.setHPPercent(stats,
+        this.enemies[0].character.currentHP / this.enemies[0].character.maxHp * 100);
+      this.setChakraPercent(stats,
+        this.enemies[0].character.currentChakra / this.enemies[0].character.maxChakra * 100);
       this.setPosition(stats, i, 125);
 
       (<HTMLElement>stats
@@ -111,7 +133,7 @@ export class FightComponent implements OnInit {
       character = this.enemiesContainer.createComponent(factory);
       const genderId = this.enemies[0].character.appearance.gender === 'FEMALE' ? 1 : 0;
       const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[1 + genderId]);
-      this.fightersElements.push(element);
+      this.fightersElements[this.enemies[0].login] = element;
       element.style.display = 'block';
       element.classList.add('enemy');
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
@@ -119,7 +141,11 @@ export class FightComponent implements OnInit {
       console.log(element);
       this.setAppearance(element, this.enemies[0]);
       const stats = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[0]);
-      this.fightersElements.push(stats);
+      this.statsElements[this.enemies[0].login] = stats;
+      this.setHPPercent(stats,
+        this.enemies[0].character.currentHP / this.enemies[0].character.maxHp * 100);
+      this.setChakraPercent(stats,
+        this.enemies[0].character.currentChakra / this.enemies[0].character.maxChakra * 100);
       const login = this.enemies[0].login;
       (<HTMLElement>stats
         .getElementsByClassName('name')[0])
@@ -178,7 +204,13 @@ export class FightComponent implements OnInit {
       console.log(data);
       const max = this.enemies[0].character.maxHp;
       this.enemies[0].character.currentHP -= data.damage;
-      this.setHPPercent(this.fightersElements[3], (this.enemies[0].character.currentHP) / max * 100);
+      console.log(this.statsElements[enemy]);
+      console.log((this.enemies[0].character.currentHP) / max * 100);
+      this.setHPPercent(this.statsElements[enemy], (this.enemies[0].character.currentHP) / max * 100);
+      const chakra = this.allies[0].character.maxChakra;
+      this.allies[0].character.currentChakra -= data.chakra;
+      this.setChakraPercent(this.statsElements[this.parent.login],
+        (this.allies[0].character.currentChakra) / chakra * 100);
     }, () => {
     });
   }
