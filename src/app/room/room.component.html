@@ -3,5 +3,6 @@
     {{'You were invited to fight' | translate }}! <br>
     {{type}} : {{author}}
   </p>
-  <p-button *ngIf = "!accepted" label="Join" (onClick)="join()"></p-button>
+  <p-button *ngIf="!accepted" label="Join" (onClick)="join()"></p-button>
+  <p *ngIf="accepted">Wait for the fight</p>
 </div>

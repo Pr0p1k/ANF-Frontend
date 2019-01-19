@@ -102,7 +102,8 @@ export class MainComponent implements OnInit {
       that.stompClient.subscribe('/user/start', (response) => {
         const message = response.body;
         console.log('Fight started: ' + message);
-        that.router.navigateByUrl('fight/' + message.substring(message.indexOf(':') + 1));
+
+        that.router.navigateByUrl('fight/' + that.fightService.type + '/' + message.substring(message.indexOf(':') + 1));
         that.dialog.close();
       });
     });

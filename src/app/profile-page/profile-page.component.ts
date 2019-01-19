@@ -1,4 +1,4 @@
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, Injector, Input, OnInit, Output} from '@angular/core';
+import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {User} from '../classes/user';
 import {Message} from '../classes/message';
@@ -60,7 +60,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     )
   ]
 })
-export class ProfilePageComponent implements OnInit, AfterViewChecked {
+export class ProfilePageComponent implements OnInit, AfterViewChecked, OnDestroy {
   public user: User;
   public loaded = false;
   public unreadMessages: Message[];
@@ -78,6 +78,7 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    document.documentElement.style.overflowY = 'hidden';
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.loaded = true;
       this.user = data;
@@ -249,6 +250,10 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked {
         };
       }
     }
+  }
+
+  ngOnDestroy() {
+    document.documentElement.style.overflowY = 'scroll';
   }
 
 }
