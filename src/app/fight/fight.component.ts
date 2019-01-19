@@ -17,6 +17,8 @@ import {MainComponent} from '../main/main.component';
 import {Character} from '../classes/character';
 import {el} from '@angular/platform-browser/testing/src/browser_util';
 import {log} from 'util';
+import {Stomp} from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
@@ -101,12 +103,28 @@ export class FightComponent implements OnInit {
           '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
       });
       this.loaded = true;
+      this.initializeWebSockets();
       this.init();
     });
   }
 
   initializeWebSockets() {
-    
+    const ws = new SockJS('http://localhost:31480/socket');
+    this.stompClient = Stomp.over(ws);
+    const that = this;
+    this.stompClient.connect({}, function (frame) {
+      that.stompClient.subscribe('/user/fightState', message => {
+        var attackerName : string = JSON.parse(message.body).attacker;
+        var targetName: string = JSON.parse(message.body).target;
+        var spellName: string = JSON.parse(message.body).attackName;
+        var chakraCost: number = JSON.parse(message.body).chakraCost;
+        var damage: number = JSON.parse(message.body).damage;
+        var chakraBurn: number = JSON.parse(message.body).chakraBurn;
+        var deadly: boolean = JSON.parse(message.body).deadly;
+        var everyoneDead: boolean = JSON.parse(message.body).everyoneDead;
+        var nextName: string = JSON.parse(message.body).nextAttacker;
+      });
+    });
   }
 
   init() {
