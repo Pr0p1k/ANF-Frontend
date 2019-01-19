@@ -23,7 +23,8 @@ import {log} from 'util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import * as SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
+import {promise} from 'selenium-webdriver';
 
 @Component({
   selector: 'app-fight',
@@ -50,6 +51,20 @@ import { Router } from '@angular/router';
       ]),
       transition('use => default', animate('0.5s'))
     ]),
+    trigger('turn', [
+      state('disabled', style({
+        opacity: 0.3
+      })),
+      state('enabled', style({
+        opacity: 1
+      })),
+      transition('disabled => enabled', [
+        animate('0.2s')
+      ]),
+      transition('enabled => disabled', [
+        animate('0.3s')
+      ])
+    ])
   ]
 })
 export class FightComponent implements OnInit {
@@ -70,10 +85,13 @@ export class FightComponent implements OnInit {
   selectedSpell = 'Physical attack';
   map: { [key: string]: string } = {};
   kek = false;
+  timer: number;
+  current: string;
 
   constructor(private router: Router, private dialogService: DialogService,
-    private confirmationService: ConfirmationService, private fightService: FightService, private resolver: ComponentFactoryResolver,
-              private http: HttpClient, private injector: Injector, private endServ: FightEndService) {
+              private confirmationService: ConfirmationService, private fightService: FightService,
+              private resolver: ComponentFactoryResolver, private http: HttpClient,
+              private injector: Injector, private endServ: FightEndService) {
   }
 
   ngOnInit() {
@@ -95,7 +113,7 @@ export class FightComponent implements OnInit {
     const that = this;
     this.stompClient.connect({}, function (frame) {
       that.stompClient.subscribe('/user/fightState', (response) => {
-        const state = <{
+        const fightState = <{
           attacker: string,
           target: string,
           attackName: string,
@@ -106,37 +124,44 @@ export class FightComponent implements OnInit {
           everyoneDead: boolean,
           nextAttacker: string
         }>JSON.parse(response.body);
+        that.setTimer(fightState.nextAttacker, 30200);
         console.log(state);
-        var attacker: User;
-        var target: User;
-        if (that.enemies.map(us => us.login).includes(state.attacker)) {
-          attacker = that.enemies.find(us => us.login === state.attacker);
-          target = that.allies.find(us => us.login === state.target);
-        } else if (that.allies.map(us => us.login).includes(state.attacker)) {
-          target = that.enemies.find(us => us.login === state.target);
-          attacker = that.allies.find(us => us.login === state.attacker);
+        let attacker: User;
+        let target: User;
+        if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
+          attacker = that.enemies.find(us => us.login === fightState.attacker);
+          target = that.allies.find(us => us.login === fightState.target);
+        } else if (that.allies.map(us => us.login).includes(fightState.attacker)) {
+          target = that.enemies.find(us => us.login === fightState.target);
+          attacker = that.allies.find(us => us.login === fightState.attacker);
         }
-          target.character.currentHP -= state.damage;
-          target.character.currentChakra -= state.chakraBurn;
-          attacker.character.currentChakra -= state.chakraCost;
-          that.setChakraPercent(that.statsElements[state.attacker], attacker.character.currentChakra / attacker.character.maxChakra * 100);
-          that.setHPPercent(that.statsElements[state.target], target.character.currentHP / target.character.maxHp * 100);
-          that.setChakraPercent(that.statsElements[state.target], target.character.currentChakra / target.character.maxChakra * 100);
-          if (state.deadly) {
-            that.setDead(target);
-            if (state.everyoneDead) {
-              var victory: boolean;
-              var loss: boolean;
-              if (that.allies.map(us => us.login).includes(target.login)) {
-                victory = false;
-                loss = true;
-              } else {
-                victory = true;
-                loss = false;
-              }
-              that.finishFight(false, victory,loss);
+        target.character.currentHP -= fightState.damage;
+        target.character.currentChakra -= fightState.chakraBurn;
+        attacker.character.currentChakra -= fightState.chakraCost;
+        that.setChakraPercent(that.statsElements[fightState.attacker],
+          attacker.character.currentChakra / attacker.character.maxChakra * 100);
+        that.setHPPercent(that.statsElements[fightState.target],
+          target.character.currentHP / target.character.maxHp * 100);
+        that.setChakraPercent(that.statsElements[fightState.target],
+          target.character.currentChakra / target.character.maxChakra * 100);
+        if (fightState.deadly) {
+          that.setDead(target);
+          if (fightState.everyoneDead) {
+            let victory: boolean;
+            let loss: boolean;
+            if (that.allies.map(us => us.login).includes(target.login)) {
+              victory = false;
+              loss = true;
+            } else {
+              victory = true;
+              loss = false;
             }
+            that.finishFight(false, victory, loss);
           }
+        }
+      });
+      that.stompClient.subscribe('/switch', (response) => {
+        that.setTimer(response.body, 30200);
       });
     });
   }
@@ -203,8 +228,10 @@ export class FightComponent implements OnInit {
       params: new HttpParams().append('id', this.id.toString())
     }).subscribe((data: {
       id: number, type: string,
-      fighters1: User, fighters2: User
+      fighters1: User, fighters2: User,
+      currentName: string, timeLeft: number
     }) => {
+      this.setTimer(data.currentName, data.timeLeft);
       if (data.fighters2.login === this.parent.login) {
         const tmp = data.fighters1;
         data.fighters1 = data.fighters2;
@@ -227,7 +254,28 @@ export class FightComponent implements OnInit {
     });
   }
 
+  setTimer(currentName: string, timeLeft: number) {
+    clearInterval(this.timer);
+    this.current = currentName;
+    if (currentName === this.parent.login) {
+      currentName = 'Your turn!';
+    } else {
+      currentName = currentName + '\'s turn!';
+      if (currentName === null) {
+        currentName = 'Prepare';
+      }
+    }
+    document.getElementById('current').innerText = currentName;
+    this.timer = setInterval(() => {
+      timeLeft -= 1000;
+      document.getElementById('timer').innerText = (timeLeft / 1000).toFixed(0);
+    }, 1000);
+  }
+
   attack(enemy: string): any {
+    if (this.current !== this.parent.login) {
+      return;
+    }
     this.kek = true;
     this.http.post('http://localhost:31480/fight/attack', null, {
       withCredentials: true,
@@ -241,14 +289,14 @@ export class FightComponent implements OnInit {
       deadly: boolean,
       code: number
     }) => {
-      //console.log(data);
+      // console.log(data);
       const max = this.enemies[0].character.maxHp;
-      //this.enemies[0].character.currentHP -= data.damage;
-      //console.log(this.statsElements[enemy]);
-      //console.log((this.enemies[0].character.currentHP) / max * 100);
-      //this.setHPPercent(this.statsElements[enemy], (this.enemies[0].character.currentHP) / max * 100);
+      // this.enemies[0].character.currentHP -= data.damage;
+      // console.log(this.statsElements[enemy]);
+      // console.log((this.enemies[0].character.currentHP) / max * 100);
+      // this.setHPPercent(this.statsElements[enemy], (this.enemies[0].character.currentHP) / max * 100);
       const chakra = this.allies[0].character.maxChakra;
-      //this.allies[0].character.currentChakra -= data.chakra;
+      // this.allies[0].character.currentChakra -= data.chakra;
       /*this.setChakraPercent(this.statsElements[this.parent.login],
         (this.allies[0].character.currentChakra) / chakra * 100);*/
     }, () => {

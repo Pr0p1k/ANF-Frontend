@@ -1,13 +1,17 @@
 <div id="fight">
   <div class="container">
     <p class="label">Attacks: </p>
-    <div id="attacks">
+    <div id="attacks" [@turn]="current === parent.login ? 'enabled' : 'disabled'">
       <div class="attack" *ngFor="let skill of skills">
         <div (click)="selectSpell($event)" pTooltip="{{map[skill]}}">
           <img id="{{skill}}"
                src="../../assets/elements/{{skill.substring(0, skill.indexOf(' ')).toLowerCase()}}.png">
         </div>
       </div>
+    </div>
+    <div id="turn">
+      <p id="current"></p>
+      <p id="timer"></p>
     </div>
   </div>
   <div id="fighters">
