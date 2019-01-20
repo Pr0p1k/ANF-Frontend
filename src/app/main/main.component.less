@@ -3,18 +3,31 @@
 @margin-value: 10px;
 @header-height: 80px;
 
+
+
+
+
 #header {
   position: fixed;
   top: 0;
   z-index: 100;
   height: @header-height;
   text-align: center;
-  @media (min-width: 700px) and (max-width: 1238px){
-    height: @header-height + 20;
-  }
-
   width: 100vw;
   background-color: @primary-color;
+   
+  #showMenuButton {
+    display: none;
+    @media (max-width: 1238px){
+      position: relative;
+      display: block;
+      float: left;
+      margin: @margin-value;
+      width: 60px;
+      
+    }
+  }
+  
   #logo {
     position: relative;
     float: left;
@@ -22,6 +35,7 @@
     width: 60px;
     height: 60px;
   }
+
   #account-button {
     position: relative;
     float: right;
@@ -34,6 +48,9 @@
     height: 100%;
     float: right;
     color: white;
+    @media (max-width: 1238px){
+      display: none; 
+    }
     p {
       @media (min-width: 1238px) {
         font-size: 18px;
@@ -52,6 +69,9 @@
     }
   }
   .menu {
+    @media (max-width: 1238px){
+      display: none; 
+    }
     //position: relative;
     margin: auto;
     width: fit-content;
@@ -68,6 +88,7 @@
     }
   }
   #lang {
+    
     position: relative;
     float: left;
     color: white;
