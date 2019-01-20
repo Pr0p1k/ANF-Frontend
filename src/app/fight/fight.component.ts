@@ -222,7 +222,7 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   getFightInfo(type: string) {
-    // if fight pvp
+    if (type.toLowerCase() === 'pvp') {
     this.http.post('http://localhost:31480/fight/info', null, {
       withCredentials: true,
       params: new HttpParams().append('id', this.id.toString())
@@ -252,6 +252,30 @@ export class FightComponent implements OnInit, OnDestroy {
       this.loaded = true;
       this.init();
     });
+  } else {
+    this.http.post('http://localhost:31480/fight/infoPVE', null, {
+      withCredentials: true,
+      params: new HttpParams().append('id', this.id.toString())
+    }).subscribe((data: {
+      id: number, type:string, fighters: User[], currentName: string, timeLeft: number,
+      boss: Boss
+    }) => {
+      this.setTimer(data.currentName, data.timeLeft);
+      this.allies = data.fighters;
+      this.boss = data.boss;
+      const spells = data.fighters.find(us => us.login === this.parent.login).character.spellsKnown;
+      this.skills.push('Physical attack');
+      this.map['Physical attack'] = 'Physical attack\n' +
+        'Damage: ' + data.fighters.find(us => us.login === this.parent.login).character.physicalDamage + '\nChakra: 0';
+      spells.forEach((it) => {
+        this.skills.push(it.spellUse.name);
+        this.map[it.spellUse.name] = it.spellUse.name +
+          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+      });
+      this.loaded = true;
+      this.init(); 
+    });
+  }
   }
 
   setTimer(currentName: string, timeLeft: number) {
