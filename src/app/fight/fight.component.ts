@@ -3,7 +3,7 @@ import {
   Component,
   ComponentFactory,
   ComponentFactoryResolver,
-  ComponentRef, Injector,
+  ComponentRef, ElementRef, Injector, OnDestroy,
   OnInit,
   ViewChild,
   ViewContainerRef
@@ -26,6 +26,7 @@ import {Stomp} from '@stomp/stompjs';
 import {Router} from '@angular/router';
 import {TranslateService} from '../services/translate.service';
 import {TranslatePipe} from '../services/translate.pipe';
+import {FocusTrap} from '@angular/cdk/typings/esm5/a11y';
 
 @Component({
   selector: 'app-fight',
@@ -34,23 +35,13 @@ import {TranslatePipe} from '../services/translate.pipe';
   animations: [
     trigger('attack', [
       state('default', style({
-        display: 'none',
-        position: 'fixed',
-        width: '15%',
-        height: 'auto',
-        top: '250px',
-        left: '50%'
+        opacity: 0
       })),
       state('use', style({
-        position: 'fixed',
-        display: 'block',
-        width: '15%',
-        height: 'auto'
+        opacity: 0.8
       })),
-      transition('default => use', [
-        animate('0.5s')
-      ]),
-      transition('use => default', animate('0.5s'))
+      transition('default => use', animate('0.3s')),
+      transition('use => default', animate('0.3s'))
     ]),
     trigger('turn', [
       state('disabled', style({
@@ -68,7 +59,7 @@ import {TranslatePipe} from '../services/translate.pipe';
     ])
   ]
 })
-export class FightComponent implements OnInit {
+export class FightComponent implements OnInit, OnDestroy {
   allies: User[] = [];
   enemies: User[] = [];
   private dialog: DynamicDialogRef;
@@ -85,9 +76,10 @@ export class FightComponent implements OnInit {
   id: number;
   selectedSpell = 'Physical attack';
   map: { [key: string]: string } = {};
-  kek = false;
+  used = 'physical';
   timer: number;
   current: string;
+  kek = false;
 
   constructor(private router: Router, private transl: TranslatePipe,
               private dialogService: DialogService,
@@ -97,6 +89,7 @@ export class FightComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initializeWebSockets();
     if (!this.fightService.valuesSet) {
       const url = this.parent.router.url;
       this.id = Number.parseInt(url.substring(11), 10);
@@ -106,7 +99,6 @@ export class FightComponent implements OnInit {
       this.type = this.fightService.type;
     }
     this.getFightInfo(this.type);
-    this.initializeWebSockets();
   }
 
   initializeWebSockets() {
@@ -126,6 +118,11 @@ export class FightComponent implements OnInit {
           everyoneDead: boolean,
           nextAttacker: string
         }>JSON.parse(response.body);
+        that.used = fightState.attackName.substring(0, fightState.attackName.indexOf(' ')).toLowerCase();
+        that.kek = true;
+        setTimeout(() => {
+          that.kek = false;
+        }, 800);
         that.setTimer(fightState.nextAttacker, 30200);
         console.log(state);
         let attacker: User;
@@ -161,6 +158,9 @@ export class FightComponent implements OnInit {
             that.finishFight(false, victory, loss);
           }
         }
+      });
+      that.stompClient.subscribe('/user/switch', (response) => {
+        that.setTimer(response.body, 30000);
       });
     });
   }
@@ -216,7 +216,7 @@ export class FightComponent implements OnInit {
         .innerText = login;
       element.addEventListener('click', () => {
         this.attack(login);
-      }); // TODO not sure about num
+      });
     }
   }
 
@@ -259,9 +259,10 @@ export class FightComponent implements OnInit {
     if (currentName === this.parent.login) {
       currentName = 'Your turn!';
     } else {
-      currentName = currentName + '\'s turn!';
-      if (currentName === null) {
-        currentName = 'Prepare';
+      if (currentName === '') {
+        currentName = 'Prepare!';
+      } else {
+        currentName = currentName + '\'s turn!';
       }
     }
     document.getElementById('current').innerText = currentName;
@@ -276,11 +277,28 @@ export class FightComponent implements OnInit {
       return;
     }
     this.kek = true;
+    this.used = this.selectedSpell.substring(0, this.selectedSpell.indexOf(' ')).toLowerCase();
+    console.log('Used: ' + this.used);
+    setTimeout(() => {
+      this.kek = false;
+    }, 800);
     const self: User = this.allies.find(all => all.login === this.parent.login);
-    if (this.selectedSpell === 'Air Strike' && self.character.currentChakra < (70 + 10 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
-      this.selectedSpell === 'Fire Strike' && self.character.currentChakra < (40 + 5 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
-      this.selectedSpell === 'Water Strike' && self.character.currentChakra < (20 + 4 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
-      this.selectedSpell === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
+    if (this.selectedSpell === 'Air Strike' &&
+      self.character.currentChakra <
+      (70 + 10 * self.character.spellsKnown
+        .find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
+      this.selectedSpell === 'Fire Strike' &&
+      self.character.currentChakra <
+      (40 + 5 * self.character.spellsKnown
+        .find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
+      this.selectedSpell === 'Water Strike' &&
+      self.character.currentChakra <
+      (20 + 4 * self.character.spellsKnown
+        .find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
+      this.selectedSpell === 'Earth Strike' &&
+      self.character.currentChakra <
+      (12 + 3 * self.character.spellsKnown
+        .find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
       this.selectedSpell = 'Physical attack';
     }
     this.http.post('http://localhost:31480/fight/attack', null, {
@@ -302,10 +320,22 @@ export class FightComponent implements OnInit {
   selectSpell(event: MouseEvent) {
     if (this.current === this.parent.login) {
       const self: User = this.allies.find(all => all.login === this.parent.login);
-      if (event.srcElement.id === 'Air Strike' && self.character.currentChakra < (70 + 10 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
-        event.srcElement.id === 'Fire Strike' && self.character.currentChakra < (40 + 5 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
-        event.srcElement.id === 'Water Strike' && self.character.currentChakra < (20 + 4 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
-        event.srcElement.id === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
+      if (event.srcElement.id === 'Air Strike' &&
+        self.character.currentChakra <
+        (70 + 10 * self.character.spellsKnown
+          .find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
+        event.srcElement.id === 'Fire Strike' &&
+        self.character.currentChakra <
+        (40 + 5 * self.character.spellsKnown
+          .find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
+        event.srcElement.id === 'Water Strike' &&
+        self.character.currentChakra <
+        (20 + 4 * self.character.spellsKnown
+          .find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
+        event.srcElement.id === 'Earth Strike' &&
+        self.character.currentChakra <
+        (12 + 3 * self.character.spellsKnown
+          .find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
         alert(this.transl.transform('Not enough chakra'));
         this.selectedSpell = 'Physical attack';
       } else {
@@ -397,6 +427,10 @@ export class FightComponent implements OnInit {
       width: '400px', height: '160px'
     });
     this.router.navigateByUrl('/profile');
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
   }
 
 }

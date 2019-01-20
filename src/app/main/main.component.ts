@@ -93,7 +93,7 @@ export class MainComponent implements OnInit {
         that.fightService.author = message.substring(4, message.lastIndexOf(':'));
         that.fightService.id = Number.parseInt(message.substring(
           message.lastIndexOf(':') + 1), 10);
-
+        that.fightService.valuesSet = true;
         that.dialog = that.dialogService.open(RoomComponent, {
           width: '200px',
           height: '200px'
@@ -101,9 +101,10 @@ export class MainComponent implements OnInit {
       });
       that.stompClient.subscribe('/user/start', (response) => {
         const message = response.body;
+        const id = message.substring(message.indexOf(':') + 1);
+        that.fightService.id = Number.parseInt(id, 10);
         console.log('Fight started: ' + message);
-
-        that.router.navigateByUrl('fight/' + that.fightService.type + '/' + message.substring(message.indexOf(':') + 1));
+        that.router.navigateByUrl('fight/' + that.fightService.type + '/' + id);
         that.dialog.close();
       });
     });
