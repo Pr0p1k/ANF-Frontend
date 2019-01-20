@@ -64,6 +64,7 @@ export class FightComponent implements OnInit, OnDestroy {
   enemies: User[] = [];
   private dialog: DynamicDialogRef;
   boss: Boss;
+
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
   fightersElements: { [key: string]: HTMLElement } = {};
