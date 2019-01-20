@@ -126,6 +126,7 @@ export class FightComponent implements OnInit, OnDestroy {
         that.setTimer(fightState.nextAttacker, 30200);
         console.log(state);
         let attacker: User;
+        const boss = that.boss;
         let target: User;
         if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
           attacker = that.enemies.find(us => us.login === fightState.attacker);
@@ -134,15 +135,24 @@ export class FightComponent implements OnInit, OnDestroy {
           target = that.enemies.find(us => us.login === fightState.target);
           attacker = that.allies.find(us => us.login === fightState.attacker);
         }
-        target.character.currentHP -= fightState.damage;
-        target.character.currentChakra -= fightState.chakraBurn;
+        if (fightState.target.length >= 6) {
+          target.character.currentHP -= fightState.damage;
+          target.character.currentChakra -= fightState.chakraBurn;
+          that.setHPPercent(that.statsElements[fightState.target],
+            target.character.currentHP / target.character.maxHp * 100);
+          that.setChakraPercent(that.statsElements[fightState.target],
+            target.character.currentChakra / target.character.maxChakra * 100);
+        } else {
+          boss.currentChakra -= fightState.chakraBurn;
+          boss.currentHP -= fightState.damage;
+          that.setHPPercent(that.statsElements[fightState.target],
+            boss.currentHP / boss.maxHp * 100);
+          that.setChakraPercent(that.statsElements[fightState.target],
+            boss.currentChakra / boss.maxChakra * 100);
+        }
         attacker.character.currentChakra -= fightState.chakraCost;
         that.setChakraPercent(that.statsElements[fightState.attacker],
           attacker.character.currentChakra / attacker.character.maxChakra * 100);
-        that.setHPPercent(that.statsElements[fightState.target],
-          target.character.currentHP / target.character.maxHp * 100);
-        that.setChakraPercent(that.statsElements[fightState.target],
-          target.character.currentChakra / target.character.maxChakra * 100);
         if (fightState.deadly) {
           that.setDead(target);
           if (fightState.everyoneDead) {
@@ -175,15 +185,14 @@ export class FightComponent implements OnInit, OnDestroy {
       const element = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[1 + genderId]);
       this.fightersElements[this.allies[this.allies.length - i - 1].login] = element;
       element.style.display = 'block';
+      console.log(element);
       this.setPosition(element, i);
       (<HTMLElement>(<HTMLElement>character.location.nativeElement)
         .childNodes[1 + (genderId + 1) % 2]).style.display = 'none';
+      console.log((<HTMLElement>(<HTMLElement>character.location.nativeElement)
+        .childNodes[1 + (genderId + 1) % 2]));
       const stats = (<HTMLElement>(<HTMLElement>character.location.nativeElement).childNodes[0]);
       this.statsElements[this.allies[this.allies.length - i - 1].login] = stats;
-      this.setHPPercent(stats,
-        this.enemies[0].character.currentHP / this.enemies[0].character.maxHp * 100);
-      this.setChakraPercent(stats,
-        this.enemies[0].character.currentChakra / this.enemies[0].character.maxChakra * 100);
       this.setPosition(stats, i, 125);
 
       (<HTMLElement>stats
@@ -217,64 +226,76 @@ export class FightComponent implements OnInit, OnDestroy {
       element.addEventListener('click', () => {
         this.attack(login);
       });
+    } else {
+      const boss = this.enemiesContainer.createComponent(factory);
+      boss.instance.bossId = this.boss.numberOfTails;
+      this.statsElements[this.boss.numberOfTails] = (<HTMLElement>(<HTMLElement>boss
+        .location.nativeElement).childNodes[0]);
+      (<HTMLElement>boss.location.nativeElement).style.position = 'absolute';
+      (<HTMLElement>boss.location.nativeElement).style.bottom = '-40px';
+      (<HTMLElement>boss.location.nativeElement).style.right = '20px';
+      (<HTMLElement>boss.location.nativeElement).addEventListener('click', () => {
+        this.attack(boss.instance.bossId);
+      });
+
     }
   }
 
   getFightInfo(type: string) {
     if (type.toLowerCase() === 'pvp') {
-    this.http.post('http://localhost:31480/fight/info', null, {
-      withCredentials: true,
-      params: new HttpParams().append('id', this.id.toString())
-    }).subscribe((data: {
-      id: number, type: string,
-      fighters1: User, fighters2: User,
-      currentName: string, timeLeft: number
-    }) => {
-      this.setTimer(data.currentName, data.timeLeft);
-      if (data.fighters2.login === this.parent.login) {
-        const tmp = data.fighters1;
-        data.fighters1 = data.fighters2;
-        data.fighters2 = tmp;
-      }
-      this.allies = [data.fighters1];
-      this.enemies = [data.fighters2];
-      console.log(data);
-      const spells = data.fighters1.character.spellsKnown;
-      this.skills.push('Physical attack');
-      this.map['Physical attack'] = 'Physical attack\n' +
-        'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
-      spells.forEach((it) => {
-        this.skills.push(it.spellUse.name);
-        this.map[it.spellUse.name] = it.spellUse.name +
-          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+      this.http.post('http://localhost:31480/fight/info', null, {
+        withCredentials: true,
+        params: new HttpParams().append('id', this.id.toString())
+      }).subscribe((data: {
+        id: number, type: string,
+        fighters1: User, fighters2: User,
+        currentName: string, timeLeft: number
+      }) => {
+        this.setTimer(data.currentName, data.timeLeft);
+        if (data.fighters2.login === this.parent.login) {
+          const tmp = data.fighters1;
+          data.fighters1 = data.fighters2;
+          data.fighters2 = tmp;
+        }
+        this.allies = [data.fighters1];
+        this.enemies = [data.fighters2];
+        console.log(data);
+        const spells = data.fighters1.character.spellsKnown;
+        this.skills.push('Physical attack');
+        this.map['Physical attack'] = 'Physical attack\n' +
+          'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
+        spells.forEach((it) => {
+          this.skills.push(it.spellUse.name);
+          this.map[it.spellUse.name] = it.spellUse.name +
+            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+        });
+        this.loaded = true;
+        this.init();
       });
-      this.loaded = true;
-      this.init();
-    });
-  } else {
-    this.http.post('http://localhost:31480/fight/infoPVE', null, {
-      withCredentials: true,
-      params: new HttpParams().append('id', this.id.toString())
-    }).subscribe((data: {
-      id: number, type:string, fighters: User[], currentName: string, timeLeft: number,
-      boss: Boss
-    }) => {
-      this.setTimer(data.currentName, data.timeLeft);
-      this.allies = data.fighters;
-      this.boss = data.boss;
-      const spells = data.fighters.find(us => us.login === this.parent.login).character.spellsKnown;
-      this.skills.push('Physical attack');
-      this.map['Physical attack'] = 'Physical attack\n' +
-        'Damage: ' + data.fighters.find(us => us.login === this.parent.login).character.physicalDamage + '\nChakra: 0';
-      spells.forEach((it) => {
-        this.skills.push(it.spellUse.name);
-        this.map[it.spellUse.name] = it.spellUse.name +
-          '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+    } else {
+      this.http.post('http://localhost:31480/fight/info', null, {
+        withCredentials: true,
+        params: new HttpParams().append('id', this.id.toString())
+      }).subscribe((data: {
+        id: number, type: string, fighters1: User[], currentName: string, timeLeft: number,
+        boss: Boss
+      }) => {
+        this.setTimer(data.currentName, data.timeLeft);
+        this.allies = data.fighters1;
+        this.boss = data.boss;
+        const spells = data.fighters1.find(us => us.login === this.parent.login).character.spellsKnown;
+        this.skills.push('Physical attack');
+        this.map['Physical attack'] = 'Physical attack\n' +
+          'Damage: ' + data.fighters1.find(us => us.login === this.parent.login).character.physicalDamage + '\nChakra: 0';
+        spells.forEach((it) => {
+          this.skills.push(it.spellUse.name);
+          this.map[it.spellUse.name] = it.spellUse.name +
+            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+        });
+        this.loaded = true;
+        this.init();
       });
-      this.loaded = true;
-      this.init(); 
-    });
-  }
+    }
   }
 
   setTimer(currentName: string, timeLeft: number) {
@@ -302,7 +323,6 @@ export class FightComponent implements OnInit, OnDestroy {
     }
     this.kek = true;
     this.used = this.selectedSpell.substring(0, this.selectedSpell.indexOf(' ')).toLowerCase();
-    console.log('Used: ' + this.used);
     setTimeout(() => {
       this.kek = false;
     }, 800);

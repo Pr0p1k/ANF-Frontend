@@ -79,8 +79,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         this.parent.dialog.close();
       });
 
-    }
-    else {
+    } else {
       this.http.get('http://localhost:31480/fight/startPve', {
         withCredentials: true,
         params: new HttpParams().append('queueId', this.id.toString())

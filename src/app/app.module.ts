@@ -26,20 +26,20 @@ import {MessagesComponent} from './messages/messages.component';
 import {FriendsPageComponent} from './friends-page/friends-page.component';
 import {DialogueComponent} from './dialogue/dialogue.component';
 import {ToastModule} from 'primeng/toast';
-import { ChatComponent } from './chat/chat.component';
-import { QueueComponent } from './queue/queue.component';
-import { FightComponent } from './fight/fight.component';
-import { CharacterComponent } from './character/character.component';
-import { SingleMessageComponent } from './single-message/single-message.component';
-import { UsersListComponent } from './users-list/users-list.component';
-import { SearchUsersPipe } from './services/search-users.pipe';
-import { TranslateService } from './services/translate.service';
-import { TranslatePipe } from './services/translate.pipe';
+import {ChatComponent} from './chat/chat.component';
+import {QueueComponent} from './queue/queue.component';
+import {FightComponent} from './fight/fight.component';
+import {CharacterComponent} from './character/character.component';
+import {SingleMessageComponent} from './single-message/single-message.component';
+import {UsersListComponent} from './users-list/users-list.component';
+import {SearchUsersPipe} from './services/search-users.pipe';
+import {TranslateService} from './services/translate.service';
+import {TranslatePipe} from './services/translate.pipe';
 import {RoomComponent} from './room/room.component';
-import { AnimalRaceChoiceComponent } from './animal-race-choice/animal-race-choice.component';
-import { HistoryComponent } from './history/history.component';
-import { SpellsComponent } from './spells/spells.component';
-import { FightResultComponent } from './fight-result/fight-result.component';
+import {AnimalRaceChoiceComponent} from './animal-race-choice/animal-race-choice.component';
+import {HistoryComponent} from './history/history.component';
+import {SpellsComponent} from './spells/spells.component';
+import {FightResultComponent} from './fight-result/fight-result.component';
 
 export function setupTranslateFactory(
   service: TranslateService): Function {
@@ -93,7 +93,7 @@ export function setupTranslateFactory(
     {
       provide: APP_INITIALIZER,
       useFactory: setupTranslateFactory,
-      deps: [ TranslateService ],
+      deps: [TranslateService],
       multi: true
     }],
   bootstrap: [MainComponent],
@@ -106,4 +106,5 @@ export function setupTranslateFactory(
     AnimalRaceChoiceComponent,
     FightResultComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
