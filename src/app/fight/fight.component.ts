@@ -23,9 +23,9 @@ import {log} from 'util';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import * as SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
-import { Router } from '@angular/router';
-import { TranslateService } from '../services/translate.service';
-import { TranslatePipe } from '../services/translate.pipe';
+import {Router} from '@angular/router';
+import {TranslateService} from '../services/translate.service';
+import {TranslatePipe} from '../services/translate.pipe';
 
 @Component({
   selector: 'app-fight',
@@ -277,11 +277,12 @@ export class FightComponent implements OnInit {
     }
     this.kek = true;
     const self: User = this.allies.find(all => all.login === this.parent.login);
-      if (this.selectedSpell === 'Air Strike' && self.character.currentChakra < (70 + 10 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
+    if (this.selectedSpell === 'Air Strike' && self.character.currentChakra < (70 + 10 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
       this.selectedSpell === 'Fire Strike' && self.character.currentChakra < (40 + 5 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
       this.selectedSpell === 'Water Strike' && self.character.currentChakra < (20 + 4 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
-      this.selectedSpell === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel))
-        this.selectedSpell = 'Physical attack';
+      this.selectedSpell === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
+      this.selectedSpell = 'Physical attack';
+    }
     this.http.post('http://localhost:31480/fight/attack', null, {
       withCredentials: true,
       params: new HttpParams()
@@ -293,23 +294,25 @@ export class FightComponent implements OnInit {
       chakra: number,
       deadly: boolean,
       code: number
-    }) => {}, () => {});
+    }) => {
+    }, () => {
+    });
   }
 
   selectSpell(event: MouseEvent) {
     if (this.current === this.parent.login) {
       const self: User = this.allies.find(all => all.login === this.parent.login);
       if (event.srcElement.id === 'Air Strike' && self.character.currentChakra < (70 + 10 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Air Strike').spellLevel) ||
-      event.srcElement.id === 'Fire Strike' && self.character.currentChakra < (40 + 5 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
-      event.srcElement.id === 'Water Strike' && self.character.currentChakra < (20 + 4 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
-      event.srcElement.id === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
+        event.srcElement.id === 'Fire Strike' && self.character.currentChakra < (40 + 5 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Fire Strike').spellLevel) ||
+        event.srcElement.id === 'Water Strike' && self.character.currentChakra < (20 + 4 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Water Strike').spellLevel) ||
+        event.srcElement.id === 'Earth Strike' && self.character.currentChakra < (12 + 3 * self.character.spellsKnown.find(sh => sh.spellUse.name === 'Earth Strike').spellLevel)) {
         alert(this.transl.transform('Not enough chakra'));
         this.selectedSpell = 'Physical attack';
       } else {
         this.selectedSpell = event.srcElement.id;
       }
     } else {
-      alert(this.transl.transform("Not your turn!"));
+      alert(this.transl.transform('Not your turn!'));
     }
 
   }
