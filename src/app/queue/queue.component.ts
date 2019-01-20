@@ -64,14 +64,6 @@ export class QueueComponent implements OnInit, OnDestroy {
 
   startFight() {
     if (this.type === 'PVP') {
-      // this.http.get<User>('http://localhost:31480/users/' + this.parent.login, {
-      //   withCredentials: true
-      // }).subscribe(ally => {
-      //   this.fightService.allies = [ally];
-      //   this.http.get<User>('http://localhost:31480/users/' + this.selected[0], {
-      //     withCredentials: true
-      //   }).subscribe(enemy => {
-      //     this.fightService.enemies = [enemy];
       this.http.get('http://localhost:31480/fight/startPvp', {
         withCredentials: true,
         params: new HttpParams().append('queueId', this.id.toString())
@@ -87,27 +79,21 @@ export class QueueComponent implements OnInit, OnDestroy {
         this.parent.dialog.close();
       });
 
-      //   });
-      // });
     }
-    /*else {
-         this.fightService.allies = [];
-         this.selected.push(this.parent.login);
-         console.log('Selected: ' + this.selected);
-         let responded = 0;
-         for (let i = 0; i < this.selected.length; i++) {
-           this.http.get<User>('http://localhost:31480/users/' + this.selected[i], {
-             withCredentials: true
-           }).subscribe(ally => {
-             this.fightService.allies.push(ally);
-             responded++;
-             if (responded === this.selected.length) {
-               this.parent.router.navigateByUrl('fight');
-               this.parent.dialog.close();
-             }
-           });
-         }
-       }*/
+    else {
+      this.http.get('http://localhost:31480/fight/startPve', {
+        withCredentials: true,
+        params: new HttpParams().append('queueId', this.id.toString())
+        .append('bossId', this.area)
+      }).subscribe((data: {
+        id: number
+      }) => {
+        this.started = true;
+        console.log(data);
+        this.parent.router.navigateByUrl('/fight/pve/' + data.id);
+        this.parent.dialog.close();
+      });
+    }
   }
 
   send(type: string, username: string, id: number): void {
