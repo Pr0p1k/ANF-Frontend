@@ -34,6 +34,10 @@
     margin: @margin-value;
     width: 60px;
     height: 60px;
+    @media (max-width: 1238px) {
+      float: none;
+      margin: @margin-value auto auto auto;
+    }
   }
 
   #account-button {
