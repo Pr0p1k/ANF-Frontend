@@ -62,7 +62,7 @@ export class MainComponent implements OnInit {
 
   showLoginBlock() {
     this.dialog = this.dialogService.open(AuthComponent, {
-      width: '800px', height: '400px'
+      width: '500px', height: '400px'
     });
   }
 

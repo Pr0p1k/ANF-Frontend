@@ -99,6 +99,10 @@ export class FightComponent implements OnInit, OnDestroy {
       this.type = this.fightService.type;
     }
     this.getFightInfo(this.type);
+    //console.log("ALLIES:");
+    //this.allies.forEach(ally => console.log(ally.login));
+    //console.log("ENEMIES:");
+    //console.log(this.boss);
   }
 
   initializeWebSockets() {
@@ -124,16 +128,22 @@ export class FightComponent implements OnInit, OnDestroy {
           that.kek = false;
         }, 800);
         that.setTimer(fightState.nextAttacker, 30200);
-        console.log(state);
+        console.log(fightState);
         let attacker: User;
         const boss = that.boss;
         let target: User;
+        if (that.type === 'pvp') {
         if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
           attacker = that.enemies.find(us => us.login === fightState.attacker);
           target = that.allies.find(us => us.login === fightState.target);
         } else if (that.allies.map(us => us.login).includes(fightState.attacker)) {
           target = that.enemies.find(us => us.login === fightState.target);
           attacker = that.allies.find(us => us.login === fightState.attacker);
+        } }
+        else {
+          if (that.boss.numberOfTails.toString() == fightState.attacker) {
+            target = that.allies.find(us => us.login === fightState.target);
+          }
         }
         if (fightState.target.length >= 6) {
           target.character.currentHP -= fightState.damage;
@@ -150,20 +160,37 @@ export class FightComponent implements OnInit, OnDestroy {
           that.setChakraPercent(that.statsElements[fightState.target],
             boss.currentChakra / boss.maxChakra * 100);
         }
+        if (that.type === 'pve') {
+        if (fightState.attacker != that.boss.numberOfTails.toString()) {
         attacker.character.currentChakra -= fightState.chakraCost;
         that.setChakraPercent(that.statsElements[fightState.attacker],
           attacker.character.currentChakra / attacker.character.maxChakra * 100);
+        } }
+        else {
+          attacker.character.currentChakra -= fightState.chakraCost;
+          that.setChakraPercent(that.statsElements[fightState.attacker],
+          attacker.character.currentChakra / attacker.character.maxChakra * 100);
+        }
         if (fightState.deadly) {
           that.setDead(target);
           if (fightState.everyoneDead) {
             let victory: boolean;
             let loss: boolean;
+            if (that.type === 'pvp') {
             if (that.allies.map(us => us.login).includes(target.login)) {
               victory = false;
               loss = true;
             } else {
               victory = true;
               loss = false;
+            }} else {
+              if (fightState.attacker == that.boss.numberOfTails.toString()) {
+                victory = false;
+                loss = true;
+              } else {
+                victory = true;
+                loss = false;
+              }
             }
             that.finishFight(false, victory, loss);
           }
@@ -460,7 +487,10 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   setDead(user: User): void {
-    console.log(user.login + ' has perished.');
+    if (this.type === 'pvp')
+      console.log(user.login + ' has perished.');
+      else 
+      console.log('Boss is dead')
   }
 
   finishFight(death: boolean, victory: boolean, loss: boolean): void {
