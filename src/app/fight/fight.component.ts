@@ -143,6 +143,8 @@ export class FightComponent implements OnInit, OnDestroy {
         else {
           if (that.boss.numberOfTails.toString() == fightState.attacker) {
             target = that.allies.find(us => us.login === fightState.target);
+          } else {
+            attacker = that.allies.find(us => us.login === fightState.attacker);
           }
         }
         if (fightState.target.length >= 6) {
