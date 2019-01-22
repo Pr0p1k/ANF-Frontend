@@ -99,10 +99,10 @@ export class FightComponent implements OnInit, OnDestroy {
       this.type = this.fightService.type;
     }
     this.getFightInfo(this.type);
-    //console.log("ALLIES:");
-    //this.allies.forEach(ally => console.log(ally.login));
-    //console.log("ENEMIES:");
-    //console.log(this.boss);
+    // console.log("ALLIES:");
+    // this.allies.forEach(ally => console.log(ally.login));
+    // console.log("ENEMIES:");
+    // console.log(this.boss);
   }
 
   initializeWebSockets() {
@@ -112,16 +112,10 @@ export class FightComponent implements OnInit, OnDestroy {
     this.stompClient.connect({}, function (frame) {
       that.stompClient.subscribe('/user/fightState', (response) => {
         const fightState = <{
-          attacker: string,
-          target: string,
-          attackName: string,
-          chakraCost: number,
-          damage: number,
-          chakraBurn: number,
-          deadly: boolean,
-          everyoneDead: boolean,
-          nextAttacker: string
+          attacker: string, target: string, attackName: string, chakraCost: number, damage: number,
+          chakraBurn: number, deadly: boolean, everyoneDead: boolean, nextAttacker: string
         }>JSON.parse(response.body);
+
         that.used = fightState.attackName.substring(0, fightState.attackName.indexOf(' ')).toLowerCase();
         that.kek = true;
         setTimeout(() => {
@@ -133,15 +127,15 @@ export class FightComponent implements OnInit, OnDestroy {
         const boss = that.boss;
         let target: User;
         if (that.type === 'pvp') {
-        if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
-          attacker = that.enemies.find(us => us.login === fightState.attacker);
-          target = that.allies.find(us => us.login === fightState.target);
-        } else if (that.allies.map(us => us.login).includes(fightState.attacker)) {
-          target = that.enemies.find(us => us.login === fightState.target);
-          attacker = that.allies.find(us => us.login === fightState.attacker);
-        } }
-        else {
-          if (that.boss.numberOfTails.toString() == fightState.attacker) {
+          if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
+            attacker = that.enemies.find(us => us.login === fightState.attacker);
+            target = that.allies.find(us => us.login === fightState.target);
+          } else {
+            target = that.enemies.find(us => us.login === fightState.target);
+            attacker = that.allies.find(us => us.login === fightState.attacker);
+          }
+        } else {
+          if (that.boss.numberOfTails.toString() === fightState.attacker) {
             target = that.allies.find(us => us.login === fightState.target);
           } else {
             attacker = that.allies.find(us => us.login === fightState.attacker);
@@ -163,30 +157,33 @@ export class FightComponent implements OnInit, OnDestroy {
             boss.currentChakra / boss.maxChakra * 100);
         }
         if (that.type === 'pve') {
-        if (fightState.attacker != that.boss.numberOfTails.toString()) {
-        attacker.character.currentChakra -= fightState.chakraCost;
-        that.setChakraPercent(that.statsElements[fightState.attacker],
-          attacker.character.currentChakra / attacker.character.maxChakra * 100);
-        } }
-        else {
+          if (fightState.attacker.length >= 6) {
+            attacker.character.currentChakra -= fightState.chakraCost;
+            that.setChakraPercent(that.statsElements[fightState.attacker],
+              attacker.character.currentChakra / attacker.character.maxChakra * 100);
+          }
+        } else {
           attacker.character.currentChakra -= fightState.chakraCost;
           that.setChakraPercent(that.statsElements[fightState.attacker],
-          attacker.character.currentChakra / attacker.character.maxChakra * 100);
+            attacker.character.currentChakra / attacker.character.maxChakra * 100);
         }
         if (fightState.deadly) {
-          that.setDead(target);
+          if (fightState.target.length >= 6) {
+            that.setDead(target);
+          }
           if (fightState.everyoneDead) {
             let victory: boolean;
             let loss: boolean;
             if (that.type === 'pvp') {
-            if (that.allies.map(us => us.login).includes(target.login)) {
-              victory = false;
-              loss = true;
+              if (that.allies.map(us => us.login).includes(target.login)) {
+                victory = false;
+                loss = true;
+              } else {
+                victory = true;
+                loss = false;
+              }
             } else {
-              victory = true;
-              loss = false;
-            }} else {
-              if (fightState.attacker == that.boss.numberOfTails.toString()) {
+              if (fightState.attacker.length === 1) {
                 victory = false;
                 loss = true;
               } else {
@@ -335,6 +332,8 @@ export class FightComponent implements OnInit, OnDestroy {
     } else {
       if (currentName === '') {
         currentName = 'Prepare!';
+      } else if (currentName.length === 1) {
+        currentName = this.boss.name + '\'s turn!';
       } else {
         currentName = currentName + '\'s turn!';
       }
@@ -489,10 +488,11 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   setDead(user: User): void {
-    if (this.type === 'pvp')
+    if (this.type === 'pvp') {
       console.log(user.login + ' has perished.');
-      else 
-      console.log('Boss is dead')
+    } else {
+      console.log('Boss is dead');
+    }
   }
 
   finishFight(death: boolean, victory: boolean, loss: boolean): void {
