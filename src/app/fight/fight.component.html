@@ -1,6 +1,6 @@
 <div id="fight">
   <div class="container">
-    <p class="label">Attacks: </p>
+    <p class="label">{{'Attacks'| translate}}: </p>
     <div id="attacks" [@turn]="current === parent.login ? 'enabled' : 'disabled'">
       <div class="attack" *ngFor="let skill of skills">
         <div (click)="selectSpell($event)" pTooltip="{{map[skill]}}">

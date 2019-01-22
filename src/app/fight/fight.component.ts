@@ -292,11 +292,11 @@ export class FightComponent implements OnInit, OnDestroy {
         const spells = data.fighters1.character.spellsKnown;
         this.skills.push('Physical attack');
         this.map['Physical attack'] = 'Physical attack\n' +
-          'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
+          this.transl.transform('Damage')+': ' + data.fighters1.character.physicalDamage + '\n'+this.transl.transform('Chakra')+': 0';
         spells.forEach((it) => {
           this.skills.push(it.spellUse.name);
           this.map[it.spellUse.name] = it.spellUse.name +
-            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+            '\n'+this.transl.transform('Damage')+ ':' + (it.spellUse.baseDamage) + '\n'+this.transl.transform('Chakra')+': ' + it.spellUse.baseChakraConsumption;
         });
         this.loaded = true;
         this.init();
@@ -315,11 +315,11 @@ export class FightComponent implements OnInit, OnDestroy {
         const spells = data.fighters1.find(us => us.login === this.parent.login).character.spellsKnown;
         this.skills.push('Physical attack');
         this.map['Physical attack'] = 'Physical attack\n' +
-          'Damage: ' + data.fighters1.find(us => us.login === this.parent.login).character.physicalDamage + '\nChakra: 0';
+          this.transl.transform('Damage')+': ' + data.fighters1.find(us => us.login === this.parent.login).character.physicalDamage + '\n'+this.transl.transform('Chakra')+': 0';
         spells.forEach((it) => {
           this.skills.push(it.spellUse.name);
           this.map[it.spellUse.name] = it.spellUse.name +
-            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+            '\n'+this.transl.transform('Damage')+': ' + (it.spellUse.baseDamage) + '\n'+this.transl.transform('Chakra')+': ' + it.spellUse.baseChakraConsumption;
         });
         this.loaded = true;
         this.init();
@@ -331,12 +331,12 @@ export class FightComponent implements OnInit, OnDestroy {
     clearInterval(this.timer);
     this.current = currentName;
     if (currentName === this.parent.login) {
-      currentName = 'Your turn!';
+      currentName = this.transl.transform('Your turn!');
     } else {
       if (currentName === '') {
-        currentName = 'Prepare!';
+        currentName = this.transl.transform('Prepare!');
       } else {
-        currentName = currentName + '\'s turn!';
+        currentName = currentName + '\'s '+ this.transl.transform('turn!');
       }
     }
     document.getElementById('current').innerText = currentName;
