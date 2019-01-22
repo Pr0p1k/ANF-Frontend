@@ -63,15 +63,26 @@
   width: 17.5%;
   padding: @margin-value;
   overflow-y: hidden;
+  @media (max-width: 1238px) and (min-width: 700px) {
+    height: auto;
+  }
   @media (max-width: 700px) {
     overflow-y: auto;
-    width: 95%;
+    width: 100%;
+    margin: auto;
     display:block;
+    height: auto;
   }
 }
 
 #nav {
   width: 65%;
+  @media (max-width: 700px) {
+    width: 100%;
+  }
+  @media (max-width: 1238px) and (min-width: 700px) {
+    width:80%;
+  }
 }
 
 #map {
@@ -98,6 +109,15 @@
 
 #comm, #userdata {
   background-color: rgba(19, 23, 27, 0.9);
+}
+#comm {
+  @media (max-width: 1238px) and (min-width: 700px) {
+    overflow-y: auto;
+    width: 100%;
+    margin: auto;
+    display:block;
+    height: auto;
+  }
 }
 
 #chad {

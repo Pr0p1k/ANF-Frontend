@@ -24,6 +24,8 @@ export class HistoryComponent implements OnInit {
           histrecord.ratingCh = 0;
           histrecord.type = 'PVE';
           histrecord.result = fight.result;
+          if (histrecord.result.toLowerCase() === 'won')
+          histrecord.result = 'Win';
           histrecord.date = fight.fight.fight_date;
           histrecord.rival = fight.fight.boss.name;
           histrecord.xpCh = fight.experience;
