@@ -385,7 +385,7 @@ export class FightComponent implements OnInit, OnDestroy {
       that.stompClient.subscribe('/user/switch', (response) => {
         that.setTimer(response.body, 30000);
       });
-      that.stompClient.subscribe('/summon', (response) => {
+      that.stompClient.subscribe('/user/summon', (response) => {
         const animalState = <{
           summoner: string,
           name: string,
@@ -718,7 +718,7 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   drawAnimal(animal: NinjaAnimal, ally: boolean) {
-    
+
   }
 
   ngOnDestroy() {
