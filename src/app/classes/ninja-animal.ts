@@ -4,6 +4,7 @@ export class NinjaAnimal {
     damage: number;
     maxHP: number;
     race: string;
+    summoner: string;
     requiredLevel: number;
     currentHP: number;
     currentChakra: number;
