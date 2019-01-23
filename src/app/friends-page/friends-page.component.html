@@ -8,9 +8,9 @@
             <div class="userdata">{{friend.login}}
               <label *ngIf="friend.online" class="online">⚫</label>
               <label *ngIf="friend.offline" class="offline">⚫</label><br>
-              <p-button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">{{'Invite to Fight' | translate }}
+              <!--<p-button *ngIf="friend.online" class="invite" (click)="inviteToPVP(friend)">{{'Invite to Fight' | translate }}
               </p-button>
-              <br *ngIf="friend.online">
+              <br *ngIf="friend.online">-->
               <p-button class="invite" (click)="showMessageInput(friend)" label="{{'message' | translate}}"></p-button>
               <br>
               <p-button class="decline" (click)="deleteFriend(friend)" label="{{'delete' | translate}}"></p-button>

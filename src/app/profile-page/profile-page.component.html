@@ -18,11 +18,11 @@
     </div>
     <div class="scroll">
       <div id="stats" *ngIf="loaded">
-        <label class="stats">Email:</label>
+        <!--<label class="stats">Email:</label>
         <label class="stats" *ngIf ="user.email != undefined">{{user.email}}</label>
         <label class="stats" *ngIf="user.email == undefined">
         <p-button label="{{'Add' | translate}}" (onClick)="addEmail()"></p-button> <br>
-        </label>
+        </label>-->
         <label class="stats">{{'Number of fights:' | translate }} {{user.stats.fights}}</label><br>
         <label class="stats">{{'Number of wins:' | translate }} {{user.stats.wins}}</label><br>
         <label class="stats">{{'Number of losses:' | translate }} {{user.stats.losses}}</label><br>
