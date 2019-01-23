@@ -36,16 +36,18 @@ export class MainComponent implements OnInit {
     this.login = this.cookieService.get('username');
     if (this.loggedIn) {
       this.http.get('http://localhost:31480/checkCookies', {
-        withCredentials: true,
-        params: new HttpParams()
-          .append('username', this.login)
-      }).subscribe(null,
-        () => {
-          this.loggedIn = false;
-          this.cookieService.delete('loggedIn');
-          this.cookieService.delete('username');
-          this.router.navigateByUrl('start');
-        });
+        withCredentials: true
+      }).subscribe((response: { authorized: boolean, login: string }) => {
+        this.loggedIn = true;
+        this.login = response.login;
+        this.cookieService.set('username', response.login);
+        this.cookieService.set('loggedIn', 'true');
+      }, (response: { authorized: boolean, login: string }) => {
+        this.loggedIn = false;
+        this.cookieService.delete('loggedIn');
+        this.cookieService.delete('username');
+        this.router.navigateByUrl('start');
+      });
     }
     this.initializeWebsockets();
   }

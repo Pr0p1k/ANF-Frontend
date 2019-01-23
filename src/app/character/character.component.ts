@@ -12,7 +12,22 @@ export class CharacterComponent implements OnInit {
   @ViewChild('male') male: ElementRef;
   @ViewChild('female') female: ElementRef;
   @ViewChild('boss') boss: ElementRef;
+  @ViewChild('animal') animal: ElementRef;
   private _bossId = 1;
+  private _animalName = 'дядя';
+
+  get animalName(): string {
+    return this._animalName;
+  }
+
+  set animalName(value: string) {
+    this._animalName = value;
+    (<HTMLElement>this.male.nativeElement).style.display = 'none';
+    (<HTMLElement>this.female.nativeElement).style.display = 'none';
+    (<HTMLImageElement>this.animal.nativeElement).style.display = 'block';
+    (<HTMLImageElement>this.animal.nativeElement).style.height = '200px';
+    (<HTMLImageElement>this.animal.nativeElement).style.width = 'auto';
+  }
 
   get bossId(): number {
     return this._bossId;
@@ -23,6 +38,8 @@ export class CharacterComponent implements OnInit {
     (<HTMLElement>this.male.nativeElement).style.display = 'none';
     (<HTMLElement>this.female.nativeElement).style.display = 'none';
     (<HTMLImageElement>this.boss.nativeElement).style.display = 'block';
+    (<HTMLImageElement>this.boss.nativeElement).style.height = '20%';
+    (<HTMLImageElement>this.boss.nativeElement).style.width = 'auto';
   }
 
   constructor() {

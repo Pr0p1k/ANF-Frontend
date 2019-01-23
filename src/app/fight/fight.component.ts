@@ -84,6 +84,7 @@ export class FightComponent implements OnInit, OnDestroy {
   timer: number;
   current: string;
   kek = false;
+  summonEnabled = true;
 
   constructor(private router: Router, private transl: TranslatePipe,
               private dialogService: DialogService,
@@ -471,6 +472,7 @@ export class FightComponent implements OnInit, OnDestroy {
       }).subscribe((data: {
         id: number, type: string,
         fighters1: User, fighters2: User,
+        animals1: NinjaAnimal, animals2: NinjaAnimal,
         currentName: string, timeLeft: number
       }) => {
         this.setTimer(data.currentName, data.timeLeft);
@@ -496,13 +498,16 @@ export class FightComponent implements OnInit, OnDestroy {
         this.loaded = true;
         this.init();
       });
+      if (this.animals1.length > 0) {
+        this.summonEnabled = false;
+      }
     } else {
       this.http.post('http://localhost:31480/fight/info', null, {
         withCredentials: true,
         params: new HttpParams().append('id', this.id.toString())
       }).subscribe((data: {
         id: number, type: string, fighters1: User[], currentName: string, timeLeft: number,
-        boss: Boss
+        boss: Boss, animals1: NinjaAnimal[]
       }) => {
         this.setTimer(data.currentName, data.timeLeft);
         this.allies = data.fighters1;
@@ -522,6 +527,13 @@ export class FightComponent implements OnInit, OnDestroy {
         });
         this.loaded = true;
         this.init();
+        this.animals1 = data.animals1;
+        for (let i = 0; i < data.animals1.length; i++) {
+          this.drawAnimal(data.animals1[i], true);
+          if (data.animals1[i].summoner === this.parent.login) {
+            this.summonEnabled = false;
+          }
+        }
       });
     }
   }
@@ -595,8 +607,10 @@ export class FightComponent implements OnInit, OnDestroy {
       this.type.substring(1).toLowerCase(), null, {
       withCredentials: true,
       params: new HttpParams().append('fightId', this.id.toString())
-    }).subscribe((response) => {
+    }).subscribe((response: NinjaAnimal) => {
       console.log(response);
+      this.summonEnabled = false;
+      this.drawAnimal(response, true);
     });
   }
 
@@ -740,7 +754,19 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   drawAnimal(animal: NinjaAnimal, ally: boolean) {
-
+    const factory = this.resolver.resolveComponentFactory(CharacterComponent);
+    let element;
+    if (ally) {
+      element = this.alliesContainer.createComponent(factory);
+      element.instance.animalName = animal.name;
+      this.statsElements[animal.name.substring(0, 3)] = <HTMLElement>element.location.nativeElement;
+      this.setPosition(<HTMLElement>element.location.nativeElement, 7);
+    } else {
+      element = this.enemiesContainer.createComponent(factory);
+      element.instance.animalName = animal.name;
+      this.statsElements[animal.name.substring(0, 3)] = <HTMLElement>element.location.nativeElement;
+      this.setPosition(element, 7);
+    }
   }
 
   ngOnDestroy() {

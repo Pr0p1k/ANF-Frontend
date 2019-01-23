@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div id="summon" (click)="summon()"></div>
+    <div id="summon" *ngIf="summonEnabled" (click)="summon()"></div>
     <div id="turn">
       <p id="current"></p>
       <p id="timer"></p>
