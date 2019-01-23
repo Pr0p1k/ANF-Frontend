@@ -78,7 +78,7 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked, OnDestroy
   }
 
   ngOnInit() {
-    document.documentElement.style.overflowY = 'hidden';
+    //document.documentElement.style.overflowY = 'hidden';
     this.http.get<User>('http://localhost:31480/profile', {withCredentials: true}).subscribe(data => {
       this.loaded = true;
       this.user = data;

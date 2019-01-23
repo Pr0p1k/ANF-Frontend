@@ -12,7 +12,7 @@
       <td>{{fight.date | date:'short'}}</td>
       <td>{{fight.type}}</td>
       <td><div [ngClass]="fight.result === 'Win' ? 'won': 'lost'">
-          {{fight.result}} </div></td>
+          {{fight.result | translate}} </div></td>
       <td>{{fight.xpCh}}</td>
       <td><div *ngIf = "fight.ratingCh !==0" [ngClass]="fight.ratingCh > 0 ? 'won': 'lost'">
         {{fight.ratingCh}}</div>

@@ -27,6 +27,7 @@ import {Router} from '@angular/router';
 import {TranslateService} from '../services/translate.service';
 import {TranslatePipe} from '../services/translate.pipe';
 import {FocusTrap} from '@angular/cdk/typings/esm5/a11y';
+import { NinjaAnimal } from '../classes/ninja-animal';
 
 @Component({
   selector: 'app-fight',
@@ -64,6 +65,9 @@ export class FightComponent implements OnInit, OnDestroy {
   enemies: User[] = [];
   private dialog: DynamicDialogRef;
   boss: Boss;
+  died: string[] = [];
+  animals1: NinjaAnimal[] = [];
+  animals2: NinjaAnimal[] = [];
   @ViewChild('alliesContainer', {read: ViewContainerRef}) alliesContainer;
   @ViewChild('enemiesContainer', {read: ViewContainerRef}) enemiesContainer;
   fightersElements: { [key: string]: HTMLElement } = {};
@@ -89,7 +93,6 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.initializeWebSockets();
     if (!this.fightService.valuesSet) {
       const url = this.parent.router.url;
       this.id = Number.parseInt(url.substring(11), 10);
@@ -98,11 +101,8 @@ export class FightComponent implements OnInit, OnDestroy {
       this.id = this.fightService.id;
       this.type = this.fightService.type;
     }
+    this.initializeWebSockets();
     this.getFightInfo(this.type);
-    // console.log("ALLIES:");
-    // this.allies.forEach(ally => console.log(ally.login));
-    // console.log("ENEMIES:");
-    // console.log(this.boss);
   }
 
   initializeWebSockets() {
@@ -110,12 +110,20 @@ export class FightComponent implements OnInit, OnDestroy {
     this.stompClient = Stomp.over(ws);
     const that = this;
     this.stompClient.connect({}, function (frame) {
+      //PVP
+      if (that.type === 'pvp') {
       that.stompClient.subscribe('/user/fightState', (response) => {
         const fightState = <{
-          attacker: string, target: string, attackName: string, chakraCost: number, damage: number,
-          chakraBurn: number, deadly: boolean, everyoneDead: boolean, nextAttacker: string
+          attacker: string,
+          target: string,
+          attackName: string,
+          chakraCost: number,
+          damage: number,
+          chakraBurn: number,
+          deadly: boolean,
+          everyoneDead: boolean,
+          nextAttacker: string
         }>JSON.parse(response.body);
-
         that.used = fightState.attackName.substring(0, fightState.attackName.indexOf(' ')).toLowerCase();
         that.kek = true;
         setTimeout(() => {
@@ -123,78 +131,257 @@ export class FightComponent implements OnInit, OnDestroy {
         }, 800);
         that.setTimer(fightState.nextAttacker, 30200);
         console.log(fightState);
-        let attacker: User;
-        const boss = that.boss;
-        let target: User;
-        if (that.type === 'pvp') {
-          if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
-            attacker = that.enemies.find(us => us.login === fightState.attacker);
-            target = that.allies.find(us => us.login === fightState.target);
-          } else {
-            target = that.enemies.find(us => us.login === fightState.target);
-            attacker = that.allies.find(us => us.login === fightState.attacker);
+
+        //find attacker and target
+        let attackerUser: User;
+        let targetUser: User;
+        let attackerAnimal: NinjaAnimal;
+        let targetAnimal: NinjaAnimal;
+        let userIsAttacker: boolean;
+        let userIsTarget: boolean;
+        let yourSideAttacks: boolean;
+
+        //if enemy user attacks
+        if (that.enemies.map(us => us.login).includes(fightState.attacker)) {
+          attackerUser = that.enemies.find(us => us.login === fightState.attacker);
+          userIsAttacker = true;
+          yourSideAttacks = false;
+          // your animal is a target
+          if (that.animals1.map(anim => anim.name).includes(fightState.target)) {
+            targetAnimal = that.animals1.find(anim => anim.name === fightState.target);
+            userIsTarget = false;
+          } 
+          //your user is a target
+          else {
+            targetUser = that.allies.find(us => us.login === fightState.target);
+            userIsTarget = true;
           }
-        } else {
-          if (that.boss.numberOfTails.toString() === fightState.attacker) {
-            target = that.allies.find(us => us.login === fightState.target);
-          } else {
-            attacker = that.allies.find(us => us.login === fightState.attacker);
+        } 
+
+        //if your user attacks
+        else if (that.allies.map(us => us.login).includes(fightState.attacker)) {
+          attackerUser = that.allies.find(us => us.login === fightState.attacker);
+          userIsAttacker = true;
+          yourSideAttacks = true;
+          // enemy user is a target
+          if (that.enemies.map(enemy => enemy.login).includes(fightState.target)){
+            targetUser = that.enemies.find(us => us.login === fightState.target);
+            userIsTarget = true;
+          } 
+          //enemy animal is a target
+          else {
+            targetAnimal = that.animals2.find(anim => anim.name === fightState.target);
+            userIsTarget = false;
+          } 
+        }
+
+        //if your animal attacks
+        else if (that.animals1.map(anim => anim.name).includes(fightState.attacker)) {
+          attackerAnimal = that.animals1.find(anim => anim.name === fightState.attacker);
+          userIsAttacker = false;
+          yourSideAttacks = true;
+          //enemy user is a target
+          if (that.enemies.map(enemy => enemy.login).includes(fightState.target)){
+            targetUser = that.enemies.find(us => us.login === fightState.target);
+            userIsTarget = true;
+          } 
+          //enemy animal is a target
+          else {
+            targetAnimal = that.animals2.find(anim => anim.name === fightState.target);
+            userIsTarget = false;
           }
         }
-        if (fightState.target.length >= 6) {
-          target.character.currentHP -= fightState.damage;
-          target.character.currentChakra -= fightState.chakraBurn;
-          that.setHPPercent(that.statsElements[fightState.target],
-            target.character.currentHP / target.character.maxHp * 100);
-          that.setChakraPercent(that.statsElements[fightState.target],
-            target.character.currentChakra / target.character.maxChakra * 100);
-        } else {
-          boss.currentChakra -= fightState.chakraBurn;
-          boss.currentHP -= fightState.damage;
-          that.setHPPercent(that.statsElements[fightState.target],
-            boss.currentHP / boss.maxHp * 100);
-          that.setChakraPercent(that.statsElements[fightState.target],
-            boss.currentChakra / boss.maxChakra * 100);
+
+        //if enemy animal attacks
+        else {
+          attackerAnimal = that.animals2.find(anim => anim.name === fightState.attacker);
+          userIsAttacker = false;
+          yourSideAttacks = false;
+          // your user is a target
+          if (that.allies.map(ally => ally.login).includes(fightState.target)) {
+            targetUser = that.allies.find(ally => ally.login === fightState.target);
+            userIsTarget = true;
+          }
+          //your animal is a target
+          else {
+            targetAnimal = that.animals1.find(anim => anim.name === fightState.target);
+            userIsTarget = false;
+          }
         }
-        if (that.type === 'pve') {
-          if (fightState.attacker.length >= 6) {
-            attacker.character.currentChakra -= fightState.chakraCost;
+
+        //set hp and chakra for target
+        if (userIsTarget) {
+          targetUser.character.currentHP -= fightState.damage;
+          if (targetUser.character.currentHP < 0)
+            targetUser.character.currentHP = 0;
+          targetUser.character.currentChakra -= fightState.chakraBurn;
+          that.setHPPercent(that.statsElements[fightState.target],
+            targetUser.character.currentHP / targetUser.character.maxHp * 100);
+          that.setChakraPercent(that.statsElements[fightState.target],
+            targetUser.character.currentChakra / targetUser.character.maxChakra * 100);
+          } else {
+            targetAnimal.currentHP -= fightState.damage;
+            if (targetAnimal.currentHP < 0)
+              targetAnimal.currentHP = 0;
+            that.setHPPercent(that.statsElements[fightState.target],
+              targetAnimal.currentHP / targetAnimal.maxHP * 100);
+          }
+
+          //set chakra for attacker
+          if (userIsAttacker) {
+            attackerUser.character.currentChakra -= fightState.chakraCost;
             that.setChakraPercent(that.statsElements[fightState.attacker],
-              attacker.character.currentChakra / attacker.character.maxChakra * 100);
+              attackerUser.character.currentChakra / attackerUser.character.maxChakra * 100);
           }
-        } else {
-          attacker.character.currentChakra -= fightState.chakraCost;
-          that.setChakraPercent(that.statsElements[fightState.attacker],
-            attacker.character.currentChakra / attacker.character.maxChakra * 100);
-        }
+
+        //if deadly
         if (fightState.deadly) {
-          if (fightState.target.length >= 6) {
-            that.setDead(target);
+          if (userIsTarget) {
+            that.setUserDead(targetUser); //method for graphics
+          } else {
+            that.setAnimalDead(targetAnimal);
           }
+
+          //if everyone is dead
           if (fightState.everyoneDead) {
+            //find who has won
             let victory: boolean;
             let loss: boolean;
-            if (that.type === 'pvp') {
-              if (that.allies.map(us => us.login).includes(target.login)) {
-                victory = false;
-                loss = true;
-              } else {
-                victory = true;
-                loss = false;
-              }
+            if (yourSideAttacks) {
+              victory = true;
+              loss = false;
             } else {
-              if (fightState.attacker.length === 1) {
-                victory = false;
-                loss = true;
-              } else {
-                victory = true;
-                loss = false;
-              }
+              victory = false;
+              loss = true;
             }
+            //finish
             that.finishFight(false, victory, loss);
           }
         }
       });
+      } 
+      //PVE
+      else {
+        that.stompClient.subscribe('/user/fightState', (response) => {
+          const fightState = <{
+            attacker: string,
+            target: string,
+            attackName: string,
+            chakraCost: number,
+            damage: number,
+            chakraBurn: number,
+            deadly: boolean,
+            everyoneDead: boolean,
+            nextAttacker: string
+          }>JSON.parse(response.body);
+          that.used = fightState.attackName.substring(0, fightState.attackName.indexOf(' ')).toLowerCase();
+          that.kek = true;
+          setTimeout(() => {
+            that.kek = false;
+          }, 800);
+          that.setTimer(fightState.nextAttacker, 30200);
+          console.log(fightState);
+
+          //find attacker and target
+          let attackerUser: User;
+          let attackerAnimal: NinjaAnimal;
+          let bossIsAttacker: boolean;
+          let animalIsAttacker: boolean;
+          let userIsAttacker: boolean;
+          let bossIsTarget: boolean;
+          let animalIsTarget: boolean;
+          let userIsTarget: boolean;
+          let boss = that.boss;
+          let targetUser: User;
+          let targetAnimal: NinjaAnimal;
+          if (that.allies.map(us => us.login).includes(fightState.attacker)) {
+            attackerUser = that.allies.find(all => all.login === fightState.attacker);
+            bossIsAttacker = false;
+            userIsAttacker = true;
+            animalIsAttacker = false;
+            bossIsTarget = true;
+            userIsTarget = false;
+            animalIsTarget = false;
+          } else if (that.animals1.map(anim => anim.name).includes(fightState.attacker)) {
+            attackerAnimal = that.animals1.find(anim => anim.name === fightState.attacker);
+            bossIsAttacker = false;
+            userIsAttacker = false;
+            animalIsAttacker = true;
+            bossIsTarget = true;
+            userIsTarget = false;
+            animalIsTarget = false;
+          } else {
+            bossIsAttacker = true;
+            userIsAttacker = false;
+            animalIsAttacker = false;
+            bossIsTarget = false;
+            if (that.allies.map(ally => ally.login).includes(fightState.target)) {
+              targetUser = that.allies.find(ally => ally.login === fightState.target);
+              userIsTarget = true;
+              animalIsTarget = false;
+            } else {
+              targetAnimal = that.animals1.find(anim => anim.name === fightState.target);
+              userIsTarget = false;
+              animalIsTarget = true;
+            }
+          }
+
+          //set HP and chakra
+          // allies attack
+          if (userIsAttacker || animalIsAttacker) {
+            that.boss.currentHP -= fightState.damage;
+            if (that.boss.currentHP < 0)
+              that.boss.currentHP = 0;
+            that.setHPPercent(that.statsElements[fightState.target],
+              that.boss.currentHP / that.boss.maxHp * 100);
+            if (userIsAttacker)
+              that.setChakraPercent(that.statsElements[fightState.attacker],
+                attackerUser.character.currentHP / attackerUser.character.maxHp * 100);
+            else 
+                that.setChakraPercent(that.statsElements[fightState.attacker],
+                  attackerAnimal.currentHP / attackerAnimal.maxHP * 100);
+          }
+          // boss attack 
+          else {
+            if (userIsTarget) {
+              targetUser.character.currentHP -= fightState.damage;
+              if (targetUser.character.currentHP < 0)
+                targetUser.character.currentHP = 0;
+              that.setHPPercent(that.statsElements[fightState.target],
+                targetUser.character.currentHP / targetUser.character.maxHp * 100);
+            } else {
+              targetAnimal.currentHP -= fightState.damage;
+              if (targetAnimal.currentHP < 0)
+                targetAnimal.currentHP = 0;
+              that.setHPPercent(that.statsElements[fightState.target],
+                targetAnimal.currentHP / targetAnimal.maxHP * 100);
+            }
+          }
+
+          //check if deadly
+          if (fightState.deadly) {
+            //if boss killed someone
+            if (bossIsAttacker) {
+              if (animalIsTarget) {
+                that.setAnimalDead(targetAnimal);
+              } else {
+                that.setUserDead(targetUser);
+              }
+              //if boss has won
+              if (fightState.everyoneDead) {
+                that.finishFight(false, false, true); // you lost
+              }
+            } 
+            //if boss was killed
+            else {
+              if (that.died.includes(that.parent.login))
+                that.finishFight(true, false, false); //you died
+              else
+                that.finishFight(false, true, false); //you won
+            }
+          }
+        });
+      }
       that.stompClient.subscribe('/user/switch', (response) => {
         that.setTimer(response.body, 30000);
       });
@@ -289,11 +476,11 @@ export class FightComponent implements OnInit, OnDestroy {
         const spells = data.fighters1.character.spellsKnown;
         this.skills.push('Physical attack');
         this.map['Physical attack'] = 'Physical attack\n' +
-          'Damage: ' + data.fighters1.character.physicalDamage + '\nChakra: 0';
+          this.transl.transform('Damage')+': ' + data.fighters1.character.physicalDamage + '\n'+this.transl.transform('Chakra')+': 0';
         spells.forEach((it) => {
           this.skills.push(it.spellUse.name);
           this.map[it.spellUse.name] = it.spellUse.name +
-            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+            '\n'+this.transl.transform('Damage')+ ':' + (it.spellUse.baseDamage) + '\n'+this.transl.transform('Chakra')+': ' + it.spellUse.baseChakraConsumption;
         });
         this.loaded = true;
         this.init();
@@ -312,11 +499,11 @@ export class FightComponent implements OnInit, OnDestroy {
         const spells = data.fighters1.find(us => us.login === this.parent.login).character.spellsKnown;
         this.skills.push('Physical attack');
         this.map['Physical attack'] = 'Physical attack\n' +
-          'Damage: ' + data.fighters1.find(us => us.login === this.parent.login).character.physicalDamage + '\nChakra: 0';
+          this.transl.transform('Damage')+': ' + data.fighters1.find(us => us.login === this.parent.login).character.physicalDamage + '\n'+this.transl.transform('Chakra')+': 0';
         spells.forEach((it) => {
           this.skills.push(it.spellUse.name);
           this.map[it.spellUse.name] = it.spellUse.name +
-            '\nDamage: ' + (it.spellUse.baseDamage) + '\nChakra: ' + it.spellUse.baseChakraConsumption;
+            '\n'+this.transl.transform('Damage')+': ' + (it.spellUse.baseDamage) + '\n'+this.transl.transform('Chakra')+': ' + it.spellUse.baseChakraConsumption;
         });
         this.loaded = true;
         this.init();
@@ -328,14 +515,12 @@ export class FightComponent implements OnInit, OnDestroy {
     clearInterval(this.timer);
     this.current = currentName;
     if (currentName === this.parent.login) {
-      currentName = 'Your turn!';
+      currentName = this.transl.transform('Your turn!');
     } else {
       if (currentName === '') {
-        currentName = 'Prepare!';
-      } else if (currentName.length === 1) {
-        currentName = this.boss.name + '\'s turn!';
+        currentName = this.transl.transform('Prepare!');
       } else {
-        currentName = currentName + '\'s turn!';
+        currentName = currentName + '\'s '+ this.transl.transform('turn!');
       }
     }
     document.getElementById('current').innerText = currentName;
@@ -487,13 +672,16 @@ export class FightComponent implements OnInit, OnDestroy {
     }
   }
 
-  setDead(user: User): void {
-    if (this.type === 'pvp') {
+  setUserDead(user: User): void {
+    if (this.type === 'pvp')
       console.log(user.login + ' has perished.');
-    } else {
-      console.log('Boss is dead');
-    }
+    else {
+      this.died.push(user.login);
+    } 
+      
   }
+
+  setAnimalDead(animal: NinjaAnimal) {}
 
   finishFight(death: boolean, victory: boolean, loss: boolean): void {
     this.endServ.death = death;
