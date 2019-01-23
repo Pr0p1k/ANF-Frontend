@@ -10,8 +10,8 @@
            [(ngModel)]="firstPassword" (keyup.enter)="tryToLogin()"/>
   </div>
   <p-button label="{{'Sign in' | translate}}" (onClick)="tryToLogin()"></p-button>
-  <p-button label="{{'VK' | translate}}" (onClick)="tryToSignInWithVk()"></p-button>
-  <p-button label="G+" (onClick)="tryToSignInWithGoogle()"></p-button>
+  <!--<p-button label="{{'VK' | translate}}" (onClick)="tryToSignInWithVk()"></p-button>
+  <p-button label="G+" (onClick)="tryToSignInWithGoogle()"></p-button>-->
 </div>
 
 <div id="sign-up" *ngIf="!registration">
