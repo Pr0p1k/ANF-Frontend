@@ -12,6 +12,7 @@ export class User {
   incomingMessages: Message[];
   outgoingMessages: Message[];
   roles: Role[];
+  email: string;
   friendRequestsIn: FriendsRequest[];
   friendRequestsOut: FriendsRequest[];
   online = false;

@@ -385,6 +385,30 @@ export class FightComponent implements OnInit, OnDestroy {
       that.stompClient.subscribe('/user/switch', (response) => {
         that.setTimer(response.body, 30000);
       });
+      that.stompClient.subscribe('/user/summon', (response) => {
+        const animalState = <{
+          summoner: string,
+          name: string,
+          race: string,
+          maxHp: number,
+          damage: number,
+        }>JSON.parse(response.body);
+        let animal: NinjaAnimal = new NinjaAnimal();
+        animal.currentChakra = 100;
+        animal.damage = animalState.damage;
+        animal.maxHP = animalState.maxHp;
+        animal.name = animalState.name;
+        animal.race = animalState.race;
+        animal.currentHP = animal.maxHP;
+        if (that.allies.map(ally => ally.login).includes(animalState.summoner)) {
+          that.animals1.push(animal);
+          that.drawAnimal(animal, true);
+        }
+        else {
+          that.animals2.push(animal);
+          that.drawAnimal(animal, false);
+        }
+      });
     });
   }
 
@@ -691,6 +715,10 @@ export class FightComponent implements OnInit, OnDestroy {
       width: '400px', height: '160px'
     });
     this.router.navigateByUrl('/profile');
+  }
+
+  drawAnimal(animal: NinjaAnimal, ally: boolean) {
+
   }
 
   ngOnDestroy() {

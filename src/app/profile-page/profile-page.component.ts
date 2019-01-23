@@ -252,6 +252,10 @@ export class ProfilePageComponent implements OnInit, AfterViewChecked, OnDestroy
     }
   }
 
+  addEmail(): void {
+    
+  }
+
   ngOnDestroy() {
     document.documentElement.style.overflowY = 'scroll';
   }
