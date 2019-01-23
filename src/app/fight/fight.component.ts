@@ -482,6 +482,7 @@ export class FightComponent implements OnInit, OnDestroy {
           data.fighters2 = tmp;
         }
         this.allies = [data.fighters1];
+        this.summonEnabled = this.summonEnabled && this.allies[0].character.animalRace != null;
         this.enemies = [data.fighters2];
         console.log(data);
         const spells = data.fighters1.character.spellsKnown;
