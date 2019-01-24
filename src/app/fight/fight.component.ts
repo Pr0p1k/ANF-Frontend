@@ -85,6 +85,7 @@ export class FightComponent implements OnInit, OnDestroy {
   current: string;
   kek = false;
   summonEnabled = true;
+  animalsElements: { [key: string]: HTMLElement } = {};
 
   constructor(private router: Router, private transl: TranslatePipe,
               private dialogService: DialogService,
@@ -149,7 +150,7 @@ export class FightComponent implements OnInit, OnDestroy {
             yourSideAttacks = false;
             // your animal is a target
             if (that.animals1.map(anim => anim.name).includes(fightState.target)) {
-              targetAnimal = that.animals1.find(anim => anim.name === fightState.target);
+              targetAnimal = that.animals1.find(anim => anim.name.substring(0, 3) === fightState.target.substring(0, 3));
               userIsTarget = false;
             } else {
               targetUser = that.allies.find(us => us.login === fightState.target);
@@ -280,7 +281,10 @@ export class FightComponent implements OnInit, OnDestroy {
           const boss = that.boss;
           let targetUser: User;
           let targetAnimal: NinjaAnimal;
-          if (that.allies.map(us => us.login).includes(fightState.attacker)) {
+          animalIsAttacker = fightState.attacker.length === 3 || fightState.attacker.length === 3;
+          userIsAttacker = fightState.attacker.length >= 6;
+          bossIsAttacker = fightState.attacker.length === 1;
+          if (userIsAttacker) {
             attackerUser = that.allies.find(all => all.login === fightState.attacker);
             bossIsAttacker = false;
             userIsAttacker = true;
@@ -288,8 +292,9 @@ export class FightComponent implements OnInit, OnDestroy {
             bossIsTarget = true;
             userIsTarget = false;
             animalIsTarget = false;
-          } else if (that.animals1.map(anim => anim.name).includes(fightState.attacker)) {
-            attackerAnimal = that.animals1.find(anim => anim.name === fightState.attacker);
+          } else if (animalIsAttacker) {
+            attackerAnimal = that.animals1.find(anim =>
+              anim.name.substring(0, 3).toLowerCase() === fightState.attacker.substring(0, 3).toLowerCase());
             bossIsAttacker = false;
             userIsAttacker = false;
             animalIsAttacker = true;
@@ -306,7 +311,8 @@ export class FightComponent implements OnInit, OnDestroy {
               userIsTarget = true;
               animalIsTarget = false;
             } else {
-              targetAnimal = that.animals1.find(anim => anim.name === fightState.target);
+              targetAnimal = that.animals1.find(anim =>
+                anim.name.substring(0, 3).toLowerCase() === fightState.target.substring(0, 3).toLowerCase());
               userIsTarget = false;
               animalIsTarget = true;
             }
@@ -325,8 +331,8 @@ export class FightComponent implements OnInit, OnDestroy {
               that.setChakraPercent(that.statsElements[fightState.attacker],
                 attackerUser.character.currentHP / attackerUser.character.maxHp * 100);
             } else {
-              that.setChakraPercent(that.statsElements[fightState.attacker],
-                attackerAnimal.currentHP / attackerAnimal.maxHP * 100);
+              // that.setChakraPercent(that.statsElements[fightState.attacker],
+              //   attackerAnimal.currentHP / attackerAnimal.maxHP * 100);
             }
           } else {
             if (userIsTarget) {
@@ -337,12 +343,18 @@ export class FightComponent implements OnInit, OnDestroy {
               that.setHPPercent(that.statsElements[fightState.target],
                 targetUser.character.currentHP / targetUser.character.maxHp * 100);
             } else {
-              targetAnimal.currentHP -= fightState.damage;
-              if (targetAnimal.currentHP < 0) {
-                targetAnimal.currentHP = 0;
+              console.log(fightState.target);
+              console.log(targetAnimal);
+              try {
+                targetAnimal.currentHP -= fightState.damage;
+                if (targetAnimal.currentHP < 0) {
+                  targetAnimal.currentHP = 0;
+                }
+                that.setHPPercent(that.statsElements[fightState.target],
+                  targetAnimal.currentHP / targetAnimal.maxHP * 100);
+              } catch (e) {
+
               }
-              that.setHPPercent(that.statsElements[fightState.target],
-                targetAnimal.currentHP / targetAnimal.maxHP * 100);
             }
           }
 
@@ -739,6 +751,23 @@ export class FightComponent implements OnInit, OnDestroy {
   }
 
   setAnimalDead(animal: NinjaAnimal) {
+    console.log('dead');
+    this.statsElements[this.parent.login].style.display = 'none';
+    let counter = 0;
+    let translate: string;
+    const anim = setInterval(() => {
+      counter++;
+      this.animalsElements[animal.name.substring(0, 3)].style.transform = 'rotate(-' + counter + 'deg)';
+      if (counter < 27) {
+        translate = 'translate(0,-' + (counter) * 2 + 'px)';
+        this.animalsElements[animal.name].style.transform += translate;
+      } else {
+        this.animalsElements[animal.name].style.transform += translate;
+      }
+      if (counter === 87) {
+        clearInterval(anim);
+      }
+    }, 3);
   }
 
   finishFight(death: boolean, victory: boolean, loss: boolean): void {
@@ -766,8 +795,13 @@ export class FightComponent implements OnInit, OnDestroy {
       element = this.enemiesContainer.createComponent(factory);
       element.instance.animalName = animal.name;
       this.statsElements[animal.name.substring(0, 3)] = <HTMLElement>element.location.nativeElement;
-      this.setPosition(element, 7);
+      (<HTMLElement>element).style.position = 'absolute';
+      (<HTMLElement>element).style.bottom = '60px';
+      (<HTMLElement>element).style.right = '80px';
+      (<HTMLElement>element).style.transform = 'scaleX(-1)';
     }
+
+    this.animalsElements[animal.name] = <HTMLElement>element;
   }
 
   ngOnDestroy() {
